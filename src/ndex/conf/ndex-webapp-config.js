@@ -132,7 +132,10 @@ var ndexSettings =
     idleTime: 3600,
     uploadSizeLimit: "none",
 
+    // googleAnalyticsTrackingCode: 'XXXXXXX',
     // specifies network with that many edges that open in Cytoscape without warning
-    openInCytoscapeEdgeThresholdWarning: 300000
-
+    openInCytoscapeEdgeThresholdWarning: 300000,
+    linkToReleaseDocs: 'https://home.ndexbio.org/release-notes/',
+    landingPageConfigServer: 'https://staging.ndexbio.org/landing_page_content/v2_4_2',
+    featuredContentScrollIntervalInMs: 3100
 };

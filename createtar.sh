@@ -4,7 +4,7 @@ RAWSCRIPT_DIR=`dirname $0`
 pushd $RAWSCRIPT_DIR
 SCRIPT_DIR=`pwd -P`
 
-VERSION=`cat VERSION`
+VERSION=`egrep "^tarballversion=" versions.config | sed "s/^.*= *//"`
 
 RELEASEDIR="ndex-${VERSION}"
 

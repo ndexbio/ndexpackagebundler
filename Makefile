@@ -16,10 +16,13 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: ## remove all build, test, coverage and Python artifacts
+clean: clean-dist ## remove everything
 	rm -fr dist/
 
-dist: clean ## builds package
+clean-dist: ## remove packaged distribution file
+	rm -fr dist/ndex-*
+
+dist: clean-dist ## builds package
 	@echo "Creating tar file"
 	./createtar.sh
  

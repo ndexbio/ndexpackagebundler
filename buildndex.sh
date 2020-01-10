@@ -4,9 +4,10 @@ RAWSCRIPT_DIR=`dirname $0`
 pushd $RAWSCRIPT_DIR
 SCRIPT_DIR=`pwd -P`
 
-VERSION=`cat NDEXVERSION`
-
+NDEXVERSION=`egrep "^tarballversion=" versions.config | sed "s/^.*= *//"`
 RELEASEDIR="ndex-${NDEXVERSION}"
+
+VERSION=`egrep "^ndex=" versions.config | sed "s/^.*= *//"`
 
 if [ "$VERSION" == "master" ] ; then
    BRANCH=""
@@ -15,12 +16,19 @@ else
 fi
 
 
-QUERYVERSION=`cat NDEXQUERYVERSION`
+QUERYVERSION=`egrep "^ndexquery=" versions.config | sed "s/^.*= *//"`
 
 if [ "$QUERYVERSION" == "master" ] ; then
    QBRANCH=""
 else
    QBRANCH="--branch=v${QUERYVERSION}"
+fi
+
+IQUERYVERSION=`egrep "^iquery=" versions.config | sed "s/^.*= *//"`
+if [ "$IQUERYVERSION" == "master" ] ; then
+   IBRANCH=""
+else
+   IBRANCH="--branch=v${IQUERYVERSION}"
 fi
 
 pushd dist/
@@ -40,12 +48,32 @@ pushd ndex-rest
 mvn clean install -DskipTests=true -B
 popd
 
+# build NDEx java client
+git clone $BRANCH --depth=1 https://github.com/ndexbio/ndex-java-client
+pushd ndex-java-client
+mvn clean install -DskipTests=true -B
+popd
+
 # build NDEx neighborhood query
 git clone $QBRANCH --depth=1 https://github.com/ndexbio/ndex-neighborhood-query-java
 pushd ndex-neighborhood-query-java
 mvn clean install -DskipTests=true -B
 popd
 
+# build ndex enrichment object model
+git clone $IBRANCH --depth=1 https://github.com/cytoscape/ndex-enrichment-rest-model
+pushd ndex-enrichment-rest-model
+mvn clean install -DskipTests=true -B
+popd
+
+# build NDEx enrichment
+git clone $IBRANCH --depth=1 https://github.com/cytoscape/ndex-enrichment-rest
+pushd ndex-enrichment-rest
+mvn clean install -DskipTests=true -B
+popd
+
+
 popd
 mv buildndex/ndex-rest/target/ndexbio-rest.war .
 mv buildndex/ndex-neighborhood-query-java/target/NDExQuery-*.jar .
+mv buildndex/ndex-enrichment-rest/target/ndex-enrichment-rest-*-jar-with-dependencies.jar .

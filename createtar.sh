@@ -4,7 +4,7 @@ RAWSCRIPT_DIR=`dirname $0`
 pushd $RAWSCRIPT_DIR
 SCRIPT_DIR=`pwd -P`
 
-VERSION="2.4.4"
+VERSION=`cat VERSION`
 
 RELEASEDIR="ndex-${VERSION}"
 
@@ -59,3 +59,13 @@ echo "Decompressing solr"
 tar -zxf ../solr-${SOLR_VERSION}.tgz
 /bin/ln -s solr-${SOLR_VERSION} solr
 
+/bin/rm -rf tomcat/webapps/*
+cp ../ndexbio-rest.war tomcat/webapps/.
+
+cp ../NDExQuery-*.jar query_engine/.
+
+QUERY_JAR_WITH_PATH=`find query_engine/ -name "NDExQuery-*.jar" -type f`
+QUERY_JAR=`basename $QUERY_JAR_WITH_PATH`
+cat query_engine/run.sh | sed "s/@@NDEX_QUERY_JAR@@/${QUERY_JAR}/g" > query_engine/run.tmp
+mv query_engine/run.tmp query_engine/run.sh
+chmod a+x query_engine/run.sh 

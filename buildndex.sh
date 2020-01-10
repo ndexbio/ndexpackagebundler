@@ -60,9 +60,15 @@ pushd ndex-neighborhood-query-java
 mvn clean install -DskipTests=true -B
 popd
 
-# build ndex enrichment object model
+# build NDEx enrichment object model
 git clone $IBRANCH --depth=1 https://github.com/cytoscape/ndex-enrichment-rest-model
 pushd ndex-enrichment-rest-model
+mvn clean install -DskipTests=true -B
+popd
+
+# build NDEx enrichment REST client
+git clone $IBRANCH --depth=1 https://github.com/cytoscape/ndex-enrichment-rest-client
+pushd ndex-enrichment-rest-client
 mvn clean install -DskipTests=true -B
 popd
 
@@ -72,8 +78,21 @@ pushd ndex-enrichment-rest
 mvn clean install -DskipTests=true -B
 popd
 
+# build NDEx interactome search
+git clone $IBRANCH --depth=1 https://github.com/cytoscape/ndex-interactome-search
+pushd ndex-interactome-search
+mvn clean install -DskipTests=true -B
+popd
+
+# build NDEx iQuery/integrated search
+git clone $IBRANCH --depth=1 https://github.com/cytoscape/ndexsearch-rest
+pushd ndexsearch-rest
+mvn clean install -DskipTests=true -B
+popd
 
 popd
 mv buildndex/ndex-rest/target/ndexbio-rest.war .
 mv buildndex/ndex-neighborhood-query-java/target/NDExQuery-*.jar .
 mv buildndex/ndex-enrichment-rest/target/ndex-enrichment-rest-*-jar-with-dependencies.jar .
+mv buildndex/ndex-interactome-search/target/interactomeSearch-*.jar .
+mv buildndex/ndexsearch-rest/target/ndexsearch-rest-*-jar-with-dependencies.jar .

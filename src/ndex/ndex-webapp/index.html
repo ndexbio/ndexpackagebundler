@@ -1,0 +1,275 @@
+<!DOCTYPE html> <!-- define angular app --> <html id="ng-app"> <head> <meta charset="utf-8"> <title>NDEx WebApp v2.3</title> <meta name="description" content="NDEx, the Network Data Exchange, is a collaborative software infrastructure for storing, sharing and publishing biological network knowledge; NDEx is developed in tight association with Cytoscape at the UC San Diego School of Medicine."> <meta name="viewport" content="width=device-width"> <link rel="stylesheet" href="styles/vendor.12c11bd0.css"> <link rel="stylesheet" href="styles/main.be4dd6b3.css"> <!-- it is important to load angular *after* jQuery if you want angular to have access
+         to full jQuery functionality instead of angular's internal 'lite' version --> <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" type="text/css"> <script src="scripts/vendor.84c21abd.js"></script> <!-- Load script that may redirect to maint.html --> <!--   <script src="checkMaintenance.js"></script>  --> <!-- Scripts --> <!-- it is important to load angular *after* jQuery if you want angular to have access
+         to full jQuery functionality instead of angular's internal 'lite' version --> <script src="https://apis.google.com/js/api.js"></script> <script src="ndex-webapp-config.js"></script> <script src="scripts/scripts.efe75516.js"></script> <noscript> <!-- This will execute if JavaScript is disabled in the browser --> <div class="jsOrCookiesDisabledWarning"> JavaScript is not enabled in your browser. <br> NDEx requires that JavaScript be enabled. <br> Please turn JavaScript on and try again. </div> </noscript> <!-- This element will be filled in and shown in case  cookies are blocked by the browser --> <div id="noCookiesEnabledId"></div> </head> <!-- define angular controller --> <body ng-controller="mainController" style="height: 100%;"> <!-- template for search bar --> <script type="text/ng-template" id="search_bar.html"> <div class="" style="background-color:white; color:black;">
+        <form ng-show="!main.serverIsDown && (!config.requireAuthentication||main.loggedIn)"
+              ng-submit="main.search()">
+
+            <table class="table">
+
+                    <div class="input-group">
+                        <tr style="border:hidden">
+                            <td style="width: 70px;"  bgcolor="#FFFFFF">
+
+                                <div class="input-group-btn dropdown">
+                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                            data-toggle="dropdown" style="border-radius: 24px;">
+                                        Search Examples <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+
+                                        <li class="AlignLeft" style="padding-left: 5px;"
+                                            ng-repeat="item in main.searchNetworksExamples">
+                                            <a ng-click="main.runSearchExample(item); closeModal()">
+                                                {{item.description}}
+                                            </a>
+                                        </li>
+
+                                        <li class="AlignLeft" ng-show="config.searchDocLink">
+                                            <a style="color:#428bca; background-color:white;"
+                                               ng-click="redirectToExternalLink(config.searchDocLink); closeModal()">
+                                                <u>{{config.searchDocLink.label}}</u>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </td>
+
+                            <td style="width: 35px;"  bgcolor="#FFFFFF">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default"
+                                            ng-click="main.browse(); closeModal()" style="border-radius: 24px;">Browse
+                                    </button>
+                                </div>
+                            </td>
+
+                            <td bgcolor="#FFFFFF">
+                                <div class="row" style="margin-left:5px; margin-right:5px">
+
+                                    <div class="input-group">
+
+                                        <span class="input-group-btn dropdown"
+                                            style="border-bottom-right-radius:0px; border-top-right-radius:0px">
+                                            <button type="button" class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown" style="margin-right:-2px;">
+                                                {{main.searchType}} <span class="caret"></span>
+                                            </button>
+
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a class="dropdown-toggle"
+                                                       ng-click="main.searchType = 'All'; main.searchString = ''">All NDEx</a></li>
+                                                <li><a class="dropdown-toggle"
+                                                       ng-click="main.searchType = 'Networks'; main.searchString = ''">Networks</a></li>
+                                                <li><a class="dropdown-toggle"
+                                                       ng-click="main.searchType = 'Users'; main.searchString = ''">Users</a></li>
+                                                <li><a class="dropdown-toggle"
+                                                       ng-click="main.searchType = 'Groups'; main.searchString = ''">Groups</a></li>
+                                            </ul>
+                                        </span>
+
+                                        <input type="text"
+                                               class="form-control"
+                                               placeholder="{{main.getSearchPlaceholder()}}"
+                                               ng-model="main.searchString"
+                                               maxlength="{{maxSearchInputLength}}"
+                                               ng-change="checkLengthOfSearchString()">
+
+                                        <!--!$scope.main.searchString-->
+
+                                        <span class="input-group-btn">
+                                            <button ng-disabled="!main.searchString" type="submit" ng-click="closeModal();" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="stringTooLongWarning">
+                            <td bgcolor="#FFFFFF"></td>
+                            <td bgcolor="#FFFFFF"></td>
+
+                            <td bgcolor="#FFFFFF">
+                                <div ng-show="stringTooLongWarning"
+                                     style="color:red; font-size:1.15em; font-weight:bold; margin-left:60px;"
+                                     ng-bind-html="stringTooLongWarning">
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr style="border:hidden">
+                            <td bgcolor="#FFFFFF"></td>
+                            <td bgcolor="#FFFFFF"></td>
+
+                            <td bgcolor="#FFFFFF">
+                                <div class="row" style="margin-left:60px;">
+
+                                    <input type="checkbox"
+                                           ng-hide="checkSearchTypeAndTermExpansion()"
+                                           title="{{main.searchTitle}}"
+                                           ng-model="main.searchTermExpansionSelected">
+                                            &nbsp;
+                                            <span ng-style="searchTermExpansionEnabled ?
+                                                {'color':'black', 'font-size':'1.15em'} : {'color':'red', 'font-size':'1.15em'}">
+                                                    <strong>{{main.searchTitle}}</strong>
+                                            </span>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    </div>
+
+            </table>
+        </form>
+    </div> </script> <!-- Nav Bar --> <nav class="navbar navbar-fixed-top"> <div class="navbar-ndex navbar-ndex-top" style="padding-right: 20px;"> <div class="navbar-header"> <button ng-show="(main.serverIsDown != null) && !main.serverIsDown" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" ng-href="{{$location.path()}}" ng-click="collapseHamburgerMenu(); redirectToCurrentServer()" style="max-height: 50px; padding-top: 0; padding-bottom: 0;"> <div id="hiddenElementId" style="display: none;
+                    background-image: url('images/NDEx-horizontal-transparent.86d85ed5.png');
+                    background-repeat: no-repeat;
+                    background-position: 0px 10px;
+                    width: 120px;
+                    height: 50px;
+                    margin-left: 5px;
+                    margin-right: 0px;
+                    background-size: 120px 30px;"> </div> </a> </div> <div class="navbar-collapse collapse" id="myNavbar"> <!-- even though we use ng-show directive, we still set style display to none: in case third parties cookies are
+                disabled in the browser, the ng-show is undefined and we use 'display: none' for this scenario --> <ul id="hiddenElementId1" class="nav navbar-nav navbar-left" style="display: none" ng-show="(main.serverIsDown != null) && !main.serverIsDown"> <li> <a ng-href="{{$location.path()}}" ng-click="collapseHamburgerMenu(); redirectToExternalLink(config.newsLink)">{{config.newsLink.label}} </a> </li> <li> <a ng-href="{{$location.path()}}" ng-click="collapseHamburgerMenu(); redirectToExternalLink(config.aboutLink)">{{config.aboutLink.label}} </a> </li> <li> <a ng-href="{{$location.path()}}" ng-click="collapseHamburgerMenu(); redirectToExternalLink(config.documentationLink)"> {{config.documentationLink.label}} </a> </li> <!--
+                <li>
+                    <a ng-href="{{$location.path()}}"
+                       ng-click="collapseHamburgerMenu(); redirectToExternalLink(config.apiLink)">
+                        {{config.apiLink.label}}
+                    </a>
+                </li>
+                --> <li> <a ng-href="{{$location.path()}}" ng-click="collapseHamburgerMenu(); redirectToExternalLink(config.reportBugLink)"> {{config.reportBugLink.label}} </a> </li> <li> <a ng-href="{{$location.path()}}" ng-click="collapseHamburgerMenu(); redirectToExternalLink(config.contactUsLink)"> {{config.contactUsLink.label}} </a> </li> <li> <a id="copyNDExCitationToClipboardId" ng-click="collapseHamburgerMenuAfterMs(750);" data-toggle="tooltip" data-placement="bottom" ng-mouseover="changeTitle()" ng-init="setToolTips()" ngclipboard data-clipboard-text="{{NDEx.citation}}"> {{config.citeNDEx.label}} </a> </li> </ul> <!-- even though we use ng-show directives, we still set style display to none: in case third parties cookies are
+                 disabled in the browser, the ng-show is undefined and we use 'display: none' for this scenario --> <ul id="hiddenElementId2" class="nav navbar-nav navbar-right" style="display: none"> <li ng-show="showSearchMenu"> <a ng-click="collapseHamburgerMenu(); showSearchBar()"> <div style="background-image: url('images/search-icon.3efadc6c.png');
+                            margin-top: -5px;
+                            margin-bottom: -5px;
+                            width: 30px;
+                            height: 30px;
+                            background-size: 30px 30px;"> </div> </a> </li> <li ng-show="main.loggedIn"> <a ng-click="collapseHamburgerMenu(); main.goToCurrentUser()" ng-class="{'selected-navbar-item' : isActiveUserView('/myAccount/')}"> <img src="images/home.056c872b.png" style="float:left; width:30px; height:30px; margin-bottom:-5px; margin-top:-5px;"> &nbsp;&nbsp;{{main.userFirstAndLastNames}}! </a> </li> <li ng-show="main.loggedIn"> <a ng-click="collapseHamburgerMenu(); main.signout()">Sign Out</a> </li> <li ng-show="!main.loggedIn && !config.requireAuthentication && !main.serverIsDown && main.showSignIn"> <a ng-click="collapseHamburgerMenu(); main.startSignIn()">Sign In</a> </li> </ul> </div> </div> </nav> <div id="main" class="container-fluid"> <!-- angular templating --> <!-- this is where content will be injected --> <div id="searchBarId" ng-hide="main.hideSearchBar" class="marginsForNGView" style="background-color: white;"> <div style="max-width: 1000px; margin-left: auto; margin-right: auto;"> <ng-include src="'search_bar.html'"></ng-include> </div> </div> <div ng-view class="marginsForNGView"></div> </div> <!--
+<div ng-show='showFooter'>
+    <nav class="navbar navbar-ndex navbar-fixed-bottom footer-bar AlignCenter"  >
+        <div class='footer-content' >
+            Copyright &copy; 2016 Regents of the University of California and The Cytoscape Consortium. All rights
+            reserved.
+            &nbsp;<a href="http://home.ndexbio.org/disclaimer-license/">Terms & Conditions</a>
+        </div>
+    </nav>
+</div>
+--> <!-- even though we use ng-show directive, we still set style display to none: in case third parties cookies are
+     disabled in the browser, the ng-show is undefined and we use 'display: none' for this scenario --> <div ng-show="showFooter" id="hiddenElementId3" style="display: none"> <nav class="navbar navbar-ndex navbar-fixed-bottom footer-bar AlignLeft"> <div class="footer-content"> <div class="row"> <div class="col-md-10" style="padding-top: 6px;"> <span style="margin-left: 28px"> Copyright &copy; 2013-<script type="text/javascript">var d = new Date(); document.write(d.getFullYear());</script>, The Regents of the University of California, The Cytoscape Consortium. All rights reserved. &nbsp;<a href="https://home.ndexbio.org/disclaimer-license/" style="color:#0272c9">Terms & Conditions</a> </span> </div> <div class="col-md-2"> <ul class="social AlignRight" style="margin-right: 12px"> <li class="twitter"> <a href="https://twitter.com/NDExProject"> <i class="fa fa-twitter"></i> </a> </li> <li class="youtube"> <a href="https://www.youtube.com/channel/UCc7J1020F7e25F-zWEMtM0A"> <i class="fa fa-youtube"></i> </a> </li> <li class="linkedin"> <a href="https://www.linkedin.com/company/3991823"> <i class="fa fa-linkedin"></i> </a> </li> </ul> </div> </div> </div> </nav> </div> <script> function logInUserWithBasicAuth() {
+        var initInjector = angular.injector(["ng"]);
+        var $http = initInjector.get("$http");
+
+        var loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+        if (loggedInUser) {
+            $http({
+                    method: 'GET',
+                    url: ndexSettings.ndexServerUri + "/user?valid=true&setAuthHeader=false",
+                    headers: {
+                        Authorization: "Basic " + btoa(loggedInUser.userName + ":" + loggedInUser.token)
+                    }
+                }
+            )
+            .success(function(data, status, headers, config, statusText) {
+                startWebApp(data, 'basic');
+            })
+            .error(function(error, status, headers, config, statusText) {
+                startWebApp(null,null);
+            })
+        } else {
+            try {
+                angular.bootstrap(document, ['ndexApp']);
+            } catch(e) {
+                //already loaded; do not do anything here; we use the try .. catch block to silence up
+                // an error message in case angular.bootstrap(document, ['ndexApp']); throws an exception
+            }
+        }
+    }
+
+  function initClient() {
+      gapi.client.init({
+          clientId: ndexSettings.googleClientId,
+          scope: 'profile email',
+      }).then(function () {
+          const initInjector = angular.injector(["ng"]);
+          const $http = initInjector.get("$http");
+
+          isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
+
+          if (isSignedIn) {
+              const curUser = gapi.auth2.getAuthInstance().currentUser.get();
+              const id_token = curUser.getAuthResponse().id_token;
+
+              $http({
+                  method: 'GET',
+                  url: ndexSettings.ndexServerUri + "/user?valid=true&setAuthHeader=false",
+                  headers: {
+                      Authorization: "Bearer " + id_token
+                    }
+                  }
+              )
+              .success(function(data, status, headers, config, statusText) {
+                  startWebApp(data, 'google');
+              })
+              .error(function(error, status, headers, config, statusText) {
+                  startWebApp(null,null);
+              })
+
+          } else {
+
+              logInUserWithBasicAuth();
+
+          }
+      }, function(error) {
+
+          // this is the case where 3rd parties cookies are blocked by the browser.
+          // Google SSO is therefore unavailable.  Log in with Basic Auth.
+
+          //localStorage.setItem('noGoogleSSO', 'true');
+          window.googleSSO = false;
+          logInUserWithBasicAuth();
+      });
+
+  }
+
+  function startWebApp (signedInUser, type) {
+
+      if ( signedInUser !=null ) {
+          window.currentNdexUser = signedInUser;
+          window.currentSignInType = type;
+      }
+      try {
+          angular.bootstrap(document, ['ndexApp']);
+      } catch(e) {
+          //already loaded; do not do anything here; we use the try .. catch block to silence up
+          // an error message in case angular.bootstrap(document, ['ndexApp']); throws an exception
+      }
+  }
+
+
+
+    if (navigator.cookieEnabled) {
+
+        window.googleSSO = true;
+
+     //   window.isSafari = false;
+           /*/constructor/i.test(window.HTMLElement) || (function (p) {
+                return p.toString() === "[object SafariRemoteNotification]";
+            })(!window['safari'] || safari.pushNotification); */
+
+        if (typeof ndexSettings === 'undefined') {
+            alert("Update your ndex-webapp-config.js file");
+        } else {
+            gapi.load('client:auth2', initClient);
+        }
+
+    } else {
+
+        // cookies are blocked by the browser - NDEx cannot run since localStorage is unavailable
+
+        document.getElementById("noCookiesEnabledId").innerHTML =
+            '<div class="jsOrCookiesDisabledWarning">' +
+            'Cookies are blocked by your browser. <br>' +
+            'NDEx requires that cookies be unblocked. <br>' +
+            'Please unblock cookies and try again. </div>';
+    } </script> </body> </html> 

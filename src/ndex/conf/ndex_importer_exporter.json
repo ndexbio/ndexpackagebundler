@@ -1,0 +1,18 @@
+[
+        {
+                "name": "GSEA Gene Set",
+                "description": "The \"GSEA Gen Set\" export format generates a text file (.grp) containing unique human gene symbols that can be used for enrichment analysis.",
+                "fileExtension": "grp",
+                "directoryName": "GSEA",
+                "exporterCmd": ["cx2grp.py"]
+        },
+        {
+         "name": "GraphML",
+         "description": "This option exports a network as a GraphML (.graphml) object thus allowing it to be readable by other tools/applications that support the GraphML standard.",
+         "fileExtension": "graphml",
+         "directoryName": "graphml",
+         "exporterCmd": ["graphml.sh"]
+        }
+
+        
+] 

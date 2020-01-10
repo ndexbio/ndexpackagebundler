@@ -24,5 +24,6 @@ clean-dist: ## remove packaged distribution file
 
 dist: clean-dist ## builds package
 	@echo "Creating tar file"
+	./buildndex.sh
 	./createtar.sh
  

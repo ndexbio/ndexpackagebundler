@@ -10,7 +10,7 @@ RELEASEDIR="ndex-${VERSION}"
 
 echo "Creating directory"
 mkdir -p dist
-
+rm -rf dist/$RELEASEDIR
 /bin/cp -a src/ndex dist/$RELEASEDIR
 
 pushd dist/
@@ -59,6 +59,11 @@ echo "Decompressing solr"
 tar -zxf ../solr-${SOLR_VERSION}.tgz
 /bin/ln -s solr-${SOLR_VERSION} solr
 
+# copy over configsets and solr.in.sh
+/bin/rm -rf solr/server/solr/configsets/*
+/bin/cp -a ../../src/solr/configsets/* solr/server/solr/configsets/.
+/bin/cp ../../src/solr/solr.in.sh solr/bin/.
+
 /bin/rm -rf tomcat/webapps/*
 cp ../ndexbio-rest.war tomcat/webapps/.
 
@@ -69,3 +74,8 @@ QUERY_JAR=`basename $QUERY_JAR_WITH_PATH`
 cat query_engine/run.sh | sed "s/@@NDEX_QUERY_JAR@@/${QUERY_JAR}/g" > query_engine/run.tmp
 mv query_engine/run.tmp query_engine/run.sh
 chmod a+x query_engine/run.sh 
+
+
+# create tar and gzip it
+popd
+tar -cz $RELEASEDIR > ${RELEASEDIR}.tar.gz

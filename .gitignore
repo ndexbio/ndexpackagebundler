@@ -1,0 +1,3 @@
+.vagrant/
+dist/
+.DS_Store

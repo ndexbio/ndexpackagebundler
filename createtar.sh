@@ -65,9 +65,11 @@ tar -zxf ../solr-${SOLR_VERSION}.tgz
 /bin/cp ../../src/solr/solr.in.sh solr/bin/.
 
 /bin/rm -rf tomcat/webapps/*
-cp ../ndexbio-rest.war tomcat/webapps/.
+/bin/cp ../ndexbio-rest.war tomcat/webapps/.
 
-cp ../NDExQuery-*.jar query_engine/.
+/bin/cp ../NDExQuery-*.jar query_engine/.
+
+/bin/cp ../interactomeSearch-*.jar services/interactome/.
 
 QUERY_JAR_WITH_PATH=`find query_engine/ -name "NDExQuery-*.jar" -type f`
 QUERY_JAR=`basename $QUERY_JAR_WITH_PATH`
@@ -75,6 +77,18 @@ cat query_engine/run.sh | sed "s/@@NDEX_QUERY_JAR@@/${QUERY_JAR}/g" > query_engi
 mv query_engine/run.tmp query_engine/run.sh
 chmod a+x query_engine/run.sh 
 
+# configure interactome
+INTERACTOME_JAR_WITH_PATH=`find services/interactome/ -name "interactomeSearch-*.jar" -type f`
+INTERACTOME_JAR=`basename $INTERACTOME_JAR_WITH_PATH`
+cat services/interactome/run.sh | sed "s/@@INTERACTOME_JAR@@/${INTERACTOME_JAR}/g" > services/interactome/run.tmp
+mv services/interactome/run.tmp services/interactome/run.sh
+chmod a+x services/interactome/run.sh
+
+cat services/interactome/rebuildIndex.sh | sed "s/@@INTERACTOME_JAR@@/${INTERACTOME_JAR}/g" > services/interactome/rebuildIndex.tmp
+mv services/interactome/rebuildIndex.tmp services/interactome/rebuildIndex.sh
+chmod a+x services/interactome/rebuildIndex.sh
+mkdir -p services/interactome/logs
+mkdir -p services/interactome/task
 
 # create tar and gzip it
 popd

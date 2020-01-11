@@ -90,6 +90,10 @@ chmod a+x services/interactome/rebuildIndex.sh
 mkdir -p services/interactome/logs
 mkdir -p services/interactome/task
 
+# configure enrichment
+mkdir -p services/enrichment/tasks
+mkdir -p services/enrichment/logs
+
 # create tar and gzip it
 popd
 tar -cz $RELEASEDIR > ${RELEASEDIR}.tar.gz

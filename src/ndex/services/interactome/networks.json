@@ -1,0 +1,11 @@
+{
+        "associationNetworks": [
+ {"uuid":"00a02dfc-a823-11e9-a5da-0660b7976219"},
+ {"uuid":"c6cf9ca2-a822-11e9-a5da-0660b7976219"}
+                ],
+        "ppiNetworks": [
+ {"uuid":"1bcad4a4-a823-11e9-a5da-0660b7976219"},
+ {"uuid":"452ed6d9-a823-11e9-a5da-0660b7976219"}
+        ]
+}
+

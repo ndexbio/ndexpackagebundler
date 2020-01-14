@@ -1,0 +1,20 @@
+{
+  "sources" : [ {
+    "description" : "This is a description of enrichment source",
+    "endPoint" : "http://localhost:8291/enrichment/v1",
+    "uuid": "1eb4af50-83c4-4e33-ac21-87142403589b",
+    "name" : "enrichment"
+  }, {
+    "description" : "This is a description of interactome-ppi service",
+    "endPoint" : "http://localhost:8287/interactome/ppi/v1/",
+    "uuid": "3857a397-3453-4ae4-8208-e33a283c85ec",
+    "name" : "interactome-ppi"
+  }, 
+  {
+    "description" : "This is a description of interactome-association service",
+    "endPoint" : "http://localhost:8287/interactome/geneassociation/v1/",
+    "uuid": "2857a397-3453-4ae4-8208-e33a283c85ec",
+    "name" : "interactome-association"
+  } ]
+}
+

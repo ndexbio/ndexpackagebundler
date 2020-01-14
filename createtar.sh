@@ -72,7 +72,9 @@ tar -zxf ../solr-${SOLR_VERSION}.tgz
 /bin/cp ../interactomeSearch-*.jar services/interactome/.
 
 /bin/cp ../ndex-enrichment-rest-*-jar-with-dependencies.jar services/enrichment/.
+/bin/cp ../ndexsearch-rest-*-*jar-with-dependencies.jar services/search/.
 
+echo "Configuring query_engine"
 QUERY_JAR_WITH_PATH=`find query_engine/ -name "NDExQuery-*.jar" -type f`
 QUERY_JAR=`basename $QUERY_JAR_WITH_PATH`
 cat query_engine/run.sh | sed "s/@@NDEX_QUERY_JAR@@/${QUERY_JAR}/g" > query_engine/run.tmp
@@ -80,6 +82,7 @@ mv query_engine/run.tmp query_engine/run.sh
 chmod a+x query_engine/run.sh 
 
 # configure interactome
+echo "Copying over and configuring Interactome Search"
 INTERACTOME_JAR_WITH_PATH=`find services/interactome/ -name "interactomeSearch-*.jar" -type f`
 INTERACTOME_JAR=`basename $INTERACTOME_JAR_WITH_PATH`
 cat services/interactome/run.sh | sed "s/@@INTERACTOME_JAR@@/${INTERACTOME_JAR}/g" > services/interactome/run.tmp
@@ -92,6 +95,7 @@ chmod a+x services/interactome/rebuildIndex.sh
 mkdir -p services/interactome/logs
 mkdir -p services/interactome/task
 
+echo "Copying over and configuring Enrichment"
 # configure enrichment
 ENRICHMENT_JAR_WITH_PATH=`find services/enrichment/ -name "ndex-enrichment-rest-*-jar-with-dependencies.jar" -type f`
 ENRICHMENT_JAR=`basename $ENRICHMENT_JAR_WITH_PATH`
@@ -102,6 +106,17 @@ mv services/enrichment/run.tmp services/enrichment/run.sh
 mkdir -p services/enrichment/tasks
 mkdir -p services/enrichment/logs
 
+echo "Copying over and configuring Integrated Search aka iQuery REST service"
+# configure integrated search
+ISEARCH_JAR_WITH_PATH=`find services/search/ -name "ndexsearch-rest-*-jar-with-dependencies.jar" -type f`
+ISEARCH_JAR=`basename $ISEARCH_JAR_WITH_PATH`
+cat services/search/run.sh | sed "s/@@ISEARCH_JAR@@/${ISEARCH_JAR}/g" > services/search/run.tmp
+mv services/search/run.tmp services/search/run.sh
+chmod a+x services/search/run.sh
+mkdir -p services/search/logs
+mkdir -p services/search/tasks
+
+echo "Creating tarball"
 # create tar and gzip it
 popd
 tar -cz $RELEASEDIR > ${RELEASEDIR}.tar.gz

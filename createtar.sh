@@ -104,6 +104,8 @@ cat services/enrichment/updatedb.sh | sed "s/@@ENRICHMENT_JAR@@/${ENRICHMENT_JAR
 mv services/enrichment/updatedb.tmp services/enrichment/updatedb.sh
 cat services/enrichment/run.sh | sed "s/@@ENRICHMENT_JAR@@/${ENRICHMENT_JAR}/g" > services/enrichment/run.tmp
 mv services/enrichment/run.tmp services/enrichment/run.sh
+chmod a+x services/enrichment/run.sh
+chmod a+x services/enrichment/updatedb.sh
 mkdir -p services/enrichment/tasks
 mkdir -p services/enrichment/logs
 

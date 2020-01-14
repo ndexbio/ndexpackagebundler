@@ -8,6 +8,9 @@ VERSION=`egrep "^tarballversion=" versions.config | sed "s/^.*= *//"`
 
 RELEASEDIR="ndex-${VERSION}"
 
+TOMCAT_VERSION=`egrep "^tomcatversion=" versions.config | sed "s/^.*= *//"`
+SOLR_VERSION=`egrep "^solrversion=" versions.config | sed "s/^.*= *//"`
+
 echo "Creating directory"
 mkdir -p dist
 rm -rf dist/$RELEASEDIR
@@ -15,7 +18,6 @@ rm -rf dist/$RELEASEDIR
 
 pushd dist/
 
-TOMCAT_VERSION="8.5.35"
 TOMCAT_DOWNLOADED="tomcat.${TOMCAT_VERSION}.downloaded"
 if [ ! -e ${TOMCAT_DOWNLOADED} ] ; then
    echo "Downloading Tomcat $TOMCAT_VERSION"
@@ -29,7 +31,6 @@ else
    echo "${TOMCAT_DOWNLOADED} file exists, assuming tomcat downloaded"
 fi 
 
-SOLR_VERSION="8.1.1"
 SOLR_DOWNLOADED="solr.${SOLR_VERSION}.downloaded"
 if [ ! -e ${SOLR_DOWNLOADED} ] ; then
    echo "Downloading Solr $SOLR_VERSION"

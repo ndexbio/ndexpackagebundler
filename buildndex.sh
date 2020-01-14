@@ -31,6 +31,7 @@ else
    IBRANCH="--branch=v${IQUERYVERSION}"
 fi
 
+mkdir -p dist/
 pushd dist/
 rm -rf buildndex
 mkdir buildndex

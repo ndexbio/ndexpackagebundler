@@ -71,6 +71,8 @@ tar -zxf ../solr-${SOLR_VERSION}.tgz
 
 /bin/cp ../interactomeSearch-*.jar services/interactome/.
 
+/bin/cp ../ndex-enrichment-rest-*-jar-with-dependencies.jar services/enrichment/.
+
 QUERY_JAR_WITH_PATH=`find query_engine/ -name "NDExQuery-*.jar" -type f`
 QUERY_JAR=`basename $QUERY_JAR_WITH_PATH`
 cat query_engine/run.sh | sed "s/@@NDEX_QUERY_JAR@@/${QUERY_JAR}/g" > query_engine/run.tmp
@@ -91,6 +93,12 @@ mkdir -p services/interactome/logs
 mkdir -p services/interactome/task
 
 # configure enrichment
+ENRICHMENT_JAR_WITH_PATH=`find services/enrichment/ -name "ndex-enrichment-rest-*-jar-with-dependencies.jar" -type f`
+ENRICHMENT_JAR=`basename $ENRICHMENT_JAR_WITH_PATH`
+cat services/enrichment/updatedb.sh | sed "s/@@ENRICHMENT_JAR@@/${ENRICHMENT_JAR}/g" > services/enrichment/updatedb.tmp
+mv services/enrichment/updatedb.tmp services/enrichment/updatedb.sh
+cat services/enrichment/run.sh | sed "s/@@ENRICHMENT_JAR@@/${ENRICHMENT_JAR}/g" > services/enrichment/run.tmp
+mv services/enrichment/run.tmp services/enrichment/run.sh
 mkdir -p services/enrichment/tasks
 mkdir -p services/enrichment/logs
 

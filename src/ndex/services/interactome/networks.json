@@ -1,11 +1,9 @@
 {
-        "associationNetworks": [
- {"uuid":"ENTER UUID HERE EXAMPLE: 00a02dfc-a823-11e9-a5da-0660b7976219"},
- {"uuid":"XXXX"}
-                ],
-        "ppiNetworks": [
- {"uuid":"XXXX"},
- {"uuid":"XXXX"}
-        ]
+  "associationNetworks": [
+                          {"uuid":"<UUID>"}
+                         ],
+  "ppiNetworks": [
+                  {"uuid":"<UUID>"}
+                 ]
 }
 

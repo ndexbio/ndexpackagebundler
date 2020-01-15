@@ -121,10 +121,20 @@ chmod a+x services/search/run.sh
 mkdir -p services/search/logs
 mkdir -p services/search/tasks
 
-echo "Creating tarball"
 # create tar and gzip it
 popd
+
 pushd $RELEASEDIR
+echo "Generating documentation"
+
+for Y in `find ../../src/docs -name "*.rst" -type f` ; do 
+   rstfilename=`basename $Y`
+   pdffilename=`echo $rstfilename | sed "s/\.rst$/\.pdf/"`
+   echo "Running rst2pdf $Y $pdffilename" 
+   rst2pdf $Y $pdffilename
+done
+
+echo "Creating tarball"
 tar -cz $TARDIR > ${TARDIR}.tar.gz
 /bin/rm -rf $TARDIR
 

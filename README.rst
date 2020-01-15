@@ -38,8 +38,8 @@ recognize 6.1 of virtualbox. This can be fixed with the solution
 documented here:
 https://github.com/oracle/vagrant-boxes/issues/178#issue-536720633
 
-Building
-========
+Building directly on machine
+==============================
 
 .. code:: bash
 
@@ -47,3 +47,14 @@ Building
    cd ndexpackagebundler
    make dist
 
+Building via Vagrant
+==========================
+
+.. code:: bash
+
+   git clone https://github.com/idekerlab/ndexpackagebundler.git
+   cd ndexpackagebundler
+   vagrant up
+   vagrant ssh
+   cd /vagrant
+   make dist

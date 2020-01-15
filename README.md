@@ -19,6 +19,7 @@ tar for external groups running NDEx. This tool is driven by a `Makefile`
 
 * wget
 
+* rst2pdf
 
 ### For other operating systems
 

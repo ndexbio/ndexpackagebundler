@@ -1,0 +1,19 @@
+{
+    "mainContent" : [
+        {
+            "title":    "Quick Start Guide",
+            "content":  "doc1.html",
+            "href":     "http://www.home.ndexbio.org/quick-start/"
+        },
+        {
+            "title":   "Publishing in NDEx",
+            "content": "publishing_in_ndex.html",
+            "href":    "http://www.home.ndexbio.org/publishing-in-ndex/"
+        },
+        {
+            "title":    "Best Practices<br> for Developers",
+            "content":  "best_practices.html",
+            "href":     "http://www.home.ndexbio.org/readme-developers-best-practices/"
+        }
+    ]
+}

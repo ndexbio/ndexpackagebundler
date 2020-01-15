@@ -1,0 +1,130 @@
+{
+    "items" : [
+
+{
+            "type": "network",
+            "UUID": "8390acc9-07f5-11ea-bb65-0ac135e8bacf",
+            "title": "GeneHancer Associations"
+        },
+
+{
+            "type": "user",
+            "UUID": "301a91c6-a37b-11e4-bda0-000c29202374",
+            "title": "NCI - Pathway Interaction Database (PID)"
+        },
+
+{		 "type": "user",
+            "UUID": "363f49e0-4cf0-11e9-9f06-0ac135e8bacf",
+            "title": "WikiPathways - Approved Human Pathways Collection & Cancer Hallmark Networks"
+        },
+
+{
+            "type": "user",
+            "UUID": "91f585ec-83ef-11e9-848d-0ac135e8bacf",
+            "title": "ProteomeHD - Complete and Top 0.5% Co-Regulated Human Proteins Networks"
+        },
+
+{
+            "type": "user",
+            "UUID": "df813eda-7e7a-11e9-848d-0ac135e8bacf",
+            "title": "Human Protein Atlas - Tissue, Cell and Pathology Atlas"
+        },
+
+{
+            "type": "user",
+            "UUID": "004c1b68-7e72-11e9-848d-0ac135e8bacf",
+            "title": "ACSN 2.0 - PPI Master Map"
+        },
+
+{
+            "type": "user",
+            "UUID": "07e3af33-c69b-11e4-bcc4-000c29cb28fb",
+            "title": "Comparative Toxicogenomics Database (CTD)"
+        },
+{
+            "type": "network",
+            "UUID": "89dd3925-3718-11e9-9f06-0ac135e8bacf",
+            "title": "HIPPIE v2.2 - Human Scored Interactions"
+        },
+
+{
+            "type": "networkSet",
+            "UUID": "9ad6b8a6-355b-11e9-9f06-0ac135e8bacf",
+            "title": "HumanNet v2 - Integrated Networks"
+        },
+{
+            "type":     "user",
+            "UUID":     "77520e6b-816b-11e8-a4bf-0ac135e8bacf",
+            "title": "CIViC - Clinical Evidence Summaries"
+        },
+
+{
+            "type": "networkSet",
+            "UUID": "00289894-2025-11e9-bb6a-0ac135e8bacf",
+            "title": "SMPDB 2.0 - 22 Drug Action Pathways Related to Cancer"
+        },
+
+
+{
+            "type":     "user",
+            "UUID":     "0edf268f-df15-11e4-951c-000c29cb28fb",
+            "title": "BioGRID Interactions for 10 Species"
+        },
+
+        {
+            "type":     "user",
+            "UUID":     "0db1f2dc-103f-11e8-b939-0ac135e8bacf",
+            "title": "Signor 2.0 - Manually-curated Signalling Pathways"
+        },
+
+        {
+            "type":     "user",
+            "UUID":     "aed0a36f-39db-11e8-8695-0ac135e8bacf",
+            "title": "STRING - Complete and High-Confidence Interactions"
+        },
+        {
+            "type":     "user",
+            "UUID":     "877a8867-6f63-11e8-a4bf-0ac135e8bacf",
+            "title": "Califano Lab - ARACNe Regulons from TCGA Data"
+        },
+   
+        {
+            "type": "user",
+            "UUID": "18d09450-0e3b-11e5-ac0f-000c29cb28fb",
+	    "title": "DrugBank Database"
+
+        },
+
+
+        {
+            "type": "networkSet",
+            "UUID": "b4e620b5-2beb-11e9-9f06-0ac135e8bacf",
+            "title": "DisGeNET v6.0: Gene-Disease and Variant-Disease Associations"
+        },
+
+         {
+            "type": "network",
+            "UUID": "6816114d-669b-11e7-a03e-0ac135e8bacf",
+            "title": "CCSB HI-II-14: ~14,000 Interactions"
+        },
+        
+	   {
+            "type": "network",
+            "UUID": "67f6a26a-669b-11e7-a03e-0ac135e8bacf",
+            "title": "CCSB Edgotyping Data: Interaction Profiles of Disease and non-Disease Alleles."
+        },
+
+{
+            "type": "network",
+            "UUID": "682f65af-669b-11e7-a03e-0ac135e8bacf",
+            "title": "CCSB Lit-BM-13: High-Quality Recurated Literature Binary Interactions"
+        },
+
+{
+            "type": "networkSet",
+            "UUID": "e8ebbdde-86dc-11e7-a10d-0ac135e8bacf",
+            "title": "Human Genome Wide Network Compendium - 25 Networks"
+        }
+    ]
+}
+

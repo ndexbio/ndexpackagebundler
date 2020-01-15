@@ -1,0 +1,49 @@
+{
+    "logos": [
+        {
+            "image": "logos/ucsd_logo_alt.png",
+            "title": "University of California, San Diego",
+            "href" : "http://ucsd.edu/"
+        },
+        {
+            "image": "logos/cytoscape_logo.png",
+            "title": "Cytoscape Consortium",
+            "href" : "http://www.cytoscape.org/"
+        },
+        {
+            "image": "logos/scientificdata_logo.png",
+            "title": "Scientific Data - Official Recommended  Repository",
+            "href" : "https://www.nature.com/sdata/"
+        },
+        {
+            "image": "logos/pfizer_logo.png",
+            "title": "Visit Our Website",
+            "href" : "https://www.pfizer.com/"
+        },
+        {
+            "image": "logos/janssen_logo.png",
+            "title": "Visit Janssen R&D",
+            "href" : "https://www.janssen.com/"
+        },
+        {
+            "image": "logos/roche_logo.png",
+            "title": "Explore Roche Website",
+            "href" : "http://www.roche.com/"
+        },
+        {
+            "image": "logos/nrnb_logo.png",
+            "title": "National Resource for Network Biology",
+            "href" : "http://nrnb.org/"
+        },
+        {
+            "image": "logos/cyjs_logo.png",
+            "title": "Graph theory / network library for analysis and visualisation",
+            "href" : "http://js.cytoscape.org/"
+        },
+        {
+            "image": "logos/plos_logox90.png",
+            "title": "Public Library of Science",
+            "href" : "https://www.plos.org/"
+        }
+    ]
+}

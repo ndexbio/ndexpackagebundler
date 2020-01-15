@@ -1,0 +1,46 @@
+{
+    "items" : [
+
+{
+            "type":  "network",
+            "UUID":  "8390acc9-07f5-11ea-bb65-0ac135e8bacf",
+            "imageURL": "https://genecards.org/Images/Companions/Logo_GH.png", 
+"title": "<b>GeneHancer Associations</b>",
+            "text":  " GeneHancer is a database of genome-wide enhancer-to-gene and promoter-to-gene associations, embedded in GeneCards."
+},
+
+{
+            "type": "user",
+            "UUID": "91f585ec-83ef-11e9-848d-0ac135e8bacf",
+            "imageURL": "https://www.proteomehd.net/static/images/logos/logo_1.png",            
+            "title": "<b>ProteomeHD</b>",
+            "text": "ProteomeHD is a database of protein abundance changes in response to biological perturbations, a data matrix for functional proteomics."        
+},
+
+{
+            "type": "webpage",
+            "imageURL": "https://psb.stanford.edu/images/nucleosome_psbweb.gif",
+            "URL": "https://psb.stanford.edu/",
+            "title": "<b>Pacific Symposium on Biocomputing (PSB) 2020</b>",
+            "text": "2020 marks the 25th anniversary of PSB. PSB 2020 will be held January 3-7, 2020 at the Fairmont Orchid on the Big Island of Hawaii."
+},
+
+{
+            "type": "publication",
+            "imageURL": "https://home.ndexbio.org/img/phdtop05.png",
+            "title": "<b>Co-regulation map of the human proteome enables identification of protein functions.</b>",
+            "text": "Full and Top 0.5% Scored Interactions available in NDEx in network format!",
+            "URL": "https://doi.org/10.1038/s41587-019-0298-5"
+        },
+
+{
+            "type": "webpage",
+            "imageURL": "https://apps.cytoscape.org/media/cyndex2/butler-new-copy.jpg.png",
+            "URL": "https://apps.cytoscape.org/apps/cyndex2",
+            "title": "<b>CyNDEx-2: Learn How to Use it!</b>",
+            "text": "CyNDEx-2 is a Core App starting from Cytoscape 3.6.1 and allows seamless integration between the NDEx Web App and Cytoscape desktop application."
+
+        }
+        
+    ]
+}

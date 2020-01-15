@@ -80,7 +80,9 @@ directory into the local install of NDEx and to create a networkset.
 
       .. code-block::
 
-         curl -X POST 'http://<LOCAL NDEX SERVER>:8291/enrichment/v1' -H "accept: application/json" -H "Content-Type: application/json" -d "{\"databaseList\":[\"ncipid\"],\"geneList\":[\"MAPK3\"]}"
+         curl -X POST 'http://<LOCAL NDEX SERVER>:8291/enrichment/v1' \
+           -H "accept: application/json" -H "Content-Type: application/json" \
+           -d "{\"databaseList\":[\"ncipid\"],\"geneList\":[\"MAPK3\"]}"
 
       The above command should output this text:
 
@@ -101,7 +103,45 @@ directory into the local install of NDEx and to create a networkset.
 
       .. code-block::
 
-         {"results":[{"databaseName":"ncipid","percentOverlap":100,"similarity":0.11372836504588321,"hitGenes":["MAPK3"],"networkUUID":"6a5d5aa8-3722-11ea-af96-080027d9a524","nodes":45,"edges":185,"pValue":0.0,"rank":0,"description":"EPHB forward signaling","url":"localhost/#/network/6a5d5aa8-3722-11ea-af96-080027d9a524","imageURL":"http://www.home.ndexbio.org/img/pid-logo-ndex.jpg","databaseUUID":"e508cf31-79af-463e-b8b6-ff34c87e1734","totalNetworkCount":7},{"databaseName":"ncipid","percentOverlap":100,"similarity":0.19961372582859194,"hitGenes":["MAPK3"],"networkUUID":"6a42cdc0-3722-11ea-af96-080027d9a524","nodes":16,"edges":32,"pValue":0.0,"rank":1,"description":"Ras signaling in the CD4 TCR pathway","url":"localhost/#/network/6a42cdc0-3722-11ea-af96-080027d9a524","imageURL":"http://www.home.ndexbio.org/img/pid-logo-ndex.jpg","databaseUUID":"e508cf31-79af-463e-b8b6-ff34c87e1734","totalNetworkCount":7}],"numberOfHits":2,"start":0,"size":0,"startTime":1579043453735,"message":null,"status":"complete","progress":100,"wallTime":140}
+         {"results":[
+                     {
+                      "databaseName":"ncipid",
+                      "percentOverlap":100,
+                      "similarity":0.11372836504588321,
+                      "hitGenes":["MAPK3"],
+                      "networkUUID":"6a5d5aa8-3722-11ea-af96-080027d9a524",
+                      "nodes":45,
+                      "edges":185,
+                      "pValue":0.0,
+                      "rank":0,
+                      "description":"EPHB forward signaling",
+                      "url":"localhost/#/network/6a5d5aa8-3722-11ea-af96-080027d9a524",
+                      "imageURL":"http://www.home.ndexbio.org/img/pid-logo-ndex.jpg",
+                      "databaseUUID":"e508cf31-79af-463e-b8b6-ff34c87e1734",
+                      "totalNetworkCount":7
+                     },
+                     {
+                      "databaseName":"ncipid",
+                      "percentOverlap":100,
+                      "similarity":0.19961372582859194,
+                      "hitGenes":["MAPK3"],
+                      "networkUUID":"6a42cdc0-3722-11ea-af96-080027d9a524",
+                      "nodes":16,
+                      "edges":32,
+                      "pValue":0.0,
+                      .
+                      .
+                     }
+                    ],
+          "numberOfHits":2,
+          "start":0,
+          "size":0,
+          "startTime":1579043453735,
+          "message":null,
+          "status":"complete",
+          "progress":100,
+          "wallTime":140
+         }
 
 #. Stop Enrichment Service
 

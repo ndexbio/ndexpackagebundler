@@ -1,0 +1,982 @@
+1. NDEx Installation Instructions
+
+*Last updated: Jan 13* *9, 20209*
+
+**Step 1 – SYSTEM SETUP**
+
+1a) Make sure **Java 8** or Java 11 is installed in your system. 1b)
+Install Apache HTTP server (Version 2.4).
+
+1c) Install PostgreSQL server (version 9.5). The postgreSQL server can
+be installed on the same machine when you run NDEx server, or can be
+installed on a separate machine.
+
+1d) Install Python if it is not already installed on your server. NDEx
+v2.4.4 requires Python 2.7. The default NDEx installation requires
+Python interpreter at /usr/bin/python. You also need to install these
+Python modules: **gevent, gevent_websocket, bottle, pysolr**.
+
+1e) Create the ndex user account
+
+   # -M, --no-create-home do not create the user's home directory
+
+   # -r, --system create a system account
+
+   # -s, --shell SHELL login shell of the new account (/bin/false = no
+   login)
+
+   # -U, --user-group create a group with the same name as the user
+
+   sudo useradd -M -r -s /bin/false -U ndex
+
+**\**\* IMPORTANT NOTE \*\***\ \*
+
+In the following instructions, the ndex account is used to run tomcat
+server (and thereby the NDEx REST server) and all files are configured
+with the ndex user as owner.The tomcat7 start and stop scripts
+automatically use the ndex user. In all other situations, **it is
+necessary** to assume the role of the ndex user with “sudo su – ndex“.
+
+**Step 2 – DOWNLOAD SOFTWARE**
+
+**2a) Installing NDEx software**
+
+The NDEx bundle is a compressed archive and can be downloaded from our
+**FTP server**: ftp://ftp.ndexbio.org .
+
+2aa) Obtain the latest NDEx bundle from ftp.ndexbio.org. In this
+example, we use the **NDEx_Bundle_V2.4.4.tar** archive. The archive can
+be downloaded from the command line with wget:
+
+   cd /opt
+
+   sudo wget ftp://ftp.ndexbio.org/NDEx-v2.4.4/NDEx_Bundle_V2.4.4.tar
+
+2ab) Extract the downloaded archive to /opt
+
+   sudo tar xvf NDEx_Bundle_V2.4.4.tar
+
+2ac) You will see 2 more files: one for NDEx-Sync and one for the NDEx
+Server. Now extract the **ndex-2.4.4.tar.gz** archive using the commands
+below:
+
+   cd /opt
+
+   sudo gzip -d ndex-2.4.4.tar.gz
+
+   sudo tar xvf ndex-2.4.4.tar
+
+   sudo chown -R ndex:ndex ndex
+
+The archive will be extracted to the ndex directory regardless of the
+version you have downloaded. Symbolic links to Tomcat and Solr will also
+be created automatically. The last command line is required to change
+ownership of the newly created ndex directory.
+
+After extraction has completed, the directory should look like:
+
+   /opt
+
+   /ndex
+
+   /apache-tomcat-x.x.xx
+
+   /bin
+
+   /conf
+
+   /data
+
+   /importer_exporter
+
+   /query_engine
+
+   /services
+
+   /dbbackups
+
+   /exported-networks
+
+   /ndex-webapp
+
+   /ndex-webapp-ssh
+
+   /resources
+
+   /solr -> solr-8.1.1
+
+   /solr-8.1.1
+
+   /tomcat -> apache-tomcat-x.x.xx
+
+   /uploaded-networks
+
+   /workspace
+
+**2b) Installing Miniconda**
+
+**Some of the exporters in NDEx require Python 3+. The following steps
+install** **Miniconda**
+
+**Into /opt/ndex/miniconda3 directory. This special installation of
+Python is used by NDEx**
+
+**2ba) Download Miniconda to the temp directory and update the script to
+be executable.**
+
+**Note: Optionally the downloaded script can be verified by comparing
+checksums available on the** **Miniconda site.**
+
+**pushd /tmp**
+
+**wget
+https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh**
+
+**chmod a+x Miniconda3-latest-Linux-x86_64.sh**
+
+**2bb) Become the ndex user using su or sudo as seen below**
+
+   **sudo -u ndex /bin/bash**
+
+**2bc) Run the downloaded Miniconda script and accept the license (to
+avoid the prompt and accept license automatically add -b to command
+below.**
+
+**# become ndex user can do su or sudo as below**
+
+**sudo -u ndex /bin/bash**
+
+**./Miniconda3-latest-Linux-x86_64.sh -p /opt/ndex/miniconda3**
+
+**2bd) Still as the ndex user update the PATH so Miniconda’s Python is
+used.**
+
+**# Update path so Miniconda’s python is used**
+
+**export PATH=/opt/ndex/miniconda3/bin:$PATH**
+
+**which python**
+
+**# above should output /opt/ndex/miniconda3/bin/python**
+
+**2be) As ndex user Install** **ndex_webapp_python_exporters**
+
+**pip install ndex_webapp_python_exporters**
+
+**# verify installation by running this**
+
+**ndex_exporters.py --version**
+
+**# above should output ndex_exporters.py 0.1.1**
+
+**2bf) Be sure to remove /tmp/Miniconda3-latest-Linux-x86_64.sh when
+done**
+
+**Step 3 – CONFIGURATION**
+
+**3a) Configuring the Apache web server**
+
+The Apache web server must be configured to:
+
+-  Serve the NDEx website
+
+-  Make the NDEx REST server, running as a Tomcat webapp, available at a
+      standard, convenient URL (this is done by establishing a reverse
+      proxy, an “alias” for the NDEx server’s address)
+
+Details:
+
+-  The Tomcat main page is served at host:8080
+
+-  Tomcat makes the REST server webapp available at
+      host:8080/ndexbio-rest.
+
+-  In the typical configuration, the ndex web ui is served by Apache on
+      the same server
+
+-  The document root is changed to /opt/ndex/ndex-webapp (the files in
+      /opt/ndex/ndex-webapp are from the project ndex-webapp)
+
+-  To conveniently use the REST server from the ndex web ui we setup a
+      proxy so that it will be available as a “folder” of the website.
+
+-  For example, if the website is deployed at **www.ndexbio.org**, the
+      REST server will be at
+      `www.ndexbio.org/ <http://www.ndexbio.org/rest>`__\ **\ v2**
+
+The configuration is accomplished by adding an additional configuration
+file that Apache will read after loading its main configuration. This
+file must be added to the Apache installation. The location of the file
+depends on the version of Unix that is being used.
+
+| Apache may also require the following to be executed in order to
+  properly parse the config:
+| sudo a2enmod proxy_http
+| sudo a2enmod headers
+
+**CentOS**
+
+In CentOS (and RedHat), changes to the Apache server configuration are
+accomplished by adding a new config file called **ndex.conf** under the
+**/etc/httpd/conf.d** directory. A typical setting in the ndex.conf file
+would be like this:
+
+   <IFModule reqtimeout_module>
+
+   RequestReadTimeout header=60,minrate=200 body=60,minrate=200
+
+   </IFModule>
+
+   <VirtualHost \*:80>
+
+   ServerAdmin support@ndexbio.org
+
+   DocumentRoot /opt/ndex/ndex-webapp
+
+   <Directory />
+
+   Options FollowSymLinks
+
+   AllowOverride None
+
+   </Directory>
+
+   <Directory /opt/ndex/ndex-webapp>
+
+   Options Indexes FollowSymLinks MultiViews
+
+   AllowOverride None
+
+   Order allow,deny
+
+   allow from all
+
+   </Directory>
+
+   <FilesMatch "\.(?i:xgmml|xbel)$">
+
+   Header set Content-Disposition attachment
+
+   </FilesMatch>
+
+   ProxyPass /rest/ http://localhost:8080/ndexbio-rest/
+
+   ProxyPassReverse /rest/ http://localhost:8080/ndexbio-rest/
+
+   ProxyPass /v2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
+
+   ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
+
+   ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
+
+   ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
+
+   </VirtualHost>
+
+**Ubuntu**
+
+In Ubuntu, changes to the Apache server configuration are accomplished
+by adding a new config file **ndex.conf** under the
+/etc/apache2/sites-enabled directory. A typical setting in the ndex.conf
+file would be like this:
+
+   <IFModule reqtimeout_module>
+
+   RequestReadTimeout header=60,minrate=200 body=60,minrate=200
+
+   </IFModule>
+
+   <VirtualHost \*:80>
+
+   ServerAdmin support@ndexbio.org
+
+   DocumentRoot /opt/ndex/ndex-webapp
+
+   <Directory />
+
+   Options FollowSymLinks
+
+   AllowOverride None
+
+   </Directory>
+
+   <Directory /opt/ndex/ndex-webapp>
+
+   Options Indexes FollowSymLinks MultiViews
+
+   AllowOverride None
+
+   Require all granted
+
+   </Directory>
+
+   <FilesMatch "\.(?i:xgmml|xbel)$">
+
+   Header set Content-Disposition attachment
+
+   </FilesMatch>
+
+   ProxyPass /rest/ http://localhost:8080/ndexbio-rest/ timeout=3000
+
+   ProxyPassReverse /rest/ http://localhost:8080/ndexbio-rest/
+
+   ProxyPass /v2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
+
+   ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
+
+   ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
+
+   ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
+
+   ProxyPass /tempcx/ http://localhost:8286/tempfile/v1/ timeout=3000
+
+   ProxyPassReverse /tempcx/ http://localhost:8286/tempfile/v1/
+
+   ProxyPass /#/newNetwork/ http://localhost:80/#/network/ timeout=3000
+
+   ProxyPassReverse /#/newNetwork/ http://localhost:80/#/network/
+
+   </VirtualHost>
+
+**3b) Initialize the PostgreSQL database**
+
+The NDEx 2.0 server uses PostgreSQL server as a backend database. The
+PostgreSQL database needs to be initialized and started before you start
+the NDEx 2.0 server. You can use this command to create a user and a
+database in your PostgreSQL server:
+
+-bash-4.2$ psql
+
+psql (9.5.4)
+
+Type "help" for help.
+
+postgres=#
+
+create role ndexserver LOGIN password 'my_password' NOSUPERUSER INHERIT
+NOCREATEDB NOCREATEROLE NOREPLICATION;
+
+ALTER ROLE ndexserver
+
+SET search_path = core, "$user", public;
+
+CREATE DATABASE ndex
+
+WITH OWNER = ndexserver
+
+ENCODING = 'UTF8'
+
+TABLESPACE = pg_default
+
+LC_COLLATE = 'en_US.UTF-8'
+
+LC_CTYPE = 'en_US.UTF-8'
+
+CONNECTION LIMIT = -1;
+
+\\q
+
+After the database and user are created. You can create the schema using
+the file scripts/ndex_db_schema.sql. The command can be something like
+this:
+
+-bash-4.2$ psql ndex <~/ndex_db_schema.sql
+
+**Note:** You might need to modify the pg_hba.conf file to allow
+connections from NDEx server. For example, you can add the following
+line to allow the ndexserver user to connect from the same server where
+the Postgres server is installed.
+
+local ndex ndexserver md5
+
+**3c) Changing NDEx server properties**
+
+The NDEx server configuration file is called **ndex.properties** and can
+be found under directory /opt/ndex/conf.
+
+**!!! The default values of the following properties should never be
+modified !!!**
+
+   NdexSystemUser=ndexadministrator
+
+   NdexSystemUserPassword=admin888
+
+   NdexSystemUserEmail=support2@ndexbio.org
+
+**1)** Change the **HostURI property**. You need to set its value to the
+host name of your machine with the http prefix.
+
+For example, if you are installing NDEx to a machine named
+*myserver.somedomain.com*, the HostURI value should be set to:
+*HostURI=http://myserver.somedomain.com*
+
+**2)** The **SMPT-XXXX** properties need to be updated only if you want
+to allow users to update their passwords.
+
+**3)** To enable **LDAP Server Authentication**, you will need to edit
+the ndex.properties configurationfollowing properties:
+
+USE_AD_AUTHENTICATION= This should be set to “true” if you want to turn
+on LDAP authentication. Default value is *false*.
+
+AD_USE_SSL= Set to true if you want to use SSL with LDAP. Default value
+is *false*.
+
+PROP_LDAP_URL= This property specifies the URL of your LDAP server. For
+example, it can be\ *ldap:/dir.mycompany.com:389* for non-secured server
+or *ldaps://dir.mycompany.com:636* for secured server.
+
+AUTHENTICATED_USER_ONLY= The NDEx server will run in “Authenticated user
+only” mode when this value is set to true. In this mode, all API
+functions require user authentication except: */admin/status*,
+*/user/authenticate* and *create user*. Default value is *false*.
+
+KEYSTORE_PATH= This is the path of Java keystore in your JVM. This value
+is required when “AD_USE_SSL” is set to true.
+
+JAVA_KEYSTORE_PASSWD= The password of your Java keystore if you have a
+password setup for it.
+
+AD_CTX_PRINCIPLE= The string pattern to use when setting the
+SECURITY_PRINCIPAL context in the LDAP authentication. For example, if
+you set this value to “NA\\%%USER_NAME%%”, the server will append string
+“NA\\” to your user name and use it to set the Context.
+SECURITY_PRINCIPAL value in the LDAP search. %%USER_NAME%%” is a
+reserved word in NDEX LDAP setting, it will be replaced by the user’s
+user name in LDAP queries.
+
+AD_SEARCH_FILTER= The string pattern to be used in the LDAP search. For
+example it can be something like:
+‪\ *(&(objectclass=user)(cn=%USER_NAME%%)).*
+
+AD_SEARCH_BASE= (Optional) This property defines the search base
+parameters: for example, if you want to search in the domain
+*my.company1.com,* you can define the property as:
+AD_SEARCH_BASE=DC=my,DC=company,DC=com. If you don’t define this
+property, no search base will be used in the LDAP authentication.
+
+AD_NDEX= (Optional) If this property is defined, only the users in the
+declared group will be allowed to create accounts and use the NDEx
+server.
+
+AD_DELEGATED_ACCOUNT= (Optional) In some use cases. The authentication
+has 2 steps. 1) Using a generic account to connect to LDAP server and
+run a query on the LDAP server on the accountName to get a fully
+qualified name of that user. 2) Use the fully qualified name to
+authenticate the user. The username and password of the generic account
+can be defined in this parameter and AD_DELEGATED_ACCOUNT_PASSWORD
+property\ **.** No generic account is used if this parameter is not
+defined.
+
+When this parameter is defined, AD_DELEGATED_ACCOUNT_PASSWORD becomes a
+required parameter.
+
+AD_DELEGATED_ACCOUNT_PASSWORD= (Optional) Required when
+AD_DELEGATED_ACCOUNT is defined.
+
+AD_CREATE_USER_AUTOMATICALLY= If AD authentication is turned on and this
+parameter is set to true, when a user logs in successfully for the first
+time using LDAP, the NDEx server will automatically create an NDEx
+account for that user. The NDEx server uses this user’s “givenName”,
+“sn” and “mail” attributes in the AD record as his firstName, lastName
+and emailAddress when creating the NDEx account.
+
+AD_CTX_PRINCIPLE2= (Optional) The NDEx administrator can set this
+parameter in ndex.properties to enable the use of a second domain to
+search in the LDAP server.
+
+AD_AUTH_USE_CACHE= (Optional) If the this property is set to true, The
+server will cache last 100 active users login info in memory for up-to
+10 minutes. Turning on the cache will reduce the load on your AD server,
+because every NDEx REST API call which requires authentication will send
+a request to you AD server. If your AD server throttles the requests,
+then it is necessary to turn the cache on.
+
+**4)** The **Log-Level** parameter controls how much log information is
+written to the *ndex.log* file located in the */opt/ndex/tomcat/logs*
+directory\ *.* Possible values are **info**, **error**, **debug** and
+**off**. The default value is **info**: in this mode, a log entry is
+created at the beginning and end of every API call on the server that
+also includes the error (exception) information. Setting Log-Level to
+**error** will only log exceptions. To disable logging, set Log-Level to
+**off**. IMPORTANT: after changing the Log-Level value, you need to
+restart your server for the new setting to take effect.
+
+**5) NeighborhoodQueryURL** The Root URL of the Neighborhood Query
+Endpoint. The default value is http://localhost:8284/query/v1/network/.
+
+**6)** The NDEx v2.0 Server supports email verification upon account
+creation. The configuration parameter is **VERIFY_NEWUSER_BY_EMAIL**.
+The default value is *false*. When it is set to *true*, new accounts
+created on the server will be required to verify the email address used
+for registration. The createUser function has been modified to implement
+the first part of this feature. When user creates an account and the
+server requires email verification, the object returned from this
+function will not have a UUID value for the user, and the server will
+send a verification email to the user.
+
+| Verification email example:
+| Dear <First name Last name>
+| Thank you for registering an NDEx account.
+| Please click the link below to confirm your email address and start
+  using NDEx now! You can also copy and paste the link in a new browser
+  window.
+| >>LINK HERE>>
+| This is an automated message, please do not respond to this email. If
+  you need help, contact us by emailing: support@ndexbio.org
+| Best Regards,
+| The NDEx team
+
+A new rest API function implements the acceptance of the verification
+code and activation of the account.
+
+| @GET
+| @PermitAll
+| @Path("/{userId}/verify/{verificationCode}")
+| The NDEx Web UI has been modified to redirect the new user to a
+  verification page instead of their homepage, if verification is
+  enabled. On that page the user will be informed to check his email and
+  click the link in the confirmation email to validate his address. The
+  link will make an API call to perform the verification; if the
+  verification succeeds, the API will return a User object and the new
+  user (with an activated account) will now be able to login to his
+  newly created NDEx account.
+
+7) Configure the connection parameter to PostgreSQL database. These 3
+parameters need to be set in the configuration file:
+
+NdexDBURL=jdbc:postgresql://localhost:5432/ndex
+
+NdexDBUsername=ndexserver
+
+NdexDBDBPassword=ndex
+
+8) Set these parameters if you want to enable the Google OAuth feature
+on the server:
+
+USE_GOOGLE_AUTHENTICATION=true
+
+   GOOGLE_OAUTH_CLIENT_ID=xxxxx.apps.googleusercontent.com
+
+You can get a Google OAUTH Client Id by registering your server with a
+Google developer account at http://console.developers.google.com/ .
+
+9) USER_STORAGE_LIMIT Its value is a float which sets the default disk
+quota for each user on this server. The unit is GB. 10.5 means each user
+on this server has 10.5G to store network data.
+
+10) SolrURL The URL of Solr REST endpoint. The default value is
+http://localhost:8983/solr
+
+**3d) Changing NDEx web app properties**
+
+**Starting with release 2.4.0, configuration of NDEx Web Application
+(Web App) has been split into two parts:**
+
+1. ndex-webapp-config.js under directory /opt/ndex/ndex-webapp
+      contains definition of some constants required for network
+      querying, account refreshing, scroll interval for featured
+      collections, location of home page configuration server, etc.,
+      and
+
+2. landing page configuration server (specified in
+      ndex-webapp-config.js) contains definition of Front (landing) page
+      of NDEx. Here you can adjust Home page appearance by configuring
+
+   a. **Top menu**
+
+   b. **Featured Content channel**
+
+   c. **Main Content channel**
+
+   d. **Logos channel, and**
+
+   e. **Footer.**
+
+**3d. 1) ndex-webapp-config.js**
+
+The NDEx web-app configuration file *ndex-webapp-config.js* is found in
+
+directory /opt/ndex/ndex-webapp. Here is a list of the properties that
+can be configured:
+
+linkToReleaseDocs It’s value is a URL which points to the release notes
+of this NDEx application. This parameter will allow users to go to a
+NDEx release notes page when clicking the version number at the upper
+left corner of the web app.
+
+When this parameter is not set, the version number will not be
+clickable.
+
+-  
+
+-  
+
+-  
+
+-  
+
+refreshIntervalInSeconds: Integer number specifying time interval in
+seconds for automatic reloading of My Account page for logged in users.
+Default value is 0 (no automatic reloading).
+
+ndexServerUri: Specifies the ndex server in use. Currently, NDEx only
+supports http protocol. Support of https will be added in future
+releases.
+
+idleTime: Specifies the amount of time (in seconds) after which the user
+is automatically logged out for inactivity. Default value is: *3600*
+
+uploadSizeLimit: Specifies the maximum file size (in Mb) that can be
+uploaded using the web UI. Default value is:*none,* that means there is
+no size limit.
+
+googleClientId: The Google Client Id of the NDEx server this webapp is
+connecting to.
+
+[STRIKEOUT:openInCytoscapeEdgeThresholdWarning: When opening a network
+in Cytoscaspe, users will be warned about possible performance issues if
+the network is larger than the threshold specified. Default value for
+this property is 100000.] [STRIKEOUT:-- described below]
+
+googleAnalyticsTrackingCode: Google Analytics tracking ID of your app.
+
+[STRIKEOUT:networkDisplayLimit]: - not used in WebApp
+
+[STRIKEOUT:networkQueryLimit]: - not used in WebApp
+(networkQueryEdgeLimit used instead, see b elow)
+
+networkQueryEdgeLimit - Maximum number of edges that the network query
+will return. This parameter is optional. If it is not specified in
+ndex-webapp-config.js, then it defaults to 50000. In case network query
+finds more than networkQueryEdgeLimit edges then a warning that query
+result cannot be displayed in browser is presented and
+
+1) anonymous user is prompted to login so that the query result could be
+      saved in her/his account,
+
+2) logged in user has the option of saving the query result to her/his
+      account.
+
+[STRIKEOUT:networkTableLimit]: - not used in WebApp
+
+openInCytoscapeEdgeThresholdWarning:- Networks with this number of edges
+will open in Cytoscape without warning. This parameter is optional. If
+it is not specified, NDEx Web Application will initialize it to 0,
+meaning that no warning will be issued when opening network in Cytoscape
+no matter how many edges the network has. If this parameter is
+specified, then a performance warning will be issued in case user
+attempts to open a network with edges more than the value specified by
+openInCytoscapeEdgeThresholdWarning.
+
+landingPageConfigServer: required parameter that specifies configuration
+server for NDEx Web Application front page. For NDEx Release 4.2.0,
+landingPageConfigServer is set to
+'http://staging.ndexbio.org/landing_page_content/v2_4_0/'.
+
+featuredContentScrollIntervalInMs: this parameter specifies how fast (in
+milliseconds) the items in Featured Content channel change. It is
+required if Featured Content channel is defined in featured.json config
+file on landingPageConfigServer. There is no default value for this
+parameter. It needs to be set manually.
+
+maxNetworksInSetToDisplay: The maximum number of networks the web app
+can display in a network set. If the number of networks in a set is more
+than the value of this parameter, the web app will display a message and
+won’t display the networks in this set. The default value of this
+parameter is 50,000.
+
+3d. 2) Landing Page Configuration Server
+
+The location of Landing Page Configuration Server is defined by
+landingPageConfigServer parameter in ndex-webapp-config.js. The
+following sections and channels of Landing page can be configured.All
+elements are required.-:
+
+a. | topmenu.json - The content of this file controls the navigation bar
+        at the top of the screen.The format of this file is:
+      | {
+
+..
+
+   "topMenu": [
+
+   {
+
+   "label": string,
+
+   "href": string,
+
+   "warning": string,
+
+   "showWarning": boolean
+
+   },
+
+   . . .
+
+   ]
+
+   }
+
+-  label defines the menu item label;
+
+-  href is link to that menu item;
+
+-  showWarning element is optional. If it is not defined, it defaults to
+      ‘false’ meaning that after clicking on the menu item no warning
+      will be issued prior to following that menu link.
+
+-  warning: in case showWarning argument is set to “true”, message
+      defined in the warning field will be shown and users will be asked
+      whether to follow the selected menu item or no.
+
+   a. | featured_networks.json - The content in this file populates the
+           drop down list of “Featured Networks” button. Its format is:
+         | {
+         | "items" : [
+
+..
+
+   {
+
+   "type": "user \| group \| networkSet \| network ",
+
+   "UUID": "UUID of user, group, networkSet or network",
+
+   "title": "Title of the item"
+
+   },
+
+   . . .
+
+   ] }
+
+b. | Featured_content.json - The content in this file populates the
+        Featured Content box in the landing page. Its format is:
+      | {
+
+..
+
+   "items" : [
+
+   {
+
+   "type": string,
+
+   "UUID": string,
+
+   "imageURL": string,
+
+   "URL": string,
+
+   "title": string,
+
+   "text": string
+
+   },
+
+   . . .
+
+   ]
+
+   }
+
+-  type has one of the values: user, group, networkSet, network,
+      webPage, publication;
+
+-  UUID is only used for types user, group, networkSet, network;
+
+-  imageURL specifies the URL of the image for this item.
+
+-  URL When the type is webPage or publication. This value specifies the
+      URL for that web page or publication.
+
+-  title specifies the title of this element.
+
+-  text is description of this element.
+
+   a. main.json- The content of this file specifies a list of html files
+         that can be used to populate the Main Channel of the landing
+         page. Each file will be displayed as a column in this channel.
+         NDEx web app supports up to 4 columns in this channel. The
+         format of this file is:
+
+..
+
+   {
+
+   "mainContent" : [
+
+   {
+
+   "title": string,
+
+   "content": string,
+
+   “href”: string
+
+   },
+
+   . . .
+
+   ]
+
+   }
+
+-  title - for documentation only. Not used in the display.
+
+-  content - file name of the html file
+
+-  href - (optional) The URL the web app should jump to when user click
+      the ‘Learn more…’ at the end of this column.
+
+   a. | logos.json - This file configures the logos channel above the
+           footer. Its format is:
+         | {
+
+..
+
+   "logos": [
+
+   {
+
+   "image": string,
+
+   "title": string,
+
+   "href" : string
+
+   },
+
+   . . .
+
+   ]
+
+   }
+
+-  image - relative path of the image files on this server from the
+      current directory.
+
+-  title - mouse over text for this logo image.
+
+-  href - The URL of the web page to display when the logo is clicked.
+
+   a. 
+
+footer.html - Configures the footer of the web app.
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  
+
+-  nal.
+
+-  
+
+-  
+
+-  
+
+**Note**: The following configuration parameters are no longer supported
+in this version: **NETWORK_POST_ELEMENT_LIMIT**
+
+**3e) Starting and stopping Apache**
+
+Now that you have finished configuring Apache, you may start it so that
+the front-end of your NDEx server runs. Overall, for your NDEx server to
+run properly, both Apache and Tomcat must be running.
+
+**CentOS**
+
+======= ===================================
+Start      sudo /sbin/service httpd start
+======= ===================================
+Stop       sudo /sbin/service httpd stop
+Restart    sudo /sbin/service httpd restart
+======= ===================================
+
+**Ubuntu**
+
+======= ===================================
+Start      sudo /etc/init.d/apache2 start
+======= ===================================
+Stop       sudo /etc/init.d/apache2 stop
+Restart    sudo /etc/init.d/apache2 restart
+======= ===================================
+
+**Step 4 – START THE NDEX-REST SERVER**
+
+**Note: M**\ ake sure you switch to user ndex before you start NDEx REST
+servers.
+
+**4a) Starting Solr**
+
+NDEx v2.0 has **Solr 8.1.1**\ as a component in the server bundle. The
+HEAP size is set to 1g in solr/bin/solr.in.sh in the bundle. You can
+modify it to a larger number to fully utilize the physical memory on
+your machine. The Solr service needs to be started before the NDEx
+Tomcat server is started. To start the Solr service, use the following
+commands (assuming that the NDEx bundle is installed under directory
+/opt/ndex):
+
+cd /opt/ndex/solr
+
+bin/solr start -m 32g
+
+**4b) Starting the Tomcat server**
+
+You can start and stop the service with its standard scripts under
+/opt/ndex/tomcat/bin
+
+   cd /opt/ndex/tomcat/bin
+
+   sudo su - ndex
+
+   bash startup.sh
+
+   bash shutdown.sh
+
+\**\* **NOTE**: if you are having any trouble getting Tomcat or NDEx
+configured, it’s a good idea to launch it “manually” without detaching
+so that you can see any errors:
+
+   sudo su - ndex
+
+   bash catalina.sh run
+
+**4c) Start the Query Service.**
+
+Go to the directory query_engine and run the script run.sh to start the
+neighborhood query engine.
+
+**4d) Proxy Issues**
+
+If after completing these steps the front-end of your NDEx server does
+not seem to be talking to the back-end, it may be because your security
+settings are preventing your proxy settings from going into effect. If
+you believe this may be the case, please see your local system
+administrator.
+
+**CONGRATULATIONS !!!** You have successfully installed the NDEx REST
+server and web application user interface.

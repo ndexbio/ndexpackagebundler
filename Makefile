@@ -20,7 +20,7 @@ clean: clean-dist ## remove everything
 	rm -fr dist/
 
 clean-dist: ## remove packaged distribution file
-	rm -fr dist/ndex-*
+	rm -fr dist/NDEx-v*
 
 dist: clean-dist ## builds package
 	@echo "Creating tar file"

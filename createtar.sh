@@ -6,7 +6,8 @@ SCRIPT_DIR=`pwd -P`
 
 VERSION=`egrep "^tarballversion=" versions.config | sed "s/^.*= *//"`
 
-RELEASEDIR="ndex-${VERSION}"
+RELEASEDIR="NDEx-v${VERSION}"
+TARDIR="ndex-${VERSION}"
 
 TOMCAT_VERSION=`egrep "^tomcatversion=" versions.config | sed "s/^.*= *//"`
 SOLR_VERSION=`egrep "^solrversion=" versions.config | sed "s/^.*= *//"`
@@ -14,7 +15,8 @@ SOLR_VERSION=`egrep "^solrversion=" versions.config | sed "s/^.*= *//"`
 echo "Creating directory"
 mkdir -p dist
 rm -rf dist/$RELEASEDIR
-/bin/cp -a src/ndex dist/$RELEASEDIR
+mkdir -p dist/$RELEASEDIR
+/bin/cp -a src/ndex dist/$RELEASEDIR/$TARDIR
 
 pushd dist/
 
@@ -44,10 +46,10 @@ else
    echo "${SOLR_DOWNLOADED} file exists, assuming solr downloaded"
 fi
 
-pushd $RELEASEDIR
+pushd $RELEASEDIR/$TARDIR
 
 echo "Decompressing tomcat"
-tar -zxf ../apache-tomcat-${TOMCAT_VERSION}.tar.gz
+tar -zxf ../../apache-tomcat-${TOMCAT_VERSION}.tar.gz
 /bin/ln -s apache-tomcat-${TOMCAT_VERSION} tomcat
 
 /bin/cp -f $SCRIPT_DIR/src/tomcat/server.xml tomcat/conf/.
@@ -57,23 +59,23 @@ mkdir -p tomcat/conf/Catalina/localhost
 /bin/cp -f $SCRIPT_DIR/src/tomcat/ndexbio-rest.xml tomcat/conf/Catalina/localhost/.
 
 echo "Decompressing solr"
-tar -zxf ../solr-${SOLR_VERSION}.tgz
+tar -zxf ../../solr-${SOLR_VERSION}.tgz
 /bin/ln -s solr-${SOLR_VERSION} solr
 
 # copy over configsets and solr.in.sh
 /bin/rm -rf solr/server/solr/configsets/*
-/bin/cp -a ../../src/solr/configsets/* solr/server/solr/configsets/.
-/bin/cp ../../src/solr/solr.in.sh solr/bin/.
+/bin/cp -a ../../../src/solr/configsets/* solr/server/solr/configsets/.
+/bin/cp ../../../src/solr/solr.in.sh solr/bin/.
 
 /bin/rm -rf tomcat/webapps/*
-/bin/cp ../ndexbio-rest.war tomcat/webapps/.
+/bin/cp ../../ndexbio-rest.war tomcat/webapps/.
 
-/bin/cp ../NDExQuery-*.jar query_engine/.
+/bin/cp ../../NDExQuery-*.jar query_engine/.
 
-/bin/cp ../interactomeSearch-*.jar services/interactome/.
+/bin/cp ../../interactomeSearch-*.jar services/interactome/.
 
-/bin/cp ../ndex-enrichment-rest-*-jar-with-dependencies.jar services/enrichment/.
-/bin/cp ../ndexsearch-rest-*-*jar-with-dependencies.jar services/search/.
+/bin/cp ../../ndex-enrichment-rest-*-jar-with-dependencies.jar services/enrichment/.
+/bin/cp ../../ndexsearch-rest-*-*jar-with-dependencies.jar services/search/.
 
 echo "Configuring query_engine"
 QUERY_JAR_WITH_PATH=`find query_engine/ -name "NDExQuery-*.jar" -type f`
@@ -122,4 +124,10 @@ mkdir -p services/search/tasks
 echo "Creating tarball"
 # create tar and gzip it
 popd
-tar -cz $RELEASEDIR > ${RELEASEDIR}.tar.gz
+pushd $RELEASEDIR
+tar -cz $TARDIR > ${TARDIR}.tar.gz
+/bin/rm -rf $TARDIR
+
+echo "NDEx bundle directory created successfully and can be found here: dist/$RELEASEDIR"
+echo ""
+echo "Have a nice day!"

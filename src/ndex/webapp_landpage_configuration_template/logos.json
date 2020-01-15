@@ -16,21 +16,6 @@
             "href" : "https://www.nature.com/sdata/"
         },
         {
-            "image": "logos/pfizer_logo.png",
-            "title": "Visit Our Website",
-            "href" : "https://www.pfizer.com/"
-        },
-        {
-            "image": "logos/janssen_logo.png",
-            "title": "Visit Janssen R&D",
-            "href" : "https://www.janssen.com/"
-        },
-        {
-            "image": "logos/roche_logo.png",
-            "title": "Explore Roche Website",
-            "href" : "http://www.roche.com/"
-        },
-        {
             "image": "logos/nrnb_logo.png",
             "title": "National Resource for Network Biology",
             "href" : "http://nrnb.org/"

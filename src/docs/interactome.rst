@@ -70,10 +70,10 @@ directory into the local install of NDEx and to create a networkset.
 
 #. Stop Interactome Service
 
-.. code-block::
+   .. code-block::
 
-   sudo -u ndex /bin/bash # become ndex user
-   ps -elf | grep interactome
-   kill <PID of java process for interactome output from previous step>
+       sudo -u ndex /bin/bash # become ndex user
+       ps -elf | grep interactome
+       kill <PID of java process for interactome output from previous step>
 
 

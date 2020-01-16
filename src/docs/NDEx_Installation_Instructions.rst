@@ -1,6 +1,6 @@
-1. NDEx Installation Instructions
+  NDEx Installation Instructions
 
-*Last updated: Jan 13* *9, 20209*
+*Last updated: Jan 13, 2020*
 
 **Step 1 – SYSTEM SETUP**
 
@@ -14,8 +14,7 @@ installed on a separate machine.
 
 1d) Install Python if it is not already installed on your server. NDEx
 v2.4.4 requires Python 2.7. The default NDEx installation requires
-Python interpreter at /usr/bin/python. You also need to install these
-Python modules: **gevent, gevent_websocket, bottle, pysolr**.
+Python interpreter at /usr/bin/python.
 
 1e) Create the ndex user account
 

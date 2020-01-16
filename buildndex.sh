@@ -13,6 +13,12 @@ else
    BRANCH="--branch=v${VERSION}"
 fi
 
+QUERYDEPEND=`egrep "^ndexqueryndex=" versions.config | sed "s/^.*= *//"`
+if [ "$QUERYDEPENDVERSION" == "master" ] ; then
+   QDEPBRANCH=""
+else
+   QDEPBRANCH="--branch=v${QUERYDEPEND}"
+fi
 
 QUERYVERSION=`egrep "^ndexquery=" versions.config | sed "s/^.*= *//"`
 
@@ -41,6 +47,14 @@ pushd ndex-object-model
 mvn clean install -DskipTests=true -B
 popd
 
+# building older verion of NDEx object model cause the some libraries may
+# not be updated. THIS SUCKS SOO BAD
+rm -rf ndex-object-model
+git clone $QDEPBRANCH --depth=1 https://github.com/ndexbio/ndex-object-model
+pushd ndex-object-model
+mvn clean install -DskipTests=true -B
+popd
+
 # build NDEx REST service
 git clone $BRANCH --depth=1 https://github.com/ndexbio/ndex-rest
 pushd ndex-rest 
@@ -49,6 +63,14 @@ popd
 
 # build NDEx java client
 git clone $BRANCH --depth=1 https://github.com/ndexbio/ndex-java-client
+pushd ndex-java-client
+mvn clean install -DskipTests=true -B
+popd
+
+# building older version of NDEx java client cause the some libraries may
+# not be updated. THIS SUCKS SOO BAD
+rm -rf ndex-java-client
+git clone $QDEPBRANCH --depth=1 https://github.com/ndexbio/ndex-java-client
 pushd ndex-java-client
 mvn clean install -DskipTests=true -B
 popd

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/opt/ndex/miniconda3/bin/python
 
 '''
 This script takes a CX network from stdin and print out a set of gene symbols found in node names,

@@ -1,11 +1,12 @@
-1. NDEx Installation Instructions
+  NDEx Installation Instructions
 
-*Last updated: Jan 13* *9, 20209*
+*Last updated: Jan 13, 2020*
 
 **Step 1 – SYSTEM SETUP**
 
-1a) Make sure **Java 8** or Java 11 is installed in your system. 1b)
-Install Apache HTTP server (Version 2.4).
+1a) Make sure **Java 8** or Java 11 is installed in your system. 
+
+1b) Install Apache HTTP server (Version 2.4).
 
 1c) Install PostgreSQL server (version 9.5). The postgreSQL server can
 be installed on the same machine when you run NDEx server, or can be
@@ -13,8 +14,7 @@ installed on a separate machine.
 
 1d) Install Python if it is not already installed on your server. NDEx
 v2.4.4 requires Python 2.7. The default NDEx installation requires
-Python interpreter at /usr/bin/python. You also need to install these
-Python modules: **gevent, gevent_websocket, bottle, pysolr**.
+Python interpreter at /usr/bin/python.
 
 1e) Create the ndex user account
 
@@ -686,12 +686,14 @@ than the value of this parameter, the web app will display a message and
 won’t display the networks in this set. The default value of this
 parameter is 50,000.
 
-3d. 2) Landing Page Configuration Server
+3d. 2) Landing Page Configuration
 
 The location of Landing Page Configuration Server is defined by
 landingPageConfigServer parameter in ndex-webapp-config.js. The
-following sections and channels of Landing page can be configured.All
-elements are required.-:
+following sections describe how to configure different channels of Landing
+page. All json files mentioned in this section are required. Examples of 
+these configuration files can be found in ndex/webapp_landingpage_configuration_template
+folder in the bundle.-:
 
 a. | topmenu.json - The content of this file controls the navigation bar
         at the top of the screen.The format of this file is:
@@ -830,6 +832,11 @@ b. | Featured_content.json - The content in this file populates the
 
 -  href - (optional) The URL the web app should jump to when user click
       the ‘Learn more…’ at the end of this column.
+      
+     Note: you can use the doc4.html file in the webapp_landingpage_configuration_template 
+     folder to point integrate the home page of NDEx iQuery into NDEx landing page. To
+     configure you NDEx landing page to point to your instance of iQuery, you can just modify
+     the value of baseUrl variable in line 294 of doc4.html to point to your iQuery web server.
 
    a. | logos.json - This file configures the logos channel above the
            footer. Its format is:

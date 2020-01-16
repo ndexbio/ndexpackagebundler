@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .sophie-table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sophie-button-table {
+            width: 100%;
+            table-layout: fixed;
+            border-spacing: 1em;
+            border-collapse: separate;
+        }
+        .sophie-gene-button-table {
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sophie-th {
+            text-align: center;
+            color:#428bca
+        }
+        .sophie-tbody {
+            background: #FFFFFF;
+        }
+        .sophie-tr {
+            background: #FFFFFF !important;
+            border: none !important;
+        }
+        .sophie-button-tr {
+            height: 3.875em;
+        }
+        .sophie-td {
+            text-align: center;
+            background: #FFFFFF;
+            padding:0;
+            height: 100%;
+        }
+        .sophie-gene-td {
+            text-align: center;
+            background: #FFFFFF;
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+            height: 100%;
+        }
+        .sophie-button {
+            height: 100%;
+            width: 100%;
+            white-space: normal !important;
+            border-color: #337ab7 !important;
+        }
+        .sophie-gene-button {
+            background-color: #FFFFFF;
+            border-color: #FFFFFF;
+            height: 100%;
+            width: 100%;
+            color: #4DA1DE;
+        }
+        .sophie-gene-button:hover {
+            background-color: rgb(230, 230, 230);
+            border-color: rgb(230, 230, 230);
+            color: #4DA1DE;
+            border-radius: 4px;
+        }
+        .sophie-icon-button {
+            background-color: rgba(0, 0, 0, 0);
+            border-color: rgba(0, 0, 0, 0);
+            font-size: 22px;
+            position: absolute;
+            top: 38px;
+        }
+        .sophie-center {
+            text-align: center;
+            width: 100%;
+        }
+        .sophie-large-font {
+            font-size: 55px;
+            padding-top: 20px;
+            font-kerning: none;
+            font-family: Arial, "Open Sans", Helvetica, sans-serif;
+        }
+        .sophie-small-text-padding {
+            padding-top: 16px;
+            padding-left: 5px;
+        }
+        .sophie-negative-margin {
+            margin-top: -15px;
+        }
+        .sophie-input {
+            border-radius: 4px;
+            margin-top: 30px;
+            padding: 12px 44px;
+            width: 75%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+        .sophie-input-container {
+            position: relative;
+        }
+        .sophie-tooltip {
+            position: relative;
+            display: inline-block;
+            height: 100%;
+            width: 100%;
+        }
+        .sophie-tooltip .sophie-tooltiptext {
+            visibility: hidden;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 120%;
+            left: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .sophie-tooltip .sophie-tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        .sophie-wide {
+            width: 320px;
+            margin-left: -160px;
+        }
+        .sophie-narrow {
+            width: 184px;
+            margin-left: -92px;
+        }
+        .sophie-tooltip:hover .sophie-tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .mainAreaLandingPage {
+            height: 550px !important;
+        }
+    </style>
+</head>
+
+<body>
+<table class="sophie-button-table" style="height: 8em">
+    <thead>
+    <th colSpan="5" class="sophie-th">
+        <h4>NDEx, the Network Data Exchange:<br> A Resource for Network Analysis, Collaboration and Publication</h4>
+    </th>
+    </thead>
+    <tbody class="sophie-tbody">
+    <tr class="sophie-button-tr">
+        <td class="sophie-td">
+            <div class="sophie-tooltip">
+                        <span class="sophie-tooltiptext sophie-narrow">
+                            Use the Search Panel above to find public networks in NDEx. Click on "Featured Networks" for examples of high-quality content from multiple sources.
+                        </span>
+                <button
+                        type="button"
+                        class="btn btn-primary sophie-button"
+                        onclick="document.getElementById('findNetworkLink').click()"
+                >
+                    Find Networks
+                </button>
+        </td>
+        <td class="sophie-td">
+            <div class="sophie-tooltip">
+                        <span class="sophie-tooltiptext sophie-narrow">
+                            NDEx is for everyday work and collaboration, a "Dropbox for networks" with 10 GB of free storage. Your networks can be private or shared with other NDEx users or groups.
+                        </span>
+                <button
+                        type="button"
+                        class="btn btn-primary sophie-button"
+                        onclick="document.getElementById('storeNetworkLink').click()"
+                >
+                    Store and Share Networks with Collaborators
+                </button>
+            </div>
+        </td>
+        <td class="sophie-td">
+            <div class="sophie-tooltip">
+                        <span class="sophie-tooltiptext sophie-narrow">
+                            Programs can read, write, and query NDEx via its REST API, using our client libraries in Python, R, and Java and JavaScript components. Integrate NDEx in your workflows as a source, destination, or intermediate storage.
+                        </span>
+                <button
+                        type="button"
+                        class="btn btn-primary sophie-button"
+                        onclick="document.getElementById('useNetworkLink').click();"
+                >
+                    Use Networks in Your Programs
+                </button>
+        </td>
+        <td class="sophie-td">
+            <div class="sophie-tooltip">
+                        <span class="sophie-tooltiptext sophie-narrow">
+                            Your publications and grant proposals can go beyond static figures, linking directly to your networks in NDEx as live, actionable data. NDEx is a recommended repository for Scientific Data, Springer Nature, and PLOS.
+                        </span>
+                <button
+                        type="button"
+                        class="btn btn-primary sophie-button"
+                        onclick="document.getElementById('publishNetworkLink').click()"
+                >
+                    Publish Your Networks
+                </button>
+        </td>
+        <td class="sophie-td">
+            <div class="sophie-tooltip">
+                        <span class="sophie-tooltiptext sophie-narrow">
+                            NDEx is an integral part of Cytoscape: find networks, download networks, and upload networks directly from Cytoscape. Vice versa, networks viewed in the NDEx Web UI can be seamlessly opened in Cytoscape with just one click.
+                        </span>
+                <button
+                        type="button"
+                        class="btn btn-primary sophie-button"
+                        onclick="document.getElementById('cytoscapeLink').click()"
+                >
+                    NDEx is a Part of Cytoscape
+                </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<div class="sophie-center">
+    Try the new:
+</div>
+<table class="sophie-table sophie-negative-margin">
+    <tbody class="sophie-tbody">
+    <tr class="sophie-tr">
+        <td>
+            <img src="https://i.ibb.co/XkFcwVd/ndex-logo.png" alt="ndex-logo" border="0" height="110px"/>
+        </td>
+        <td>
+            <div class="sophie-large-font">
+                Integrated Query
+            </div>
+            <div class="sophie-small-text-padding">
+                Version 1.0
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div class="sophie-center">
+    Analyze your gene set using networks in NDEx:
+</div>
+<div class="sophie-center" style="padding-top: 2px">
+    Pathway Enrichment - Protein Interactions - Drug, Disease, and Tissue Associations
+</div>
+
+<div class="sophie-center sophie-input-container">
+    <button
+            class="sophie-icon-button"
+            style=" left: 115px;"
+            onclick="
+                document.getElementById('geneSet').value = '';
+                document.getElementById('geneSet').focus();
+            ">
+        <i class="fa fa-trash icon" style="color: #757575;" aria-hidden="true"></i>
+    </button>
+    <form onsubmit="
+                var geneSet = document.getElementById('geneSet').value;
+                if (geneSet.length > 0) {
+                    const baseUrl = 'http://search.ndexbio.org?genes=';
+                    window.open(baseUrl + encodeURIComponent(geneSet));
+                }
+                document.getElementById('geneSet').focus();
+            ">
+        <input
+            autofocus
+            type="text"
+            id="geneSet"
+            placeholder="Enter gene set (or click an example below)"
+            size=100
+            class="sophie-input"
+
+        >
+    </form>
+    <button
+            class="sophie-icon-button"
+            style="left: 714px"
+            onclick="
+                var geneSet = document.getElementById('geneSet').value;
+                if (geneSet.length > 0) {
+                    var baseUrl = 'http://search.ndexbio.org?genes=';
+                    window.open(baseUrl + encodeURIComponent(geneSet));
+                }
+                document.getElementById('geneSet').focus();
+            "
+    >
+        <i class="fa fa-search icon" style="color:#4DA1DE;" aria-hidden="true"></i>
+    </button>
+</div>
+
+<table class="sophie-gene-button-table" style="margin-top: 15px;">
+    <tbody class="sophie-tbody">
+    <tr class="sophie-tr">
+        <td colSpan="4" class="sophie-td">
+            Query gene set examples:
+        </td>
+    </tr>
+    <tr class="sophie-tr">
+        <td class="sophie-gene-td">
+            <div class="sophie-tooltip">
+                <span class="sophie-tooltiptext sophie-wide">
+                    The 200 genes comprising the MSigDB Hallmark Gene Set for Hypoxia
+                </span>
+                <button
+                        type="button"
+                        class="btn btn-primary sophie-gene-button"
+                        onclick="
+                                document.getElementById('geneSet').value = 'ADM ADORA2B AK4 AKAP12 ALDOA ALDOB ALDOC AMPD3 ANGPTL4 ANKZF1 ANXA2 ATF3 ATP7A B3GALT6 B4GALNT2 BCAN BCL2 BGN BHLHE40 BNIP3L BRS3 BTG1 CA12 CASP6 CAV1 CCNG2 CCRN4L CDKN1A CDKN1B CDKN1C CHST2 CHST3 CITED2 COL5A1 CP CSRP2 CTGF CXCR4 CXCR7 CYR61 DCN DDIT3 DDIT4 DPYSL4 DTNA DUSP1 EDN2 EFNA1 EFNA3 EGFR ENO1 ENO2 ENO3 ERO1L ERRFI1 ETS1 EXT1 F3 FAM162A FBP1 FOS FOSL2 FOXO3 GAA GALK1 GAPDH GAPDHS GBE1 GCK GCNT2 GLRX GPC1 GPC3 GPC4 GPI GRHPR GYS1 HAS1 HDLBP HEXA HK1 HK2 HMOX1 HOXB9 HS3ST1 HSPA5 IDS IER3 IGFBP1 IGFBP3 IL6 ILVBL INHA IRS2 ISG20 JMJD6 JUN KDELR3 KDM3A KIF5A KLF6 KLF7 KLHL24 LALBA LARGE LDHA LDHC LOX LXN MAFF MAP3K1 MIF MT1E MT2A MXI1 MYH9 NAGK NCAN NDRG1 NDST1 NDST2 NEDD4L NFIL3 NR3C1 P4HA1 P4HA2 PAM PCK1 PDGFB PDK1 PDK3 PFKFB3 PFKL PFKP PGAM2 PGF PGK1 PGM1 PGM2 PHKG1 PIM1 PKLR PKP1 PLAC8 PLAUR PLIN2 PNRC1 PPARGC1A PPFIA4 PPP1R15A PPP1R3C PRDX5 PRKCA PRKCDBP PTRF PYGM RBPJ RORA RRAGD S100A4 SAP30 SCARB1 SDC2 SDC3 SDC4 SELENBP1 SERPINE1 SIAH2 SLC25A1 SLC2A1 SLC2A3 SLC2A5 SLC37A4 SLC6A6 SRPX STBD1 STC1 STC2 SULT2B1 TES TGFB3 TGFBI TGM2 TIPARP TKTL1 TMEM45A TNFAIP3 TPBG TPD52 TPI1 TPST2 UGP2 VEGFA VHL VLDLR WISP2 WSB1 XPNPEP1 ZFP36 ZNF292';
+                                document.getElementById('geneSet').focus();
+                            "
+                >
+                    Hypoxia
+                </button>
+            </div>
+        </td>
+        <td class="sophie-gene-td">
+            <div class="sophie-tooltip">
+                <span class="sophie-tooltiptext sophie-wide">
+                    25 genes involved in the induction of apoptosis through DR3 and DR4/5 Death Receptors
+                </span>
+                <button
+                        type="button"
+                        class="btn btn-primary sophie-gene-button"
+                        onclick="
+                                document.getElementById('geneSet').value = 'APAF1 BCL2 BID BIRC2 BIRC3 CASP10 CASP3 CASP6 CASP7 CFLAR CHUK DFFA DFFB FADD GAS2 LMNA MAP3K14 NFKB1 RELA RIPK1 SPTAN1 TNFRSF25 TNFSF10 TRADD TRAF2 XIAP';
+                                document.getElementById('geneSet').focus();
+                            "
+                >
+                    Death Receptors
+                </button>
+            </div>
+        </td>
+        <td class="sophie-gene-td">
+            <div class="sophie-tooltip">
+                <span class="sophie-tooltiptext sophie-wide">
+                    The 49 genes comprising the MSigDB Hallmark Gene Set for Reactive Oxygen Species Processes
+                </span>
+                <button
+                    type="button"
+                    class="btn btn-primary sophie-gene-button"
+                    onclick="
+                                document.getElementById('geneSet').value = 'ABCC1 ATOX1 CAT CDKN2D EGLN2 ERCC2 FES FTL G6PD GCLC GCLM GLRX GLRX2 GPX3 GPX4 GSR HHEX HMOX2 IPCEF1 JUNB LAMTOR5 LSP1 MBP MGST1 MPO MSRA NDUFA6 NDUFB4 NDUFS2 NQO1 OXSR1 PDLIM1 PFKP PRDX1 PRDX2 PRDX4 PRDX6 PRNP PTPA SBNO2 SCAF4 SELENOS SOD1 SOD2 SRXN1 STK25 TXN TXNRD1 TXNRD2';
+                                document.getElementById('geneSet').focus();
+                            "
+            >
+                Reactive Oxygen Species
+                </button>
+            </div>
+        </td>
+        <td class="sophie-gene-td">
+            <div class="sophie-tooltip">
+                <span class="sophie-tooltiptext sophie-wide">
+                    42 human host proteins that were shown to interact with the 2A protein of the Coxsackie virus in Diep et al. Nature Microbiology (2019).  The larger network from the paper is, not surprisingly, the top enrichment result, but interestingly, the second result is a network of HIV-Human interactors that shares a set of proteins related to translation initiation.
+                </span>
+                <button
+                        type="button"
+                        class="btn btn-primary sophie-gene-button"
+                        onclick="
+                                document.getElementById('geneSet').value = 'YTHD3 XRN2 TM225 SETD3 RTRAF RING1 REL RAVR1 RAE1L PURB PTBP1 PRC2B PAN2 NUP98 NCBP3 MYCB2 LAR4B IMA5 IF4G1 FBSP1 FA98A F120A EIF3M EIF3L EIF3K EIF3I EIF3H EIF3G EIF3F EIF3E EIF3D EIF3C EIF3B EIF3A DPYL2 DDX1 CSK21 CPSF6 CISY CBX1 CARF C2AIL';
+                                document.getElementById('geneSet').focus();
+                            "
+                >
+                    Coxsackie Virus-Human
+                </button>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Links -->
+<a id="findNetworkLink" href="https://home.ndexbio.org/finding-and-querying-networks/" target="_blank"></a>
+<a id="storeNetworkLink" href="https://home.ndexbio.org/sharing-and-accessing-networks/" target="_blank"></a>
+<a id="useNetworkLink" href="https://home.ndexbio.org/readme-developers-best-practices/" target="_blank"></a>
+<a id="publishNetworkLink" href="https://home.ndexbio.org/publishing-in-ndex/" target="_blank"></a>​
+<a id="cytoscapeLink" href="https://apps.cytoscape.org/apps/cyndex2" target="_blank"></a>
+
+</body>
+</html>
+

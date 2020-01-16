@@ -1,121 +1,92 @@
-  NDEx Installation Instructions
+NDEx Installation Instructions
+===================================
 
 *Last updated: Jan 13, 2020*
 
-**Step 1 – SYSTEM SETUP**
+Step 1 – SYSTEM SETUP
+-----------------------------
 
-1a) Make sure **Java 8** or Java 11 is installed in your system. 
+a. Make sure **Java 8** or Java 11 is installed in your system.
 
-1b) Install Apache HTTP server (Version 2.4).
+#. Install Apache HTTP server (Version 2.4).
 
-1c) Install PostgreSQL server (version 9.5). The postgreSQL server can
-be installed on the same machine when you run NDEx server, or can be
-installed on a separate machine.
+#. Install PostgreSQL server (version 9.5). The postgreSQL server can
+   be installed on the same machine when you run NDEx server, or can be
+   installed on a separate machine.
 
-1d) Create the ndex user account
+#. Create the ndex user account
 
-   # -M, --no-create-home do not create the user's home directory
+   .. code-block::
 
-   # -r, --system create a system account
+     # -M, --no-create-home do not create the user's home directory
+     # -r, --system create a system account
+     # -s, --shell SHELL login shell of the new account (/bin/false = nologin)
+     # -U, --user-group create a group with the same name as the user
+     sudo useradd -M -r -s /bin/false -U ndex
 
-   # -s, --shell SHELL login shell of the new account (/bin/false = no
-   login)
 
-   # -U, --user-group create a group with the same name as the user
-
-   sudo useradd -M -r -s /bin/false -U ndex
-
-**\**\* IMPORTANT NOTE \*\***\ \*
+**IMPORTANT NOTE:**
 
 In the following instructions, the ndex account is used to run tomcat
 server (and thereby the NDEx REST server) and all files are configured
-with the ndex user as owner.The tomcat7 start and stop scripts
+with the ndex user as owner. The tomcat7 start and stop scripts
 automatically use the ndex user. In all other situations, **it is
-necessary** to assume the role of the ndex user with “sudo su – ndex“.
+necessary** to assume the role of the ndex user with ``sudo su – ndex``.
 
-**Step 2 – DOWNLOAD SOFTWARE**
-
-**2a) Installing NDEx software**
+Step 2 – DOWNLOAD AND INSTALL SOFTWARE
+----------------------------------------
 
 The NDEx bundle is a compressed archive and can be downloaded from our
-**FTP server**: ftp://ftp.ndexbio.org .
+**FTP server**: ftp://ftp.ndexbio.org.
 
-2aa) Obtain the latest NDEx bundle from ftp.ndexbio.org. In this
-example, we use the **NDEx_Bundle_V2.4.4.tar** archive. The archive can
-be downloaded from the command line with wget:
 
-   cd /opt
+a. Obtain the latest NDEx bundle from ftp://ftp.ndexbio.org.
+   In this example, we use the **NDEx-v2.4.4** archive.
+   The archive can be downloaded from the command line with wget:
 
-   sudo wget ftp://ftp.ndexbio.org/NDEx-v2.4.4/NDEx_Bundle_V2.4.4.tar
+   .. code-block::
 
-2ab) Extract the downloaded archive to /opt
+      cd /opt
+      sudo wget ftp://ftp.ndexbio.org/NDEx-v2.4.4/ndex-2.4.4.tar.gz
 
-   sudo tar xvf NDEx_Bundle_V2.4.4.tar
+#. Extract the downloaded archive to ``/opt`` and change ownership to **ndex** user
 
-2ac) You will see 2 more files: one for NDEx-Sync and one for the NDEx
-Server. Now extract the **ndex-2.4.4.tar.gz** archive using the commands
-below:
+   .. code-block::
 
-   cd /opt
+      cd /opt
+      sudo tar -zxf ndex-2.4.4.tar.gz
+      mv ndex-2.4.4 ndex
+      sudo chown -R ndex:ndex ndex
 
-   sudo gzip -d ndex-2.4.4.tar.gz
 
-   sudo tar xvf ndex-2.4.4.tar
+   After above commands, the directory should look like this:
 
-   sudo chown -R ndex:ndex ndex
+   .. code-block::
 
-The archive will be extracted to the ndex directory regardless of the
-version you have downloaded. Symbolic links to Tomcat and Solr will also
-be created automatically. The last command line is required to change
-ownership of the newly created ndex directory.
+      /opt/ndex/
+                apache-tomcat-x.x.xx/
+                bin/
+                conf/
+                data/
+                importer_exporter/
+                query_engine/
+                services/
+                dbbackups/
+                exported-networks/
+                ndex-webapp/
+                ndex-webapp-ssh/
+                resources/
+                solr -> solr-8.1.1
+                solr-8.1.1/
+                tomcat -> apache-tomcat-x.x.xx
+                uploaded-networks/
+                workspace/
 
-After extraction has completed, the directory should look like:
+#. Installing Miniconda
 
-   /opt
-
-   /ndex
-
-   /apache-tomcat-x.x.xx
-
-   /bin
-
-   /conf
-
-   /data
-
-   /importer_exporter
-
-   /query_engine
-
-   /services
-
-   /dbbackups
-
-   /exported-networks
-
-   /ndex-webapp
-
-   /ndex-webapp-ssh
-
-   /resources
-
-   /solr -> solr-8.1.1
-
-   /solr-8.1.1
-
-   /tomcat -> apache-tomcat-x.x.xx
-
-   /uploaded-networks
-
-   /workspace
-
-**2b) Installing Miniconda**
-
-**Some of the exporters in NDEx require Python 3+. The following steps
-install** **Miniconda**
-
-**Into /opt/ndex/miniconda3 directory. This special installation of
-Python is used by NDEx**
+   The exporters in NDEx require Python 3+. The following steps install Miniconda
+   Into ``/opt/ndex/miniconda3`` directory. This special installation of
+   Python is used by NDEx
 
 **2ba) Download Miniconda to the temp directory and update the script to
 be executable.**
@@ -168,7 +139,8 @@ used.**
 **2bf) Be sure to remove /tmp/Miniconda3-latest-Linux-x86_64.sh when
 done**
 
-**Step 3 – CONFIGURATION**
+Step 3 – CONFIGURATION
+---------------------------
 
 **3a) Configuring the Apache web server**
 
@@ -928,7 +900,8 @@ Stop       sudo /etc/init.d/apache2 stop
 Restart    sudo /etc/init.d/apache2 restart
 ======= ===================================
 
-**Step 4 – START THE NDEX-REST SERVER**
+Step 4 – START THE NDEX-REST SERVER
+----------------------------------------
 
 **Note: M**\ ake sure you switch to user ndex before you start NDEx REST
 servers.

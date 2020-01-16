@@ -35,6 +35,12 @@ Commands to run building via Vagrant_
    cd /vagrant
    make dist
 
+To exit the Vagrant_ VM_ just type ``exit``
+
+**WARNING:** Once done building it is a good idea to destroy the VM_ created with ``vagrant up``. This can
+be done with a call to ``vagrant destroy`` from the same directory ``vagrant up`` was typed.
+
+**NOTE:** The ``/vagrant`` directory is mounted from host computer so when exiting the VM_ the results will still be visible
 
 Results
 ----------
@@ -96,6 +102,7 @@ above.
 .. _Tomcat: http://tomcat.apache.org/
 .. _Vagrant: https://www.vagrantup.com/
 .. _VirtualBox: https://www.virtualbox.org/
+.. _VM: https://en.wikipedia.org/wiki/Virtual_machine
 
 Results
 ---------

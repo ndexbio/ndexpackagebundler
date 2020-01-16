@@ -1,54 +1,31 @@
-NDEx Package Bundler
-====================
+NDEx_ Package Bundler
+============================
 
-This repo contains scripts and files needed to build the NDEx
-distribution tar for external groups running NDEx. This tool is driven
-by a ``Makefile``
+This repo contains scripts and files needed to build the NDEx_
+distribution (similar to this ftp://ftp.ndexbio.org/NDEx-v2.3.1/) for external groups
+running NDEx_.
 
-Requirements
-------------
+This repo includes a Vagrant_ configuration that creates a VirtualBox_
+`Virtual Machine <https://en.wikipedia.org/wiki/Virtual_machine>`_
+running `Centos 7.2 <https://www.centos.org/>`_ to provide a consistent build
+environment regardless of host OS and configuration.
 
--  Linux or Mac (for other OS a Vagrant configuration is included)
+Building via Vagrant_
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  make
+Requirements for building via Vagrant_
+--------------------------------------------
 
--  bash shell
+-  Vagrant_
 
--  Java 11
+-  VirtualBox_
 
--  maven 3.6.3
+**NOTE:** Vagrant_ has a bug where it does not recognize 6.1 of VirtualBox.
+This can be fixed with the solution documented
+`found here <https://github.com/oracle/vagrant-boxes/issues/178#issue-536720633>`_
 
--  Python 3
-
--  wget
-
--  rst2pdf
-
-For other operating systems
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Vagrant requires the following
-
--  Vagrant
-
--  VirtualBox
-
-NOTE: If installing VirtualBox 6.1 Vagrant has a bug where it does not
-recognize 6.1 of virtualbox. This can be fixed with the solution
-documented here:
-https://github.com/oracle/vagrant-boxes/issues/178#issue-536720633
-
-Building directly on machine
-==============================
-
-.. code:: bash
-
-   git clone https://github.com/idekerlab/ndexpackagebundler.git
-   cd ndexpackagebundler
-   make dist
-
-Building via Vagrant
-==========================
+Commands to run building via Vagrant_
+------------------------------------------
 
 .. code:: bash
 
@@ -58,3 +35,57 @@ Building via Vagrant
    vagrant ssh
    cd /vagrant
    make dist
+
+
+Results
+----------
+
+After running ``make dist`` above a folder should reside under ``dist/NDEx-<VERSION>``
+will contain `PDF <https://en.wikipedia.org/wiki/PDF>`_ instructions as well as the NDEx_ distribution `gzipped <https://www.gzip.org/>`_
+`tarfile <https://www.gnu.org/software/tar/>`_.
+
+
+Advanced instructions for building directly on a machine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The instructions below provide requirements and instructions
+to build the NDEx_ distribution directly on a Linux or Mac
+box.
+
+Requirements for direct build
+----------------------------------
+
+**NOTE:** This requirements are only if one intends to **NOT** use the Vagrant_ approach
+above.
+
+-  Linux or Mac (for other OS a Vagrant configuration is included)
+
+-  `Make <https://www.gnu.org/software/make/manual/make.html>`_
+
+-  `Bash shell <https://en.wikipedia.org/wiki/Bash_(Unix_shell)>`_
+
+-  `Java 11 jdk <https://openjdk.java.net/projects/jdk/11/>`_
+
+-  `Maven 3.6+ <https://maven.apache.org/>`_
+
+-  `Python 3 <https://www.python.org/downloads/>`_
+
+-  `wget <https://www.gnu.org/software/wget/manual/wget.html>`_
+
+-  `rst2pdf <https://pypi.org/project/rst2pdf/>`_
+
+Commands to run for direct build
+---------------------------------------
+
+To do this all requirements above must be satisfied. If this is tricky use the Vagrant_ approach
+above.
+
+.. code:: bash
+
+   git clone https://github.com/idekerlab/ndexpackagebundler.git
+   cd ndexpackagebundler
+   make dist
+
+.. _NDEx: https://ndexbio.org
+.. _Vagrant: https://www.vagrantup.com/
+.. _VirtualBox: https://www.virtualbox.org/

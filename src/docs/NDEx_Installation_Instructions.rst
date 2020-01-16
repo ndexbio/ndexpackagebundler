@@ -4,8 +4,9 @@
 
 **Step 1 – SYSTEM SETUP**
 
-1a) Make sure **Java 8** or Java 11 is installed in your system. 1b)
-Install Apache HTTP server (Version 2.4).
+1a) Make sure **Java 8** or Java 11 is installed in your system. 
+
+1b) Install Apache HTTP server (Version 2.4).
 
 1c) Install PostgreSQL server (version 9.5). The postgreSQL server can
 be installed on the same machine when you run NDEx server, or can be

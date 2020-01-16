@@ -12,11 +12,7 @@
 be installed on the same machine when you run NDEx server, or can be
 installed on a separate machine.
 
-1d) Install Python if it is not already installed on your server. NDEx
-v2.4.4 requires Python 2.7. The default NDEx installation requires
-Python interpreter at /usr/bin/python.
-
-1e) Create the ndex user account
+1d) Create the ndex user account
 
    # -M, --no-create-home do not create the user's home directory
 

@@ -21,8 +21,7 @@ Requirements for building via Vagrant_
 -  VirtualBox_
 
 **NOTE:** Vagrant_ has a bug where it does not recognize 6.1 of VirtualBox.
-This can be fixed with the solution documented
-`found here <https://github.com/oracle/vagrant-boxes/issues/178#issue-536720633>`_
+`Click here for fix <https://github.com/oracle/vagrant-boxes/issues/178#issue-536720633>`_
 
 Commands to run building via Vagrant_
 ------------------------------------------
@@ -44,6 +43,12 @@ After running ``make dist`` above a folder should reside under ``dist/NDEx-<VERS
 will contain `PDF <https://en.wikipedia.org/wiki/PDF>`_ instructions as well as the NDEx_ distribution `gzipped <https://www.gzip.org/>`_
 `tarfile <https://www.gnu.org/software/tar/>`_.
 
+Changing versions of what to build
+-------------------------------------
+
+The file ``versions.config`` dictates what tagged versions of the NDEx_ codebase as
+well as what versions of Solr_ and Tomcat_ to bundle in.
+
 
 Advanced instructions for building directly on a machine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,7 +60,7 @@ box.
 Requirements for direct build
 ----------------------------------
 
-**NOTE:** This requirements are only if one intends to **NOT** use the Vagrant_ approach
+**NOTE:** These requirements apply only if one intends to **NOT** use the Vagrant_ approach
 above.
 
 -  Linux or Mac (for other OS a Vagrant configuration is included)
@@ -87,5 +92,12 @@ above.
    make dist
 
 .. _NDEx: https://ndexbio.org
+.. _Solr: https://lucene.apache.org/solr/
+.. _Tomcat: http://tomcat.apache.org/
 .. _Vagrant: https://www.vagrantup.com/
 .. _VirtualBox: https://www.virtualbox.org/
+
+Results
+---------
+
+The results will be in same ``dist/NDEx-<VERSION>`` location as noted in Vagrant_ build instructions

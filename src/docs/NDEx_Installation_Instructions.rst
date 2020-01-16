@@ -33,16 +33,16 @@ with the ndex user as owner. The tomcat7 start and stop scripts
 automatically use the ndex user. In all other situations, **it is
 necessary** to assume the role of the ndex user with ``sudo su – ndex``.
 
-Step 2 – DOWNLOAD AND INSTALL SOFTWARE
-----------------------------------------
+Step 2 – DOWNLOAD AND INSTALL NDEx ARCHIVE
+--------------------------------------------
 
 The NDEx bundle is a compressed archive and can be downloaded from our
 **FTP server**: ftp://ftp.ndexbio.org.
 
 
 a. Obtain the latest NDEx bundle from ftp://ftp.ndexbio.org.
-   In this example, we use the **NDEx-v2.4.4** archive.
-   The archive can be downloaded from the command line with wget:
+   In this example, we use **NDEx-v2.4.4**.
+   The archive can be downloaded from the command line with ``wget``:
 
    .. code-block::
 
@@ -82,313 +82,252 @@ a. Obtain the latest NDEx bundle from ftp://ftp.ndexbio.org.
                 uploaded-networks/
                 workspace/
 
-#. Installing Miniconda
+Step 3 – DOWNLOAD AND INSTALL MINICONDA
+--------------------------------------------
 
-   The exporters in NDEx require Python 3+. The following steps install Miniconda
-   Into ``/opt/ndex/miniconda3`` directory. This special installation of
-   Python is used by NDEx
+The exporters in NDEx require Python 3+. The following steps install Miniconda
+Into ``/opt/ndex/miniconda3`` directory.
 
-**2ba) Download Miniconda to the temp directory and update the script to
-be executable.**
+a. Download Miniconda to the temp directory and update the script to be executable.
 
-**Note: Optionally the downloaded script can be verified by comparing
-checksums available on the** **Miniconda site.**
+   .. code-block::
 
-**pushd /tmp**
+      pushd /tmp
+      wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+      chmod a+x Miniconda3-latest-Linux-x86_64.sh
 
-**wget
-https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh**
 
-**chmod a+x Miniconda3-latest-Linux-x86_64.sh**
 
-**2bb) Become the ndex user using su or sudo as seen below**
+#. Switch to ``ndex`` user and run the downloaded Miniconda script and accept the license (to
+   avoid the prompt and accept license automatically add ``-b`` to command
+   below.
 
-   **sudo -u ndex /bin/bash**
+   .. code-block::
 
-**2bc) Run the downloaded Miniconda script and accept the license (to
-avoid the prompt and accept license automatically add -b to command
-below.**
+      sudo -u ndex /bin/bash
+      ./Miniconda3-latest-Linux-x86_64.sh -p /opt/ndex/miniconda3
 
-**# become ndex user can do su or sudo as below**
+#. Install exporters
 
-**sudo -u ndex /bin/bash**
+   .. code-block::
 
-**./Miniconda3-latest-Linux-x86_64.sh -p /opt/ndex/miniconda3**
+      export PATH=/opt/ndex/miniconda3/bin:$PATH
+      pip install ndex_webapp_python_exporters
 
-**2bd) Still as the ndex user update the PATH so Miniconda’s Python is
-used.**
 
-**# Update path so Miniconda’s python is used**
+#. Verify installation of exporters
 
-**export PATH=/opt/ndex/miniconda3/bin:$PATH**
+   .. code-block::
 
-**which python**
+      ndex_exporters.py --version
+      # above should output ndex_exporters.py <version>
 
-**# above should output /opt/ndex/miniconda3/bin/python**
+#. Be sure to remove ``/tmp/Miniconda3-latest-Linux-x86_64.sh`` when
+done
 
-**2be) As ndex user Install** **ndex_webapp_python_exporters**
-
-**pip install ndex_webapp_python_exporters**
-
-**# verify installation by running this**
-
-**ndex_exporters.py --version**
-
-**# above should output ndex_exporters.py 0.1.1**
-
-**2bf) Be sure to remove /tmp/Miniconda3-latest-Linux-x86_64.sh when
-done**
-
-Step 3 – CONFIGURATION
+Step 4 – CONFIGURATION
 ---------------------------
 
-**3a) Configuring the Apache web server**
+a. Configuring the Apache web server
 
-The Apache web server must be configured to:
+   The Apache web server must be configured to:
 
--  Serve the NDEx website
+   -  Serve the NDEx website
 
--  Make the NDEx REST server, running as a Tomcat webapp, available at a
+   -  Make the NDEx REST server, running as a Tomcat webapp, available at a
       standard, convenient URL (this is done by establishing a reverse
       proxy, an “alias” for the NDEx server’s address)
 
-Details:
+   Details:
 
--  The Tomcat main page is served at host:8080
+   -  The Tomcat main page is served at host:8080
 
--  Tomcat makes the REST server webapp available at
+   -  Tomcat makes the REST server webapp available at
       host:8080/ndexbio-rest.
 
--  In the typical configuration, the ndex web ui is served by Apache on
+   -  In the typical configuration, the ndex web ui is served by Apache on
       the same server
 
--  The document root is changed to /opt/ndex/ndex-webapp (the files in
-      /opt/ndex/ndex-webapp are from the project ndex-webapp)
+   -  The document root is changed to ``/opt/ndex/ndex-webapp`` (the files in
+      ``/opt/ndex/ndex-webapp`` are from the project ndex-webapp)
 
--  To conveniently use the REST server from the ndex web ui we setup a
+   -  To conveniently use the REST server from the ndex web ui we setup a
       proxy so that it will be available as a “folder” of the website.
 
--  For example, if the website is deployed at **www.ndexbio.org**, the
-      REST server will be at
-      `www.ndexbio.org/ <http://www.ndexbio.org/rest>`__\ **\ v2**
+   -  For example, if the website is deployed at http://www.ndexbio.org, the
+      REST server will be at http://www.ndexbio.org/v2
+
+   The configuration is accomplished by adding an additional configuration
+   file that Apache will read after loading its main configuration. This
+   file must be added to the Apache installation. The location of the file
+   depends on the version of Unix that is being used.
+
+   **NOTE:** Apache may also require the following to be executed in order to
+   properly parse the config:
+
+   .. code-block::
+
+      sudo a2enmod proxy_http
+      sudo a2enmod headers
+
+   **CentOS**
+
+   In CentOS (and RedHat), changes to the Apache server configuration are
+   accomplished by adding a new config file called ``ndex.conf`` under the
+   ``/etc/httpd/conf.d`` directory. A typical setting in the ``ndex.conf`` file
+   would be like this:
+
+   .. code-block::
+
+      <IFModule reqtimeout_module>
+         RequestReadTimeout header=60,minrate=200 body=60,minrate=200
+      </IFModule>
+
+      <VirtualHost \*:80>
+          ServerAdmin support@ndexbio.org
+          DocumentRoot /opt/ndex/ndex-webapp
+          <Directory />
+             Options FollowSymLinks
+             AllowOverride None
+          </Directory>
+          <Directory /opt/ndex/ndex-webapp>
+             Options Indexes FollowSymLinks MultiViews
+             AllowOverride None
+             Order allow,deny
+             allow from all
+          </Directory>
+
+          <FilesMatch "\.(?i:xgmml|xbel)$">
+             Header set Content-Disposition attachment
+          </FilesMatch>
+          ProxyPass /rest/ http://localhost:8080/ndexbio-rest/
+          ProxyPassReverse /rest/ http://localhost:8080/ndexbio-rest/
+          ProxyPass /v2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
+          ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
+          ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
+          ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
+      </VirtualHost>
+
+   **Ubuntu**
+
+   In Ubuntu, changes to the Apache server configuration are accomplished
+   by adding a new config file ``ndex.conf`` under the
+   ``/etc/apache2/sites-enabled`` directory. A typical setting in the ``ndex.conf``
+   file would be like this:
+
+   .. code-block::
+
+      <IFModule reqtimeout_module>
+          RequestReadTimeout header=60,minrate=200 body=60,minrate=200
+      </IFModule>
+
+      <VirtualHost \*:80>
+         ServerAdmin support@ndexbio.org
+         DocumentRoot /opt/ndex/ndex-webapp
+         <Directory />
+             Options FollowSymLinks
+             AllowOverride None
+         </Directory>
+         <Directory /opt/ndex/ndex-webapp>
+             Options Indexes FollowSymLinks MultiViews
+             AllowOverride None
+             Require all granted
+         </Directory>
+         <FilesMatch "\.(?i:xgmml|xbel)$">
+             Header set Content-Disposition attachment
+         </FilesMatch>
+         ProxyPass /rest/ http://localhost:8080/ndexbio-rest/ timeout=3000
+         ProxyPassReverse /rest/ http://localhost:8080/ndexbio-rest/
+         ProxyPass /v2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
+         ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
+         ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
+         ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
+         ProxyPass /tempcx/ http://localhost:8286/tempfile/v1/ timeout=3000
+         ProxyPassReverse /tempcx/ http://localhost:8286/tempfile/v1/
+         ProxyPass /#/newNetwork/ http://localhost:80/#/network/ timeout=3000
+         ProxyPassReverse /#/newNetwork/ http://localhost:80/#/network/
+      </VirtualHost>
+
+#. Initialize the PostgreSQL database
+
+   The NDEx 2.0 server uses PostgreSQL server as a backend database. The
+   PostgreSQL database needs to be initialized and started before you start
+   the NDEx 2.0 server. You can use this command to create a user and a
+   database in your PostgreSQL server:
+
 
-The configuration is accomplished by adding an additional configuration
-file that Apache will read after loading its main configuration. This
-file must be added to the Apache installation. The location of the file
-depends on the version of Unix that is being used.
+   Open ``psql``:
 
-| Apache may also require the following to be executed in order to
-  properly parse the config:
-| sudo a2enmod proxy_http
-| sudo a2enmod headers
+   .. code-block::
 
-**CentOS**
+      psql
 
-In CentOS (and RedHat), changes to the Apache server configuration are
-accomplished by adding a new config file called **ndex.conf** under the
-**/etc/httpd/conf.d** directory. A typical setting in the ndex.conf file
-would be like this:
+   Enter this command:
 
-   <IFModule reqtimeout_module>
+   .. code-block::
 
-   RequestReadTimeout header=60,minrate=200 body=60,minrate=200
+      create role ndexserver LOGIN password 'my_password' NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
+      ALTER ROLE ndexserver
+      SET search_path = core, "$user", public;
+      CREATE DATABASE ndex
+      WITH OWNER = ndexserver
+      ENCODING = 'UTF8'
+      TABLESPACE = pg_default
+      LC_COLLATE = 'en_US.UTF-8'
+      LC_CTYPE = 'en_US.UTF-8'
+      CONNECTION LIMIT = -1;
+      \q
 
-   </IFModule>
+   After the database and user are created. You can create the schema using
+   the file ``scripts/ndex_db_schema.sql``. The command can be something like
+   this:
 
-   <VirtualHost \*:80>
+   .. code-block::
 
-   ServerAdmin support@ndexbio.org
+      $ psql ndex <~/ndex_db_schema.sql
 
-   DocumentRoot /opt/ndex/ndex-webapp
+   **Note:** You might need to modify the ``pg_hba.conf`` file to allow
+   connections from NDEx server. For example, you can add the following
+   line to allow the ndexserver user to connect from the same server where
+   the Postgres server is installed.
 
-   <Directory />
+   .. code-block::
 
-   Options FollowSymLinks
+      local ndex ndexserver md5
 
-   AllowOverride None
+#. Changing NDEx server properties
 
-   </Directory>
+   The NDEx server configuration file is called ``ndex.properties`` and can
+   be found under directory ``/opt/ndex/conf``.
 
-   <Directory /opt/ndex/ndex-webapp>
+   **!!! The default values of the following properties should never be
+   modified !!!**
 
-   Options Indexes FollowSymLinks MultiViews
+   .. code-block::
 
-   AllowOverride None
+      NdexSystemUser=ndexadministrator
+      NdexSystemUserPassword=admin888
+      NdexSystemUserEmail=support2@ndexbio.org
 
-   Order allow,deny
+#. Change the ``HostURI property``. You need to set its value to the
+   host name of your machine with the http prefix.
 
-   allow from all
+   For example, if you are installing NDEx to a machine named
+   ``myserver.somedomain.com``, the HostURI value should be set to:
 
-   </Directory>
+   ``HostURI=http://myserver.somedomain.com``
 
-   <FilesMatch "\.(?i:xgmml|xbel)$">
+#. The ``SMPT-XXXX`` properties need to be updated only if you want
+   to allow users to update their passwords.
 
-   Header set Content-Disposition attachment
+#. To enable ``LDAP Server Authentication``, you will need to edit
+   the following properties in ``ndex.properties`` file.
 
-   </FilesMatch>
+   ``USE_AD_AUTHENTICATION=`` This should be set to ``true`` if you want to turn
+   on LDAP authentication. Default value is ``false``.
 
-   ProxyPass /rest/ http://localhost:8080/ndexbio-rest/
-
-   ProxyPassReverse /rest/ http://localhost:8080/ndexbio-rest/
-
-   ProxyPass /v2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
-
-   ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
-
-   ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
-
-   ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
-
-   </VirtualHost>
-
-**Ubuntu**
-
-In Ubuntu, changes to the Apache server configuration are accomplished
-by adding a new config file **ndex.conf** under the
-/etc/apache2/sites-enabled directory. A typical setting in the ndex.conf
-file would be like this:
-
-   <IFModule reqtimeout_module>
-
-   RequestReadTimeout header=60,minrate=200 body=60,minrate=200
-
-   </IFModule>
-
-   <VirtualHost \*:80>
-
-   ServerAdmin support@ndexbio.org
-
-   DocumentRoot /opt/ndex/ndex-webapp
-
-   <Directory />
-
-   Options FollowSymLinks
-
-   AllowOverride None
-
-   </Directory>
-
-   <Directory /opt/ndex/ndex-webapp>
-
-   Options Indexes FollowSymLinks MultiViews
-
-   AllowOverride None
-
-   Require all granted
-
-   </Directory>
-
-   <FilesMatch "\.(?i:xgmml|xbel)$">
-
-   Header set Content-Disposition attachment
-
-   </FilesMatch>
-
-   ProxyPass /rest/ http://localhost:8080/ndexbio-rest/ timeout=3000
-
-   ProxyPassReverse /rest/ http://localhost:8080/ndexbio-rest/
-
-   ProxyPass /v2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
-
-   ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
-
-   ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
-
-   ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
-
-   ProxyPass /tempcx/ http://localhost:8286/tempfile/v1/ timeout=3000
-
-   ProxyPassReverse /tempcx/ http://localhost:8286/tempfile/v1/
-
-   ProxyPass /#/newNetwork/ http://localhost:80/#/network/ timeout=3000
-
-   ProxyPassReverse /#/newNetwork/ http://localhost:80/#/network/
-
-   </VirtualHost>
-
-**3b) Initialize the PostgreSQL database**
-
-The NDEx 2.0 server uses PostgreSQL server as a backend database. The
-PostgreSQL database needs to be initialized and started before you start
-the NDEx 2.0 server. You can use this command to create a user and a
-database in your PostgreSQL server:
-
--bash-4.2$ psql
-
-psql (9.5.4)
-
-Type "help" for help.
-
-postgres=#
-
-create role ndexserver LOGIN password 'my_password' NOSUPERUSER INHERIT
-NOCREATEDB NOCREATEROLE NOREPLICATION;
-
-ALTER ROLE ndexserver
-
-SET search_path = core, "$user", public;
-
-CREATE DATABASE ndex
-
-WITH OWNER = ndexserver
-
-ENCODING = 'UTF8'
-
-TABLESPACE = pg_default
-
-LC_COLLATE = 'en_US.UTF-8'
-
-LC_CTYPE = 'en_US.UTF-8'
-
-CONNECTION LIMIT = -1;
-
-\\q
-
-After the database and user are created. You can create the schema using
-the file scripts/ndex_db_schema.sql. The command can be something like
-this:
-
--bash-4.2$ psql ndex <~/ndex_db_schema.sql
-
-**Note:** You might need to modify the pg_hba.conf file to allow
-connections from NDEx server. For example, you can add the following
-line to allow the ndexserver user to connect from the same server where
-the Postgres server is installed.
-
-local ndex ndexserver md5
-
-**3c) Changing NDEx server properties**
-
-The NDEx server configuration file is called **ndex.properties** and can
-be found under directory /opt/ndex/conf.
-
-**!!! The default values of the following properties should never be
-modified !!!**
-
-   NdexSystemUser=ndexadministrator
-
-   NdexSystemUserPassword=admin888
-
-   NdexSystemUserEmail=support2@ndexbio.org
-
-**1)** Change the **HostURI property**. You need to set its value to the
-host name of your machine with the http prefix.
-
-For example, if you are installing NDEx to a machine named
-*myserver.somedomain.com*, the HostURI value should be set to:
-*HostURI=http://myserver.somedomain.com*
-
-**2)** The **SMPT-XXXX** properties need to be updated only if you want
-to allow users to update their passwords.
-
-**3)** To enable **LDAP Server Authentication**, you will need to edit
-the ndex.properties configurationfollowing properties:
-
-USE_AD_AUTHENTICATION= This should be set to “true” if you want to turn
-on LDAP authentication. Default value is *false*.
-
-AD_USE_SSL= Set to true if you want to use SSL with LDAP. Default value
-is *false*.
+   ``AD_USE_SSL=`` Set to ``true`` if you want to use SSL with LDAP. Default value
+   is ``false``.
 
 PROP_LDAP_URL= This property specifies the URL of your LDAP server. For
 example, it can be\ *ldap:/dir.mycompany.com:389* for non-secured server

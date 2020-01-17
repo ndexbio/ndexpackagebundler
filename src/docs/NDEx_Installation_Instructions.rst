@@ -29,8 +29,8 @@ a. Make sure **Java 8** or Java 11 is installed in your system.
 
 In the following instructions, the ndex account is used to run tomcat
 server (and thereby the NDEx REST server) and all files are configured
-with the ndex user as owner. The tomcat7 start and stop scripts
-automatically use the ndex user. In all other situations, **it is
+with the ndex user as owner. The tomcat start and stop scripts
+automatically use the ``ndex`` user. In all other situations, **it is
 necessary** to assume the role of the ndex user with ``sudo su – ndex``.
 
 Step 2 – DOWNLOAD AND INSTALL NDEx ARCHIVE
@@ -122,8 +122,9 @@ a. Download Miniconda to the temp directory and update the script to be executab
       ndex_exporters.py --version
       # above should output ndex_exporters.py <version>
 
+
 #. Be sure to remove ``/tmp/Miniconda3-latest-Linux-x86_64.sh`` when
-done
+   done
 
 Step 4 – CONFIGURATION
 ---------------------------
@@ -140,18 +141,18 @@ a. Configuring the Apache web server
 
    Details:
 
-   -  The Tomcat main page is served at host:8080
+   -  The Tomcat main page is served at *host:8080*
 
    -  Tomcat makes the REST server webapp available at
-      host:8080/ndexbio-rest.
+      *host:8080/ndexbio-rest*.
 
-   -  In the typical configuration, the ndex web ui is served by Apache on
+   -  In the typical configuration, the NDEx web ui is served by Apache on
       the same server
 
    -  The document root is changed to ``/opt/ndex/ndex-webapp`` (the files in
       ``/opt/ndex/ndex-webapp`` are from the project ndex-webapp)
 
-   -  To conveniently use the REST server from the ndex web ui we setup a
+   -  To conveniently use the REST server from the NDEx web ui we setup a
       proxy so that it will be available as a “folder” of the website.
 
    -  For example, if the website is deployed at http://www.ndexbio.org, the
@@ -242,10 +243,6 @@ a. Configuring the Apache web server
          ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
          ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
          ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
-         ProxyPass /tempcx/ http://localhost:8286/tempfile/v1/ timeout=3000
-         ProxyPassReverse /tempcx/ http://localhost:8286/tempfile/v1/
-         ProxyPass /#/newNetwork/ http://localhost:80/#/network/ timeout=3000
-         ProxyPassReverse /#/newNetwork/ http://localhost:80/#/network/
       </VirtualHost>
 
 #. Initialize the PostgreSQL database
@@ -613,16 +610,14 @@ a. Configuring the Apache web server
 
             {
              "topMenu": [
-             {
-              "label": string,
-              "href": string,
-              "warning": string,
-              "showWarning": boolean
-
-             },
-             . . .
-             ]
-            }
+              {
+               "label": string,
+               "href": string,
+               "warning": string,
+               "showWarning": boolean
+              },
+              . . .
+             ]}
 
          -  ``label`` defines the menu item label;
 
@@ -643,245 +638,181 @@ a. Configuring the Apache web server
 
             {
              "items" : [
-             {
-              "type": "user \| group \| networkSet \| network ",
-              "UUID": "UUID of user, group, networkSet or network",
-              "title": "Title of the item"
-             },
-             . . .
+              {
+               "type": "user \| group \| networkSet \| network ",
+               "UUID": "UUID of user, group, networkSet or network",
+               "title": "Title of the item"
+              },
+              . . .
              ]}
 
-b. | Featured_content.json - The content in this file populates the
-        Featured Content box in the landing page. Its format is:
-      | {
+      #. ``featured_content.json`` The content in this file populates the
+         "Featured Content" box in the landing page. Its format is:
 
-..
+         .. code-block::
 
-   "items" : [
+            {
+             "items" : [
+              {
+               "type": string,
+               "UUID": string,
+               "imageURL": string,
+               "URL": string,
+               "title": string,
+               "text": string
+              },
+              . . .
+             ]}
 
-   {
+         - ``type`` has one of the values: user, group, networkSet, network,
+           webPage, publication;
 
-   "type": string,
+         - ``UUID`` is only used for types user, group, networkSet, network;
 
-   "UUID": string,
+         - ``imageURL`` specifies the URL of the image for this item.
 
-   "imageURL": string,
+         - ``URL`` When the type is webPage or publication. This value specifies the
+           URL for that web page or publication.
 
-   "URL": string,
+         - ``title`` specifies the title of this element.
 
-   "title": string,
+         - ``text`` is description of this element.
 
-   "text": string
-
-   },
-
-   . . .
-
-   ]
-
-   }
-
--  type has one of the values: user, group, networkSet, network,
-      webPage, publication;
-
--  UUID is only used for types user, group, networkSet, network;
-
--  imageURL specifies the URL of the image for this item.
-
--  URL When the type is webPage or publication. This value specifies the
-      URL for that web page or publication.
-
--  title specifies the title of this element.
-
--  text is description of this element.
-
-   a. main.json- The content of this file specifies a list of html files
+      #. ``main.json`` The content of this file specifies a list of html files
          that can be used to populate the Main Channel of the landing
          page. Each file will be displayed as a column in this channel.
          NDEx web app supports up to 4 columns in this channel. The
          format of this file is:
 
-..
+         .. code-block::
 
-   {
+            {
+             "mainContent" : [
+              {
+               "title": string,
+               "content": string,
+               “href”: string
+              },
+              . . .
+             ]}
 
-   "mainContent" : [
+         - ``title`` - for documentation only. Not used in the display.
 
-   {
+         - ``content`` - file name of the html file
 
-   "title": string,
+         - ``href`` (optional) The URL the web app should jump to when user click
+           the ‘Learn more…’ at the end of this column.
 
-   "content": string,
+      #. ``logos.json`` This file configures the logos channel above the
+         footer. Its format is:
 
-   “href”: string
+         .. code-block::
 
-   },
+            {
+             "logos": [
+              {
+               "image": string,
+               "title": string,
+               "href" : string
+              },
+              . . .
+             ]}
 
-   . . .
+         - ``image`` Relative path of the image files on this server from the
+           current directory.
 
-   ]
+         - ``title`` Mouse over text for this logo image.
 
-   }
+         - ``href`` The URL of the web page to display when the logo is clicked.
 
--  title - for documentation only. Not used in the display.
+      #. ``footer.html`` Configures the footer of the web app.
 
--  content - file name of the html file
 
--  href - (optional) The URL the web app should jump to when user click
-      the ‘Learn more…’ at the end of this column.
-      
-     Note: you can use the doc4.html file in the webapp_landingpage_configuration_template 
-     folder to point integrate the home page of NDEx iQuery into NDEx landing page. To
-     configure you NDEx landing page to point to your instance of iQuery, you can just modify
-     the value of baseUrl variable in line 294 of doc4.html to point to your iQuery web server.
+   **Note**: The following configuration parameters are no longer supported
+   in this version: **NETWORK_POST_ELEMENT_LIMIT**
 
-   a. | logos.json - This file configures the logos channel above the
-           footer. Its format is:
-         | {
+   **Note:** you can use the ``doc4.html`` file in the ``webapp_landingpage_configuration_template``
+   folder to point integrate the home page of NDEx iQuery into NDEx landing page. To
+   configure you NDEx landing page to point to your instance of iQuery, you can just modify
+   the value of ``baseUrl`` variable in line 294 of ``doc4.html`` to point to your iQuery web server.
 
-..
+#. Starting and stopping Apache
 
-   "logos": [
+   Now that you have finished configuring Apache, you may start it so that
+   the front-end of your NDEx server runs. Overall, for your NDEx server to
+   run properly, both Apache and Tomcat must be running.
 
-   {
+   **CentOS**
 
-   "image": string,
+   ======= ====================================
+   Start   ``sudo /sbin/service httpd start``
+   Stop    ``sudo /sbin/service httpd stop``
+   Restart ``sudo /sbin/service httpd restart``
+   ======= ====================================
 
-   "title": string,
+   **Ubuntu**
 
-   "href" : string
+   ======= ====================================
+   Start   ``sudo /etc/init.d/apache2 start``
+   ======= ====================================
+   Stop    ``sudo /etc/init.d/apache2 stop``
+   Restart ``sudo /etc/init.d/apache2 restart``
+   ======= ====================================
 
-   },
-
-   . . .
-
-   ]
-
-   }
-
--  image - relative path of the image files on this server from the
-      current directory.
-
--  title - mouse over text for this logo image.
-
--  href - The URL of the web page to display when the logo is clicked.
-
-   a. 
-
-footer.html - Configures the footer of the web app.
-
--  
-
--  
-
--  
-
--  
-
--  
-
--  
-
--  
-
--  
-
--  
-
--  
-
--  
-
--  
-
--  nal.
-
--  
-
--  
-
--  
-
-**Note**: The following configuration parameters are no longer supported
-in this version: **NETWORK_POST_ELEMENT_LIMIT**
-
-**3e) Starting and stopping Apache**
-
-Now that you have finished configuring Apache, you may start it so that
-the front-end of your NDEx server runs. Overall, for your NDEx server to
-run properly, both Apache and Tomcat must be running.
-
-**CentOS**
-
-======= ===================================
-Start      sudo /sbin/service httpd start
-======= ===================================
-Stop       sudo /sbin/service httpd stop
-Restart    sudo /sbin/service httpd restart
-======= ===================================
-
-**Ubuntu**
-
-======= ===================================
-Start      sudo /etc/init.d/apache2 start
-======= ===================================
-Stop       sudo /etc/init.d/apache2 stop
-Restart    sudo /etc/init.d/apache2 restart
-======= ===================================
-
-Step 4 – START THE NDEX-REST SERVER
+Step 5 – START THE NDEX-REST SERVER
 ----------------------------------------
 
-**Note: M**\ ake sure you switch to user ndex before you start NDEx REST
+**Note:** Make sure you switch to user ``ndex`` before you start NDEx REST
 servers.
 
-**4a) Starting Solr**
+a. Starting Solr
 
-NDEx v2.0 has **Solr 8.1.1**\ as a component in the server bundle. The
-HEAP size is set to 1g in solr/bin/solr.in.sh in the bundle. You can
-modify it to a larger number to fully utilize the physical memory on
-your machine. The Solr service needs to be started before the NDEx
-Tomcat server is started. To start the Solr service, use the following
-commands (assuming that the NDEx bundle is installed under directory
-/opt/ndex):
+   NDEx v2.0 has **Solr 8.1.1** as a component in the server bundle. The
+   HEAP size is set to ``1g`` in ``solr/bin/solr.in.sh`` in the bundle. You can
+   modify it to a larger number to fully utilize the physical memory on
+   your machine. The Solr service needs to be started before the NDEx
+   Tomcat server is started. To start the Solr service, use the following
+   commands (assuming that the NDEx bundle is installed under directory
+   ``/opt/ndex``):
 
-cd /opt/ndex/solr
+   .. code-block::
 
-bin/solr start -m 32g
+      cd /opt/ndex/solr
+      bin/solr start -m 32g
 
-**4b) Starting the Tomcat server**
+#. Starting the Tomcat server
 
-You can start and stop the service with its standard scripts under
-/opt/ndex/tomcat/bin
+   You can start and stop the service with its standard scripts under
+   ``/opt/ndex/tomcat/bin``
 
-   cd /opt/ndex/tomcat/bin
+   .. code-block::
 
-   sudo su - ndex
+      cd /opt/ndex/tomcat/bin
+      sudo su - ndex
+      bash startup.sh
+      bash shutdown.sh
 
-   bash startup.sh
+   **NOTE**: if you are having any trouble getting Tomcat or NDEx
+   configured, it’s a good idea to launch it “manually” without detaching
+   so that you can see any errors:
 
-   bash shutdown.sh
+   .. code-block::
 
-\**\* **NOTE**: if you are having any trouble getting Tomcat or NDEx
-configured, it’s a good idea to launch it “manually” without detaching
-so that you can see any errors:
+      sudo su - ndex
+      bash catalina.sh run
 
-   sudo su - ndex
+#. Start the Query Service
 
-   bash catalina.sh run
+   Go to the directory ``query_engine`` and run the script ``run.sh`` to start the
+   neighborhood query engine.
 
-**4c) Start the Query Service.**
+#. Proxy Issues
 
-Go to the directory query_engine and run the script run.sh to start the
-neighborhood query engine.
-
-**4d) Proxy Issues**
-
-If after completing these steps the front-end of your NDEx server does
-not seem to be talking to the back-end, it may be because your security
-settings are preventing your proxy settings from going into effect. If
-you believe this may be the case, please see your local system
-administrator.
+   If after completing these steps the front-end of your NDEx server does
+   not seem to be talking to the back-end, it may be because your security
+   settings are preventing your proxy settings from going into effect. If
+   you believe this may be the case, please see your local system
+   administrator.
 
 **CONGRATULATIONS !!!** You have successfully installed the NDEx REST
 server and web application user interface.

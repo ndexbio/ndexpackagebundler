@@ -126,8 +126,15 @@ popd
 
 pushd $RELEASEDIR
 echo "Generating documentation"
-
+mkdir -p ../tmpdocs
 for Y in `find ../../src/docs -name "*.rst" -type f` ; do 
+  rstfilename=`basename $Y`
+  LASTUPDATE=`git log -1 --format=%cd --"date=format:%b %e, %Y" $Y`
+  
+  cat $Y | sed "s/@@VERSION@@/${VERSION}/g" | sed "s/@@TOMCATVERSION@@/${TOMCAT_VERSION}/g" | sed "s/@@SOLRVERSION@@/${SOLR_VERSION}/g" | sed "s/@@LASTUPDATE@@/${LASTUPDATE}/g" > ../tmpdocs/$rstfilename
+done
+
+for Y in `find ../tmpdocs -name "*.rst" -type f` ; do
    rstfilename=`basename $Y`
    pdffilename=`echo $rstfilename | sed "s/\.rst$/\.pdf/"`
    echo "Running rst2pdf $Y $pdffilename" 

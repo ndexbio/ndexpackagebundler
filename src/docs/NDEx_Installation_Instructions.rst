@@ -352,9 +352,7 @@ a. Configuring the Apache web server
    user name in LDAP queries.
 
    ``AD_SEARCH_FILTER=`` The string pattern to be used in the LDAP search. For
-   example it can be something like:
-
-   ``‪\ *(&(objectclass=user)(cn=%USER_NAME%%)).*``
+   example it can be something like: ``(&(objectclass=user)(cn=%%USER_NAME%%))``
 
    ``AD_SEARCH_BASE=`` (Optional) This property defines the search base
    parameters: for example, if you want to search in the domain

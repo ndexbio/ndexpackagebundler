@@ -20,7 +20,8 @@ initially has the following files:
 Prerequisites
 ---------------
 
-* A working local NDEx server that can be visited with a web browser
+* It is assumed the instructions found in ``NDEx_Installation_instructions.pdf``
+  have been followed to create a working NDEx installation that is currently running
 
 * An NDEx account on the local NDEx server which can hold the networks to load into Interactome (See https://home.ndexbio.org/create-an-ndex-account/)
 

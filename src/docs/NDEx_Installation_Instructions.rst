@@ -815,5 +815,5 @@ a. Starting Solr
 Step 6 - CONFIGURE IQUERY SERVICES
 --------------------------------------
 
-**CONGRATULATIONS !!!** You have successfully installed the NDEx REST
-server and web application user interface.
+The last task is the installation of the iQuery web interface.
+For instructions visit: https://github.com/cytoscape/search-portal

@@ -20,9 +20,9 @@ Prerequisites
 
 * A working local NDEx server that can be visited with a web browser
 
-* Enrichment REST Service properly configured and running
+* Enrichment REST Service properly configured and running as described in ``Enrichment_Installation_Instructions.pdf``
 
-* Interactome REST Service properly configured and running
+* Interactome REST Service properly configured and running as described in ``Interactome_Installation_Instructions.pdf``
 
 Configuring Service
 ----------------------------

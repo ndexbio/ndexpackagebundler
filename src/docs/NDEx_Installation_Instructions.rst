@@ -1,7 +1,7 @@
-NDEx Installation Instructions
-===================================
+NDEx Installation Instructions Version @@VERSION@@
+====================================================================
 
-*Last updated: Jan 13, 2020*
+*Last updated: @@LASTUPDATE@@*
 
 Step 1 – SYSTEM SETUP
 -----------------------------
@@ -41,21 +41,21 @@ The NDEx bundle is a compressed archive and can be downloaded from our
 
 
 a. Obtain the latest NDEx bundle from ftp://ftp.ndexbio.org.
-   In this example, we use **NDEx-v2.4.4**.
+   In this example, we use **NDEx-v@@VERSION@@**.
    The archive can be downloaded from the command line with ``wget``:
 
    .. code-block::
 
       cd /opt
-      sudo wget ftp://ftp.ndexbio.org/NDEx-v2.4.4/ndex-2.4.4.tar.gz
+      sudo wget ftp://ftp.ndexbio.org/NDEx-v@@VERSION@@/ndex-@@VERSION@@.tar.gz
 
 #. Extract the downloaded archive to ``/opt`` and change ownership to **ndex** user
 
    .. code-block::
 
       cd /opt
-      sudo tar -zxf ndex-2.4.4.tar.gz
-      mv ndex-2.4.4 ndex
+      sudo tar -zxf ndex-@@VERSION@@.tar.gz
+      mv ndex-@@VERSION@@ ndex
       sudo chown -R ndex:ndex ndex
 
 
@@ -64,7 +64,7 @@ a. Obtain the latest NDEx bundle from ftp://ftp.ndexbio.org.
    .. code-block::
 
       /opt/ndex/
-                apache-tomcat-x.x.xx/
+                apache-tomcat-@@TOMCATVERSION@@/
                 bin/
                 conf/
                 data/
@@ -76,9 +76,9 @@ a. Obtain the latest NDEx bundle from ftp://ftp.ndexbio.org.
                 ndex-webapp/
                 ndex-webapp-ssh/
                 resources/
-                solr -> solr-8.1.1
-                solr-8.1.1/
-                tomcat -> apache-tomcat-x.x.xx
+                solr -> solr-@@SOLRVERSION@@
+                solr-@@SOLRVERSION@@/
+                tomcat -> apache-tomcat-@@TOMCATVERSION@@
                 uploaded-networks/
                 workspace/
 
@@ -811,6 +811,9 @@ a. Starting Solr
    settings are preventing your proxy settings from going into effect. If
    you believe this may be the case, please see your local system
    administrator.
+
+Step 6 - CONFIGURE IQUERY SERVICES
+--------------------------------------
 
 **CONGRATULATIONS !!!** You have successfully installed the NDEx REST
 server and web application user interface.

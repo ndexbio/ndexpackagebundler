@@ -1,5 +1,7 @@
-Enrichment Configuration and Invocation
-==========================================
+Enrichment Configuration and Invocation @@VERSION@@
+=========================================================
+
+*Last updated: @@LASTUPDATE@@*
 
 This document provides instructions on configuring and running the Enrichment REST service
 packaged with NDEx bundle.

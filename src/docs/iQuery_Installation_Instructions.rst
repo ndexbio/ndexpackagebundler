@@ -1,5 +1,7 @@
-iQuery Configuration and Invocation
-=============================================
+iQuery Configuration and Invocation @@VERSION@@
+=====================================================================
+
+*Last updated: @@LASTUPDATE@@*
 
 This document provides instructions on running the iQuery REST service
 packaged with NDEx bundle.

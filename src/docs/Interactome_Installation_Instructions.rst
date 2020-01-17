@@ -1,5 +1,7 @@
-Interactome Configuration and Invocation
-==========================================
+Interactome Configuration and Invocation @@VERSION@@
+=================================================================
+
+*Last updated: @@LASTUPDATE@@*
 
 This document provides instructions on configuring and running the Interactome REST service
 packaged with NDEx bundle.

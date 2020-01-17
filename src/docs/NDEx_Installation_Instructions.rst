@@ -812,8 +812,29 @@ a. Starting Solr
    you believe this may be the case, please see your local system
    administrator.
 
-Step 6 - CONFIGURE IQUERY SERVICES
---------------------------------------
+Step 6 - INSTALLATION OF IQUERY
+---------------------------------------------
 
-The last task is the installation of the iQuery web interface.
-For instructions visit: https://github.com/cytoscape/search-portal
+This step involves configuration and installation of iQuery REST services and
+web application.
+
+a. Configuration of iQuery Enrichment REST service can be
+   accomplished by following instructions
+   found in ``Enrichment_Installation_Instructions.pdf``.
+
+#. Configuration of iQuery Interactome REST service can be
+   accomplished by following instructions
+   found in ``Interactome_Installation_Instructions.pdf``.
+
+#. Configuration of iQuery Integrated Query REST service can be
+   accomplished by following instructions
+   found in ``iQuery_Installation_Instructions.pdf``.
+
+#. The last task is the installation and configuration of
+   the iQuery web interface. For instructions visit:
+   https://github.com/cytoscape/search-portal
+
+
+**CONGRATULATIONS !!!** You have successfully installed the NDEx REST
+server and web application user interface along with iQuery
+REST server and web application.

@@ -73,6 +73,23 @@ directory into the local install of NDEx and to create a networkset.
       sudo -u ndex /bin/bash # become ndex user
       ./run.sh
 
+#. Test service is up
+
+   .. code-block::
+
+      curl 'http://localhost:8291/enrichment/v1/status'
+
+   Should output something similar to this:
+
+   .. code-block::
+
+      {
+       "status":"ok",
+       "restVersion":"0.6.5",
+       "load":[0.01,-1.0,-1.0],
+       "pcDiskFull":15,
+       "queries":null
+      }
 #. Test service with example dataset
 
    This step requires ``curl`` command but can also be done with any tool that can invoke REST services
@@ -92,8 +109,6 @@ directory into the local install of NDEx and to create a networkset.
       .. code-block::
 
          {"id":"f8ef982d-1b4a-3700-9855-243407a1b0d7"}
-
-
 
 
    b. **Check result**

@@ -329,337 +329,327 @@ a. Configuring the Apache web server
    ``AD_USE_SSL=`` Set to ``true`` if you want to use SSL with LDAP. Default value
    is ``false``.
 
-PROP_LDAP_URL= This property specifies the URL of your LDAP server. For
-example, it can be\ *ldap:/dir.mycompany.com:389* for non-secured server
-or *ldaps://dir.mycompany.com:636* for secured server.
+   ``PROP_LDAP_URL=`` This property specifies the URL of your LDAP server.
 
-AUTHENTICATED_USER_ONLY= The NDEx server will run in “Authenticated user
-only” mode when this value is set to true. In this mode, all API
-functions require user authentication except: */admin/status*,
-*/user/authenticate* and *create user*. Default value is *false*.
+   For example, it can be ``ldap:/dir.mycompany.com:389``
+   for non-secured server or
+   ``ldaps://dir.mycompany.com:636`` for secured server.
 
-KEYSTORE_PATH= This is the path of Java keystore in your JVM. This value
-is required when “AD_USE_SSL” is set to true.
+   ``AUTHENTICATED_USER_ONLY=`` The NDEx server will run in “Authenticated user
+   only” mode when this value is set to ``true``. In this mode, all API
+   functions require user authentication except: */admin/status*,
+   */user/authenticate* and *create user*. Default value is ``false``.
 
-JAVA_KEYSTORE_PASSWD= The password of your Java keystore if you have a
-password setup for it.
+   ``KEYSTORE_PATH=`` This is the path of Java keystore in your JVM. This value
+   is required when ``AD_USE_SSL`` is set to ``true``.
 
-AD_CTX_PRINCIPLE= The string pattern to use when setting the
-SECURITY_PRINCIPAL context in the LDAP authentication. For example, if
-you set this value to “NA\\%%USER_NAME%%”, the server will append string
-“NA\\” to your user name and use it to set the Context.
-SECURITY_PRINCIPAL value in the LDAP search. %%USER_NAME%%” is a
-reserved word in NDEX LDAP setting, it will be replaced by the user’s
-user name in LDAP queries.
+   ``JAVA_KEYSTORE_PASSWD=`` The password of your Java keystore if you have a
+   password setup for it.
 
-AD_SEARCH_FILTER= The string pattern to be used in the LDAP search. For
-example it can be something like:
-‪\ *(&(objectclass=user)(cn=%USER_NAME%%)).*
+   ``AD_CTX_PRINCIPLE=`` The string pattern to use when setting the
+   ``SECURITY_PRINCIPAL`` context in the LDAP authentication. For example, if
+   you set this value to ``NA\\%%USER_NAME%%``, the server will append string
+   ``NA\\`` to your user name and use it to set the Context.
+   SECURITY_PRINCIPAL value in the LDAP search. ``%%USER_NAME%%`` is a
+   reserved word in NDEX LDAP setting, it will be replaced by the user’s
+   user name in LDAP queries.
 
-AD_SEARCH_BASE= (Optional) This property defines the search base
-parameters: for example, if you want to search in the domain
-*my.company1.com,* you can define the property as:
-AD_SEARCH_BASE=DC=my,DC=company,DC=com. If you don’t define this
-property, no search base will be used in the LDAP authentication.
+   ``AD_SEARCH_FILTER=`` The string pattern to be used in the LDAP search. For
+   example it can be something like:
 
-AD_NDEX= (Optional) If this property is defined, only the users in the
-declared group will be allowed to create accounts and use the NDEx
-server.
+   ``‪\ *(&(objectclass=user)(cn=%USER_NAME%%)).*``
 
-AD_DELEGATED_ACCOUNT= (Optional) In some use cases. The authentication
-has 2 steps. 1) Using a generic account to connect to LDAP server and
-run a query on the LDAP server on the accountName to get a fully
-qualified name of that user. 2) Use the fully qualified name to
-authenticate the user. The username and password of the generic account
-can be defined in this parameter and AD_DELEGATED_ACCOUNT_PASSWORD
-property\ **.** No generic account is used if this parameter is not
-defined.
+   ``AD_SEARCH_BASE=`` (Optional) This property defines the search base
+   parameters: for example, if you want to search in the domain
+   ``my.company1.com`` you can define the property as:
+   ``AD_SEARCH_BASE=DC=my,DC=company,DC=com``. If you don’t define this
+   property, no search base will be used in the LDAP authentication.
 
-When this parameter is defined, AD_DELEGATED_ACCOUNT_PASSWORD becomes a
-required parameter.
+   ``AD_NDEX=`` (Optional) If this property is defined, only the users in the
+   declared group will be allowed to create accounts and use the NDEx
+   server.
 
-AD_DELEGATED_ACCOUNT_PASSWORD= (Optional) Required when
-AD_DELEGATED_ACCOUNT is defined.
+   ``AD_DELEGATED_ACCOUNT=`` (Optional) In some use cases. The authentication
+   has 2 steps.
 
-AD_CREATE_USER_AUTOMATICALLY= If AD authentication is turned on and this
-parameter is set to true, when a user logs in successfully for the first
-time using LDAP, the NDEx server will automatically create an NDEx
-account for that user. The NDEx server uses this user’s “givenName”,
-“sn” and “mail” attributes in the AD record as his firstName, lastName
-and emailAddress when creating the NDEx account.
+   1) Using a generic account to connect to LDAP server and
+      run a query on the LDAP server on the accountName to get a fully
+      qualified name of that user.
 
-AD_CTX_PRINCIPLE2= (Optional) The NDEx administrator can set this
-parameter in ndex.properties to enable the use of a second domain to
-search in the LDAP server.
+   2) Use the fully qualified name to
+      authenticate the user. The username and password of the generic account
+      can be defined in this parameter and ``AD_DELEGATED_ACCOUNT_PASSWORD``.
+      No generic account is used if this parameter is not
+      defined.
 
-AD_AUTH_USE_CACHE= (Optional) If the this property is set to true, The
-server will cache last 100 active users login info in memory for up-to
-10 minutes. Turning on the cache will reduce the load on your AD server,
-because every NDEx REST API call which requires authentication will send
-a request to you AD server. If your AD server throttles the requests,
-then it is necessary to turn the cache on.
+   When this parameter is defined, ``AD_DELEGATED_ACCOUNT_PASSWORD`` becomes a
+   required parameter.
 
-**4)** The **Log-Level** parameter controls how much log information is
-written to the *ndex.log* file located in the */opt/ndex/tomcat/logs*
-directory\ *.* Possible values are **info**, **error**, **debug** and
-**off**. The default value is **info**: in this mode, a log entry is
-created at the beginning and end of every API call on the server that
-also includes the error (exception) information. Setting Log-Level to
-**error** will only log exceptions. To disable logging, set Log-Level to
-**off**. IMPORTANT: after changing the Log-Level value, you need to
-restart your server for the new setting to take effect.
+   ``AD_DELEGATED_ACCOUNT_PASSWORD=`` (Optional) Required when
+   ``AD_DELEGATED_ACCOUNT`` is defined.
 
-**5) NeighborhoodQueryURL** The Root URL of the Neighborhood Query
-Endpoint. The default value is http://localhost:8284/query/v1/network/.
+   ``AD_CREATE_USER_AUTOMATICALLY=`` If AD authentication is turned on and this
+   parameter is set to true, when a user logs in successfully for the first
+   time using LDAP, the NDEx server will automatically create an NDEx
+   account for that user. The NDEx server uses this user’s ``givenName``,
+   ``sn`` and ``mail`` attributes in the AD record as his firstName, lastName
+   and emailAddress when creating the NDEx account.
 
-**6)** The NDEx v2.0 Server supports email verification upon account
-creation. The configuration parameter is **VERIFY_NEWUSER_BY_EMAIL**.
-The default value is *false*. When it is set to *true*, new accounts
-created on the server will be required to verify the email address used
-for registration. The createUser function has been modified to implement
-the first part of this feature. When user creates an account and the
-server requires email verification, the object returned from this
-function will not have a UUID value for the user, and the server will
-send a verification email to the user.
+   ``AD_CTX_PRINCIPLE2=`` (Optional) The NDEx administrator can set this
+   parameter in ``ndex.properties`` to enable the use of a second domain to
+   search in the LDAP server.
 
-| Verification email example:
-| Dear <First name Last name>
-| Thank you for registering an NDEx account.
-| Please click the link below to confirm your email address and start
-  using NDEx now! You can also copy and paste the link in a new browser
-  window.
-| >>LINK HERE>>
-| This is an automated message, please do not respond to this email. If
-  you need help, contact us by emailing: support@ndexbio.org
-| Best Regards,
-| The NDEx team
+   ``AD_AUTH_USE_CACHE=`` (Optional) If the this property is set to ``true``, The
+   server will cache last 100 active users login info in memory for up-to
+   10 minutes. Turning on the cache will reduce the load on your AD server,
+   because every NDEx REST API call which requires authentication will send
+   a request to you AD server. If your AD server throttles the requests,
+   then it is necessary to turn the cache on.
 
-A new rest API function implements the acceptance of the verification
-code and activation of the account.
+#. The ``Log-Level`` parameter controls how much log information is
+   written to the ``ndex.log`` file located in the ``/opt/ndex/tomcat/logs``
+   directory.
+   Possible values are ``info``, ``error``, ``debug`` and
+   ``off``. The default value is ``info``: in this mode, a log entry is
+   created at the beginning and end of every API call on the server that
+   also includes the error (exception) information. Setting Log-Level to
+   ``error`` will only log exceptions. To disable logging, set Log-Level to
+   ``off``.
+   **IMPORTANT:** after changing the Log-Level value, you need to
+   restart your server for the new setting to take effect.
 
-| @GET
-| @PermitAll
-| @Path("/{userId}/verify/{verificationCode}")
-| The NDEx Web UI has been modified to redirect the new user to a
-  verification page instead of their homepage, if verification is
-  enabled. On that page the user will be informed to check his email and
-  click the link in the confirmation email to validate his address. The
-  link will make an API call to perform the verification; if the
-  verification succeeds, the API will return a User object and the new
-  user (with an activated account) will now be able to login to his
-  newly created NDEx account.
+#. ``NeighborhoodQueryURL`` The Root URL of the Neighborhood Query
+   Endpoint. The default value is http://localhost:8284/query/v1/network/.
 
-7) Configure the connection parameter to PostgreSQL database. These 3
-parameters need to be set in the configuration file:
+#. The NDEx v2.0 Server supports email verification upon account
+   creation. The configuration parameter is ``VERIFY_NEWUSER_BY_EMAIL``.
+   The default value is ``false``. When it is set to ``true``, new accounts
+   created on the server will be required to verify the email address used
+   for registration. The createUser function has been modified to implement
+   the first part of this feature. When user creates an account and the
+   server requires email verification, the object returned from this
+   function will not have a UUID value for the user, and the server will
+   send a verification email to the user.
 
-NdexDBURL=jdbc:postgresql://localhost:5432/ndex
+   .. code-block::
 
-NdexDBUsername=ndexserver
+      Verification email example:
+      Dear <First name Last name>
 
-NdexDBDBPassword=ndex
+      Thank you for registering an NDEx account.
 
-8) Set these parameters if you want to enable the Google OAuth feature
-on the server:
+      Please click the link below to confirm your email address and start
+      using NDEx now! You can also copy and paste the link in a new browser
+      window.
 
-USE_GOOGLE_AUTHENTICATION=true
+      >>LINK HERE>>
 
-   GOOGLE_OAUTH_CLIENT_ID=xxxxx.apps.googleusercontent.com
+      This is an automated message, please do not respond to this email. If
+      you need help, contact us by emailing: support@ndexbio.org
 
-You can get a Google OAUTH Client Id by registering your server with a
-Google developer account at http://console.developers.google.com/ .
+      Best Regards,
 
-9) USER_STORAGE_LIMIT Its value is a float which sets the default disk
-quota for each user on this server. The unit is GB. 10.5 means each user
-on this server has 10.5G to store network data.
+      The NDEx team
 
-10) SolrURL The URL of Solr REST endpoint. The default value is
-http://localhost:8983/solr
+   A new rest API function implements the acceptance of the verification
+   code and activation of the account.
 
-**3d) Changing NDEx web app properties**
+   .. code-block::
 
-**Starting with release 2.4.0, configuration of NDEx Web Application
-(Web App) has been split into two parts:**
+      @GET
+      @PermitAll
+      @Path("/{userId}/verify/{verificationCode}")
 
-1. ndex-webapp-config.js under directory /opt/ndex/ndex-webapp
+   The NDEx Web UI has been modified to redirect the new user to a
+   verification page instead of their homepage, if verification is
+   enabled. On that page the user will be informed to check his email and
+   click the link in the confirmation email to validate his address. The
+   link will make an API call to perform the verification; if the
+   verification succeeds, the API will return a User object and the new
+   user (with an activated account) will now be able to login to his
+   newly created NDEx account.
+
+#. Configure the connection parameter to PostgreSQL database. These 3
+   parameters need to be set in the configuration file:
+
+   .. code-block::
+
+      NdexDBURL=jdbc:postgresql://localhost:5432/ndex
+      NdexDBUsername=ndexserver
+      NdexDBDBPassword=ndex
+
+#. Set these parameters if you want to enable the Google OAuth feature
+   on the server:
+
+   .. code-block::
+
+      USE_GOOGLE_AUTHENTICATION=true
+      GOOGLE_OAUTH_CLIENT_ID=xxxxx.apps.googleusercontent.com
+
+   You can get a Google OAUTH Client Id by registering your server with a
+   Google developer account at http://console.developers.google.com/ .
+
+#. `USER_STORAGE_LIMIT` Its value is a float which sets the default disk
+   quota for each user on this server. The unit is GB. 10.5 means each user
+   on this server has 10.5G to store network data.
+
+#. SolrURL The URL of Solr REST endpoint. The default value is
+   http://localhost:8983/solr
+
+#. Changing NDEx web app properties
+
+   Starting with release 2.4.0, configuration of NDEx Web Application
+   (Web App) has been split into two parts:
+
+   1. ``ndex-webapp-config.js`` under directory ``/opt/ndex/ndex-webapp``
       contains definition of some constants required for network
       querying, account refreshing, scroll interval for featured
       collections, location of home page configuration server, etc.,
-      and
 
-2. landing page configuration server (specified in
-      ndex-webapp-config.js) contains definition of Front (landing) page
+      Here is a list of the properties that can be configured:
+
+      * ``linkToReleaseDocs``
+        It’s value is a URL which points to the release notes
+        of this NDEx application. This parameter will allow users to go to a
+        NDEx release notes page when clicking the version number at the upper
+        left corner of the web app.
+
+        When this parameter is not set, the version number will not be
+        clickable.
+
+      * ``refreshIntervalInSeconds`` Integer number specifying time interval in
+        seconds for automatic reloading of My Account page for logged in users.
+        Default value is ``0`` (no automatic reloading).
+
+      * ``ndexServerUri`` Specifies the ndex server in use. Currently, NDEx only
+        supports http protocol. Support of https will be added in future
+        releases.
+
+      * ``idleTime`` Specifies the amount of time (in seconds) after which the user
+        is automatically logged out for inactivity. Default value is: ``3600``
+
+      * ``uploadSizeLimit`` Specifies the maximum file size (in Mb) that can be
+        uploaded using the web UI. Default value is ``none``, that means there is
+        no size limit.
+
+      * ``googleClientId`` The Google Client Id of the NDEx server this webapp is
+        connecting to.
+
+      * [STRIKEOUT:openInCytoscapeEdgeThresholdWarning: When opening a network
+        in Cytoscasp, users will be warned about possible performance issues if
+        the network is larger than the threshold specified. Default value for
+        this property is 100000.] [STRIKEOUT:-- described below]
+
+      * ``googleAnalyticsTrackingCode`` Google Analytics tracking ID of your app.
+
+      * [STRIKEOUT:networkDisplayLimit]: - not used in WebApp
+
+      * [STRIKEOUT:networkQueryLimit]: - not used in WebApp
+        (networkQueryEdgeLimit used instead, see below)
+
+      * ``networkQueryEdgeLimit`` Maximum number of edges that the network query
+        will return. This parameter is optional. If it is not specified in
+        ``ndex-webapp-config.js``, then it defaults to 50000. In case network query
+        finds more than ``networkQueryEdgeLimit`` edges then a warning that query
+        result cannot be displayed in browser is presented and if the user is...
+
+        1) anonymous they are prompted to login so that the query result could be
+           saved in her/his account,
+
+        2) logged in they have the option of saving the query result to her/his
+           account.
+
+      * [STRIKEOUT:networkTableLimit]: - not used in WebApp
+
+      * ``openInCytoscapeEdgeThresholdWarning`` Networks with this number of edges
+        will open in Cytoscape without warning. This parameter is optional. If
+        it is not specified, NDEx Web Application will initialize it to ``0``,
+        meaning that no warning will be issued when opening network in Cytoscape
+        no matter how many edges the network has. If this parameter is
+        specified, then a performance warning will be issued in case user
+        attempts to open a network with edges more than the value specified by
+        ``openInCytoscapeEdgeThresholdWarning``.
+
+      * ``landingPageConfigServer`` Required parameter that specifies configuration
+        server for NDEx Web Application front page. For NDEx Release 2.4.0,
+        ``landingPageConfigServer`` is set to
+        http://staging.ndexbio.org/landing_page_content/v2_4_0/.
+
+      * ``featuredContentScrollIntervalInMs`` This parameter specifies how fast (in
+        milliseconds) the items in Featured Content channel change. It is
+        required if Featured Content channel is defined in ``featured.json`` config
+        file on ``landingPageConfigServer``. There is no default value for this
+        parameter. It needs to be set manually.
+
+      * ``maxNetworksInSetToDisplay`` The maximum number of networks the web app
+        can display in a network set. If the number of networks in a set is more
+        than the value of this parameter, the web app will display a message and
+        won’t display the networks in this set. The default value of this
+        parameter is ``50000``.
+
+   2. Landing page configuration server (specified in
+      ``ndex-webapp-config.js``) contains definition of Front (landing) page
       of NDEx. Here you can adjust Home page appearance by configuring
 
-   a. **Top menu**
+      a. **Top menu**
+      #. **Featured Content channel**
+      #. **Main Content channel**
+      #. **Logos channel, and**
+      #. **Footer.**
 
-   b. **Featured Content channel**
+      Landing Page Configuration
 
-   c. **Main Content channel**
+      The location of Landing Page Configuration Server is defined by
+      ``landingPageConfigServer`` parameter in ``ndex-webapp-config.js``. The
+      following sections describe how to configure different channels of Landing
+      page. All json files mentioned in this section are **required**. Examples of
+      these configuration files can be found in ``ndex/webapp_landingpage_configuration_template``
+      folder in the bundle:
 
-   d. **Logos channel, and**
+      a. ``topmenu.json`` The content of this file controls the navigation bar
+         at the top of the screen. The format of this file is:
 
-   e. **Footer.**
+         .. code-block::
 
-**3d. 1) ndex-webapp-config.js**
+            {
+             "topMenu": [
+             {
+              "label": string,
+              "href": string,
+              "warning": string,
+              "showWarning": boolean
 
-The NDEx web-app configuration file *ndex-webapp-config.js* is found in
+             },
+             . . .
+             ]
+            }
 
-directory /opt/ndex/ndex-webapp. Here is a list of the properties that
-can be configured:
+         -  ``label`` defines the menu item label;
 
-linkToReleaseDocs It’s value is a URL which points to the release notes
-of this NDEx application. This parameter will allow users to go to a
-NDEx release notes page when clicking the version number at the upper
-left corner of the web app.
+         -  ``href`` is link to that menu item;
 
-When this parameter is not set, the version number will not be
-clickable.
+         -  ``showWarning`` element is optional. If it is not defined, it defaults to
+            ‘false’ meaning that after clicking on the menu item no warning
+            will be issued prior to following that menu link.
 
--  
+         -  ``warning`` in case showWarning argument is set to “true”, message
+            defined in the warning field will be shown and users will be asked
+            whether to follow the selected menu item or no.
 
--  
+      #. ``featured_networks.json`` The content in this file populates the
+         drop down list of “Featured Networks” button. Its format is:
 
--  
+         .. code-block::
 
--  
-
-refreshIntervalInSeconds: Integer number specifying time interval in
-seconds for automatic reloading of My Account page for logged in users.
-Default value is 0 (no automatic reloading).
-
-ndexServerUri: Specifies the ndex server in use. Currently, NDEx only
-supports http protocol. Support of https will be added in future
-releases.
-
-idleTime: Specifies the amount of time (in seconds) after which the user
-is automatically logged out for inactivity. Default value is: *3600*
-
-uploadSizeLimit: Specifies the maximum file size (in Mb) that can be
-uploaded using the web UI. Default value is:*none,* that means there is
-no size limit.
-
-googleClientId: The Google Client Id of the NDEx server this webapp is
-connecting to.
-
-[STRIKEOUT:openInCytoscapeEdgeThresholdWarning: When opening a network
-in Cytoscaspe, users will be warned about possible performance issues if
-the network is larger than the threshold specified. Default value for
-this property is 100000.] [STRIKEOUT:-- described below]
-
-googleAnalyticsTrackingCode: Google Analytics tracking ID of your app.
-
-[STRIKEOUT:networkDisplayLimit]: - not used in WebApp
-
-[STRIKEOUT:networkQueryLimit]: - not used in WebApp
-(networkQueryEdgeLimit used instead, see b elow)
-
-networkQueryEdgeLimit - Maximum number of edges that the network query
-will return. This parameter is optional. If it is not specified in
-ndex-webapp-config.js, then it defaults to 50000. In case network query
-finds more than networkQueryEdgeLimit edges then a warning that query
-result cannot be displayed in browser is presented and
-
-1) anonymous user is prompted to login so that the query result could be
-      saved in her/his account,
-
-2) logged in user has the option of saving the query result to her/his
-      account.
-
-[STRIKEOUT:networkTableLimit]: - not used in WebApp
-
-openInCytoscapeEdgeThresholdWarning:- Networks with this number of edges
-will open in Cytoscape without warning. This parameter is optional. If
-it is not specified, NDEx Web Application will initialize it to 0,
-meaning that no warning will be issued when opening network in Cytoscape
-no matter how many edges the network has. If this parameter is
-specified, then a performance warning will be issued in case user
-attempts to open a network with edges more than the value specified by
-openInCytoscapeEdgeThresholdWarning.
-
-landingPageConfigServer: required parameter that specifies configuration
-server for NDEx Web Application front page. For NDEx Release 4.2.0,
-landingPageConfigServer is set to
-'http://staging.ndexbio.org/landing_page_content/v2_4_0/'.
-
-featuredContentScrollIntervalInMs: this parameter specifies how fast (in
-milliseconds) the items in Featured Content channel change. It is
-required if Featured Content channel is defined in featured.json config
-file on landingPageConfigServer. There is no default value for this
-parameter. It needs to be set manually.
-
-maxNetworksInSetToDisplay: The maximum number of networks the web app
-can display in a network set. If the number of networks in a set is more
-than the value of this parameter, the web app will display a message and
-won’t display the networks in this set. The default value of this
-parameter is 50,000.
-
-3d. 2) Landing Page Configuration
-
-The location of Landing Page Configuration Server is defined by
-landingPageConfigServer parameter in ndex-webapp-config.js. The
-following sections describe how to configure different channels of Landing
-page. All json files mentioned in this section are required. Examples of 
-these configuration files can be found in ndex/webapp_landingpage_configuration_template
-folder in the bundle.-:
-
-a. | topmenu.json - The content of this file controls the navigation bar
-        at the top of the screen.The format of this file is:
-      | {
-
-..
-
-   "topMenu": [
-
-   {
-
-   "label": string,
-
-   "href": string,
-
-   "warning": string,
-
-   "showWarning": boolean
-
-   },
-
-   . . .
-
-   ]
-
-   }
-
--  label defines the menu item label;
-
--  href is link to that menu item;
-
--  showWarning element is optional. If it is not defined, it defaults to
-      ‘false’ meaning that after clicking on the menu item no warning
-      will be issued prior to following that menu link.
-
--  warning: in case showWarning argument is set to “true”, message
-      defined in the warning field will be shown and users will be asked
-      whether to follow the selected menu item or no.
-
-   a. | featured_networks.json - The content in this file populates the
-           drop down list of “Featured Networks” button. Its format is:
-         | {
-         | "items" : [
-
-..
-
-   {
-
-   "type": "user \| group \| networkSet \| network ",
-
-   "UUID": "UUID of user, group, networkSet or network",
-
-   "title": "Title of the item"
-
-   },
-
-   . . .
-
-   ] }
+            {
+             "items" : [
+             {
+              "type": "user \| group \| networkSet \| network ",
+              "UUID": "UUID of user, group, networkSet or network",
+              "title": "Title of the item"
+             },
+             . . .
+             ]}
 
 b. | Featured_content.json - The content in this file populates the
         Featured Content box in the landing page. Its format is:

@@ -71,6 +71,20 @@ directory into the local install of NDEx and to create a networkset.
       sudo -u ndex /bin/bash # become ndex user
       ./run.sh
 
+#. Test service
+
+   To test the service is up invoke the following ``curl`` command
+
+   .. code-block::
+
+      curl http://localhost:8287/interactome/ppi/v1/status
+
+   Which should return output like this:
+
+   .. code-block::
+
+      {"status":"online"}
+
 #. Stop Interactome Service
 
    .. code-block::

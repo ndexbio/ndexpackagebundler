@@ -816,9 +816,9 @@ Step 6 - INSTALLATION OF IQUERY
 ---------------------------------------------
 
 This step involves configuration and installation of iQuery REST services and
-web application.
+web application in order of steps below.
 
-a. Configuration of iQuery Enrichment REST service can be
+1. Configuration of iQuery Enrichment REST service can be
    accomplished by following instructions
    found in ``Enrichment_Installation_Instructions.pdf``.
 

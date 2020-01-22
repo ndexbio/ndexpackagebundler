@@ -582,18 +582,8 @@ a. Configuring the Apache web server
         won’t display the networks in this set. The default value of this
         parameter is ``50000``.
 
-   2. Landing page configuration server (specified in
-      ``ndex-webapp-config.js``) contains definition of Front (landing) page
-      of NDEx. Here you can adjust Home page appearance by configuring
-
-      a. **Top menu**
-      #. **Featured Content channel**
-      #. **Main Content channel**
-      #. **Logos channel, and**
-      #. **Footer.**
-
-      Landing Page Configuration
-
+   2. Landing page configuration server 
+   
       The location of Landing Page Configuration Server is defined by
       ``landingPageConfigServer`` parameter in ``ndex-webapp-config.js``. The
       following sections describe how to configure different channels of Landing

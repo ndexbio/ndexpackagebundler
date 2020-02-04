@@ -55,7 +55,7 @@ directory into the local install of NDEx and to create a networkset.
 
 #. Create Interactome database
 
-   As user NDEx run ``updatedb.sh`` to create the Interactome database.
+   As user NDEx run ``rebuildIndex.sh`` to create the Interactome database.
 
    .. code-block::
 

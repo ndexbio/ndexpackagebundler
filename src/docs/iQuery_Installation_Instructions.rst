@@ -60,7 +60,7 @@ Testing Service
    .. code-block::
 
       curl -X POST "http://localhost/integratedsearch/v1" \
-       -H "accept: application/json" " \
+       -H "accept: application/json" \
        -d "{\"sourceList\":[\"enrichment\",\"interactome-ppi\",\"interactome-association\"],\"geneList\":[\"mapk3\",\"tp53\"]}"
 
    Output will look similar to the following:

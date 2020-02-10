@@ -9,7 +9,7 @@ NDEx_ Package Bundler
 ============================
 
 This repo contains scripts and files needed to build the NDEx_
-distribution (similar to this ftp://ftp.ndexbio.org/NDEx-v2.3.1/) for external groups
+distribution (similar to this ftp://ftp.ndexbio.org/NDEx-v2.4.4) for external groups
 running NDEx_.
 
 This repo includes a Vagrant_ configuration that creates a VirtualBox_

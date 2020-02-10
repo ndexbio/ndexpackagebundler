@@ -27,8 +27,12 @@ Prerequisites
 Configuring Service
 ----------------------------
 
-No additional configuration is required to use the iQuery REST Service
+Normally you need to setup a ProxyPass in your Apache configuration, so that the rest endpoints are acessable on port 80. 
+You can add something like this in your configuration file (ndex.conf if you use our default setup.):
 
+ProxyPass /integratedsearch/ http://localhost:8290/
+ProxyPassReverse /integratedsearch/ http://localhost:8290/
+   
 Starting Service
 ---------------------------------
 

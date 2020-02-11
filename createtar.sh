@@ -134,6 +134,14 @@ for Y in `find ../../src/docs -name "*.rst" -type f` ; do
   cat $Y | sed "s/@@VERSION@@/${VERSION}/g" | sed "s/@@TOMCATVERSION@@/${TOMCAT_VERSION}/g" | sed "s/@@SOLRVERSION@@/${SOLR_VERSION}/g" | sed "s/@@LASTUPDATE@@/${LASTUPDATE}/g" > ../tmpdocs/$rstfilename
 done
 
+which rst2pdf
+
+if [ $? != 0 ] ; then
+  echo "rst2pdf command not found which is needed to convert"
+  echo "restructured text documents to pdf files"
+  exit 3
+fi
+
 for Y in `find ../tmpdocs -name "*.rst" -type f` ; do
    rstfilename=`basename $Y`
    pdffilename=`echo $rstfilename | sed "s/\.rst$/\.pdf/"`

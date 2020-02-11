@@ -16,7 +16,8 @@ initially has the following files:
 * **ndex-enrichment-rest-<VERSION>-jar-with-dependencies.jar** - Enrichment Application
 * **enrichment.conf** - Main configuration file
 * **db/** - Enrichment database directory
-* **db/databaseresults.json** - Enrichment database configuration
+* **dbresults.json** - Enrichment database creation/update configuration file
+* **db/databaseresults.json** - Enrichment database file
 * **examplencipidnetworks/** - Contains a several NCI PID networks to load into Enrichment as an example
 
 
@@ -40,9 +41,9 @@ directory into the local install of NDEx and to create a networkset.
 #. Create a networkset containing networks uploaded in previous step. Take note of the networksetid which can be
    obtained by extracting the UUID from end of browser URL (ie For URL http://xxxx/#/networkset/939200c7-3703-11ea-bfbb-080027d9a524 the UUID is 939200c7-3703-11ea-bfbb-080027d9a524)
 
-#. Set networkset and authentication credentials id in ``db/databaseresults.json``
+#. Set networkset and authentication credentials id in ``dbresults.json``
 
-   Open ``db/databaseresults.json`` and under ``databaseConnectionMap`` update ``user, server, password`` with NDEx account credentials and set the value of ``networkSetId`` to the networksetid created in the previous step. Save and close the file
+   Open ``dbresults.json`` and under ``databaseConnectionMap`` update ``user, server, password`` with NDEx account credentials and set the value of ``networkSetId`` to the networksetid created in the previous step. Save and close the file
 
    .. code-block::
 

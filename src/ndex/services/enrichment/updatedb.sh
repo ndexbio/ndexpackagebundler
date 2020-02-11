@@ -5,11 +5,16 @@ rawscriptdir=`dirname $0`
 cd $rawscriptdir
 SCRIPT_DIR=`pwd -P`
 
+if [ `whoami` != "ndex" ] ; then
+   echo "ERROR This script should be run by user ndex and not `whoami`"
+   exit 1
+fi
 
 JARFILE="$SCRIPT_DIR/@@ENRICHMENT_JAR@@"
 
 echo "This script updates the enrichment database located: $SCRIPT_DIR/db"
 echo "using the configuration file $SCRIPT_DIR/enrichment.conf"
+echo "and database $SCRIPT_DIR/dbresults.json"
 echo ""
 echo "This usually takes a minute or so and requires enrichment service"
 echo "to be restarted."
@@ -33,4 +38,4 @@ if [ $userconfirm -ne 1 ] ; then
   exit 1
 fi
 
-java -jar $JARFILE --conf "$SCRIPT_DIR/enrichment.conf" --mode createdb
+java -jar $JARFILE --conf "$SCRIPT_DIR/enrichment.conf" --mode createdb --dbresults "$SCRIPT_DIR/dbresults.json"

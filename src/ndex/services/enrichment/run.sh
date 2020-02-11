@@ -5,6 +5,10 @@ rawscriptdir=`dirname $0`
 cd $rawscriptdir
 SCRIPT_DIR=`pwd -P`
 
+if [ `whoami` != "ndex" ] ; then
+   echo "ERROR This script should be run by user ndex and not `whoami`"
+   exit 1
+fi
 
 JARFILE="$SCRIPT_DIR/@@ENRICHMENT_JAR@@"
 

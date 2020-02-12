@@ -42,7 +42,7 @@ if [ $userconfirm -ne 1 ] ; then
 fi
 
 echo "Starting enrichment"
-nohup java -Xmx1g -jar $JARFILE --conf "$SCRIPT_DIR/enrichment.conf" --mode runserver >> $SCRIPT_DIR/nohup.out 2>&1 &
+nohup java -Xmx5g -jar $JARFILE --conf "$SCRIPT_DIR/enrichment.conf" --mode runserver >> $SCRIPT_DIR/nohup.out 2>&1 &
 
 echo "Command started, tail of $SCRIPT_DIR/nohup.out"
 tail $SCRIPT_DIR/nohup.out

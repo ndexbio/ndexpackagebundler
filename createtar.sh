@@ -148,6 +148,27 @@ for Y in `find ../tmpdocs -name "*.rst" -type f` ; do
    echo "Running rst2pdf $Y $pdffilename" 
    rst2pdf $Y $pdffilename
 done
+# rm -rf ../tmpdocs
+
+# Look for any patches
+if [ -d "../../src/patches/${VERSION}" ] ; then
+    for Y in `find ../../src/patches/${VERSION} -maxdepth 1 -mindepth 1 -type d` ; do
+      echo "Found a patch: $Y"
+      PATCHNUM=`basename $Y`
+      patchdir="${TARDIR}-patch${PATCHNUM}"
+      cp -a "$Y" "$patchdir"
+      readmefile="${patchdir}/Readme.rst"
+
+      LASTUPDATE=`git log -1 --format=%cd --"date=format:%b %e, %Y" $Y/Readme.rst`
+      cat "$Y/Readme.rst" | sed "s/@@VERSION@@/${VERSION}/g" | sed "s/@@TOMCATVERSION@@/${TOMCAT_VERSION}/g" | sed "s/@@SOLRVERSION@@/${SOLR_VERSION}/g" | sed "s/@@LASTUPDATE@@/${LASTUPDATE}/g" | sed "s/@@PATCHNUM@@/${PATCHNUM}/g" > "$readmefile"
+      pdffilename=`echo $readmefile | sed "s/\.rst$/\.pdf/"`
+      echo "Running rst2pdf $readmefile $pdffilename"
+      rst2pdf $readmefile $pdffilename
+      rm "$readmefile"
+      tar -cz "${patchdir}" > "${patchdir}.tar.gz"
+      rm -rf "${patchdir}"
+    done
+fi
 
 echo "Creating tarball"
 tar -cz $TARDIR > ${TARDIR}.tar.gz

@@ -101,7 +101,7 @@ directory into the local install of NDEx and to create a networkset.
 
       .. code-block::
 
-         curl -X POST 'http://<LOCAL NDEX SERVER>:8291/enrichment/v1' \
+         curl -X POST 'http://localhost:8291/enrichment/v1' \
            -H "accept: application/json" -H "Content-Type: application/json" \
            -d "{\"databaseList\":[\"ncipid\"],\"geneList\":[\"MAPK3\"]}"
 
@@ -116,7 +116,7 @@ directory into the local install of NDEx and to create a networkset.
 
       .. code-block::
 
-         curl 'http://<LOCAL NDEX SERVER>:8291/enrichment/v1/<ID OUTPUT FROM PREVIOUS STEP>'
+         curl 'http://localhost:8291/enrichment/v1/f8ef982d-1b4a-3700-9855-243407a1b0d7'
 
       Upon success output will look like the following:
 

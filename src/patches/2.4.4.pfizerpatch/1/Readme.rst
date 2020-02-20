@@ -41,6 +41,33 @@ This section walks one through Pathway Relevance REST Service.
    found in the directory containing this document to
    ``/opt/ndex/services/enrichment`` directory
 
+#. Update updatedb.sh script
+
+   As user ``ndex`` edit `updatedb.sh` and append the following text
+   to the *java -jar* line (it is the last line of the file)
+
+   .. code-block::
+
+      --dbresults "$SCRIPT_DIR/dbresults.json"
+
+   The last line in `updatedb.sh` should look like this
+
+   .. code-block::
+
+      java -jar $JARFILE --conf "$SCRIPT_DIR/enrichment.conf" --mode createdb --dbresults "$SCRIPT_DIR/dbresults.json"
+
+   Be sure to save the file
+
+#. Copy `db/databaseresults.json` to `dbresults.json`
+
+   The ``--dbresults`` flag added to ``updatedb.sh`` tells Pathway Relevance/Enrichment
+   to use the 
+   Run the following command:
+
+   .. code-block::
+
+      cp db/databaseresults.json dbresults.json
+
 #. Update Pathway Relevance REST Service database
 
    The database needs to be updated to include gene counts for every

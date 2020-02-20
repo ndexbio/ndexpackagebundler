@@ -143,7 +143,7 @@ a.  Install ndex2 python client if version < 4.0.0
 
    .. code-block::
 
-      ./updatedb.sh dbresults.json
+      ./updatedb.sh
 
 #. Start Service
 

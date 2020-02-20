@@ -61,7 +61,7 @@ This section walks one through Pathway Relevance REST Service.
 #. Copy `db/databaseresults.json` to `dbresults.json`
 
    The ``--dbresults`` flag added to ``updatedb.sh`` tells Pathway Relevance/Enrichment
-   to use the 
+   to use the
    Run the following command:
 
    .. code-block::

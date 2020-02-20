@@ -18,8 +18,6 @@ Prerequisites
 
 * An NDEx account on the local NDEx server which can hold the networks to load into Pathway Relevance (See https://home.ndexbio.org/create-an-ndex-account/)
 
-* If this is version (@@VERSION@@) is **2.4.4** patch ``1`` **must** be applied
-
 Instructions
 ----------------------------------------------------------
 

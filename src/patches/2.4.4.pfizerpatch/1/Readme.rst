@@ -49,7 +49,7 @@ This section walks one through Pathway Relevance REST Service.
 
    .. code-block::
 
-      ./updatedb.sh dbresults.json
+      ./updatedb.sh
 
 #. Restart Pathway Relevance REST Service
 

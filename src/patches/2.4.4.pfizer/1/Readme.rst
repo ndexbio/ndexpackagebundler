@@ -41,7 +41,29 @@ This section walks one through Pathway Relevance REST Service.
    found in the directory containing this document to
    ``/opt/ndex/services/enrichment`` directory
 
-#. Update updatedb.sh script
+#. Update jar file in `run.sh` script
+
+    As user ``ndex`` edit `run.sh` and update the jar file to
+    use the updated jar. The line should look like this:
+
+    .. code-block::
+
+       JARFILE="$SCRIPT_DIR/ndex-enrichment-rest-0.6.6-SNAPSHOT-jar-with-dependencies.jar"
+
+    Be sure to save the file
+
+#. Update jar file `in updatedb.sh` script
+
+    As user ``ndex`` edit `updatedb.sh` and update the jar file to
+    use the updated jar. The line should look like this:
+
+    .. code-block::
+
+       JARFILE="$SCRIPT_DIR/ndex-enrichment-rest-0.6.6-SNAPSHOT-jar-with-dependencies.jar"
+
+    Be sure to save the file
+
+#. Update last line in `updatedb.sh` script
 
    As user ``ndex`` edit `updatedb.sh` and append the following text
    to the *java -jar* line (it is the last line of the file)
@@ -114,6 +136,16 @@ his section walks one through iQuery REST Service.
    directory containing this document to ``/opt/ndex/services/search`` directory
 
 
+#. Update jar file in `run.sh` script
+
+    As user ``ndex`` edit `run.sh` and update the jar file to
+    use the updated jar. The line should look like this:
+
+    .. code-block::
+
+       JARFILE="$SCRIPT_DIR/ndexsearch-rest-0.3.4-SNAPSHOT-jar-with-dependencies.jar"
+
+    Be sure to save the file
 
 #. Start iQuery REST Service
 

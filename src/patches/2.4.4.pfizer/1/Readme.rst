@@ -41,7 +41,7 @@ This section walks one through Pathway Relevance REST Service.
    found in the directory containing this document to
    ``/opt/ndex/services/enrichment`` directory
 
-#. Update jar file in `run.sh` script
+#. Update path to jar file in `run.sh` script
 
     As user ``ndex`` edit `run.sh` and update the jar file to
     use the updated jar. The line should look like this:
@@ -52,7 +52,7 @@ This section walks one through Pathway Relevance REST Service.
 
     Be sure to save the file
 
-#. Update jar file `in updatedb.sh` script
+#. Update path to jar file `in updatedb.sh` script
 
     As user ``ndex`` edit `updatedb.sh` and update the jar file to
     use the updated jar. The line should look like this:
@@ -82,8 +82,12 @@ This section walks one through Pathway Relevance REST Service.
 
 #. Copy `db/databaseresults.json` to `dbresults.json`
 
-   The ``--dbresults`` flag added to ``updatedb.sh`` tells Pathway Relevance/Enrichment
-   to use the
+   The ``--dbresults`` flag added to ``updatedb.sh`` tells
+   Pathway Relevance/Enrichment
+   to use the `dbresults.json` in ``/opt/ndex/services/enrichment`` directory
+   as input for creation of the database. This step copies the
+   database to `dbresults.json` file so calls to ``updatedb.sh`` will work.
+
    Run the following command:
 
    .. code-block::
@@ -136,7 +140,7 @@ his section walks one through iQuery REST Service.
    directory containing this document to ``/opt/ndex/services/search`` directory
 
 
-#. Update jar file in `run.sh` script
+#. Update path to jar file in `run.sh` script
 
     As user ``ndex`` edit `run.sh` and update the jar file to
     use the updated jar. The line should look like this:

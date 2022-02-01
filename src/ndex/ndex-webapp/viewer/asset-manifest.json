@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/viewer/static/css/main.653bd8d0.chunk.css",
+    "main.js": "/viewer/static/js/main.507914d0.chunk.js",
+    "main.js.map": "/viewer/static/js/main.507914d0.chunk.js.map",
+    "runtime-main.js": "/viewer/static/js/runtime-main.87274826.js",
+    "runtime-main.js.map": "/viewer/static/js/runtime-main.87274826.js.map",
+    "static/js/2.a86a6141.chunk.js": "/viewer/static/js/2.a86a6141.chunk.js",
+    "static/js/2.a86a6141.chunk.js.map": "/viewer/static/js/2.a86a6141.chunk.js.map",
+    "index.html": "/viewer/index.html",
+    "precache-manifest.da5813ea1aa94f54911d92c9ba15833e.js": "/viewer/precache-manifest.da5813ea1aa94f54911d92c9ba15833e.js",
+    "service-worker.js": "/viewer/service-worker.js",
+    "static/css/main.653bd8d0.chunk.css.map": "/viewer/static/css/main.653bd8d0.chunk.css.map",
+    "static/js/2.a86a6141.chunk.js.LICENSE.txt": "/viewer/static/js/2.a86a6141.chunk.js.LICENSE.txt",
+    "static/js/main.507914d0.chunk.js.LICENSE.txt": "/viewer/static/js/main.507914d0.chunk.js.LICENSE.txt",
+    "static/media/ndex-logo.svg": "/viewer/static/media/ndex-logo.04d7bf44.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.87274826.js",
+    "static/js/2.a86a6141.chunk.js",
+    "static/css/main.653bd8d0.chunk.css",
+    "static/js/main.507914d0.chunk.js"
+  ]
+}

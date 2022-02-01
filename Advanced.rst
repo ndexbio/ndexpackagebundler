@@ -16,7 +16,7 @@ Requirements for direct build
 ----------------------------------
 
 **NOTE:** These requirements apply only if one intends to **NOT** use the Vagrant_ described
-in :doc:`README.rst`
+in `README.rst`
 
 -  Linux or Mac (for other OS a Vagrant configuration is included)
 
@@ -33,6 +33,8 @@ in :doc:`README.rst`
 -  `wget <https://www.gnu.org/software/wget/manual/wget.html>`_
 
 -  `rst2pdf <https://pypi.org/project/rst2pdf/>`_
+
+-  `yarn <https://classic.yarnpkg.com/en/>`_
 
 Commands to run for direct build
 ---------------------------------------

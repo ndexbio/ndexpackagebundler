@@ -10,8 +10,20 @@ VERSION=`egrep "^ndex=" versions.config | sed "s/^.*= *//"`
 if [ "$VERSION" == "master" ] ; then
    BRANCH=""
 else
-   BRANCH="--branch=v${VERSION}"
+   BRANCH="--branch=${VERSION}"
 fi
+
+CLIENTVERSION=`egrep "^ndexjavaclient=" versions.config | sed "s/^.*= *//"`
+if [ -z "$CLIENTVERSION" ] ; then
+   CLIENTVERSION=$VERSION
+fi
+
+if [ "$CLIENTVERSION" == "master" ] ; then
+   CLIENTBRANCH=""
+else
+   CLIENTBRANCH="--branch=${CLIENTVERSION}"
+fi
+
 
 QUERYDEPEND=`egrep "^ndexqueryndex=" versions.config | sed "s/^.*= *//"`
 if [ "$QUERYDEPENDVERSION" == "master" ] ; then
@@ -33,6 +45,20 @@ if [ "$IQUERYVERSION" == "master" ] ; then
    IBRANCH=""
 else
    IBRANCH="--branch=v${IQUERYVERSION}"
+fi
+
+NDEXJSCLIENT=`egrep "^ndexjsclient=" versions.config | sed "s/^.*= *//"`
+if [ "$NDEXJSCLIENT" == "master" ] ; then
+   NDEXJSCLIENT=""
+else
+   NDEXJSCLIENT="--branch=${NDEXJSCLIENT}"
+fi
+
+CXVIZCONVERTER=`egrep "^cxvizconverter=" versions.config | sed "s/^.*= *//"`
+if [ "$CXVIZCONVERTER" == "master" ] ; then
+   CXVIZCONVERTER=""
+else
+   CXVIZCONVERTER="--branch=${CXVIZCONVERTER}"
 fi
 
 mkdir -p dist/
@@ -62,7 +88,7 @@ mvn clean install -DskipTests=true -B
 popd
 
 # build NDEx java client
-git clone $BRANCH --depth=1 https://github.com/ndexbio/ndex-java-client
+git clone $CLIENTBRANCH --depth=1 https://github.com/ndexbio/ndex-java-client
 pushd ndex-java-client
 mvn clean install -DskipTests=true -B
 popd

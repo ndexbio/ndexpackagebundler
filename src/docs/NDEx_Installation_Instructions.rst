@@ -197,6 +197,14 @@ a. Configuring the Apache web server
              Order allow,deny
              allow from all
           </Directory>
+          <Directory /opt/ndex/ndex-webapp/viewer>
+             RewriteEngine on
+             RewriteCond %{REQUEST_FILENAME} -f [OR]
+             RewriteCond %{REQUEST_FILENAME} -d
+             RewriteRule ^ - [L]
+             # Rewrite everything else to index.html to allow html5 state links
+             RewriteRule ^ index.html [L]
+          </Directory>
 
           <FilesMatch "\.(?i:xgmml|xbel)$">
              Header set Content-Disposition attachment
@@ -233,6 +241,14 @@ a. Configuring the Apache web server
              Options Indexes FollowSymLinks MultiViews
              AllowOverride None
              Require all granted
+         </Directory>
+         <Directory /opt/ndex/ndex-webapp/viewer>
+             RewriteEngine on
+             RewriteCond %{REQUEST_FILENAME} -f [OR]
+             RewriteCond %{REQUEST_FILENAME} -d
+             RewriteRule ^ - [L]
+             # Rewrite everything else to index.html to allow html5 state links
+             RewriteRule ^ index.html [L]
          </Directory>
          <FilesMatch "\.(?i:xgmml|xbel)$">
              Header set Content-Disposition attachment

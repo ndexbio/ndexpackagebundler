@@ -19,6 +19,15 @@ pushd /opt
 wget https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz 
 tar -zxf apache-maven-3.6.3-bin.tar.gz
 
+# install Node.js source repo
+curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
+
+
+# install yarn
+curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+yum install -y yarn
+
+
 echo "export JAVA_HOME=/etc/alternatives/java_sdk" > /etc/profile.d/maven.sh
 echo "export M2_HOME=/opt/apache-maven-3.6.3" >> /etc/profile.d/maven.sh
 echo "export MAVEN_HOME=/opt/apache-maven-3.6.3" >> /etc/profile.d/maven.sh

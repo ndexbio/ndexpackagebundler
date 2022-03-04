@@ -23,7 +23,7 @@ pushd dist/
 TOMCAT_DOWNLOADED="tomcat.${TOMCAT_VERSION}.downloaded"
 if [ ! -e ${TOMCAT_DOWNLOADED} ] ; then
    echo "Downloading Tomcat $TOMCAT_VERSION"
-   wget https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz
+   curl -O https://archive.apache.org/dist/tomcat/tomcat-8/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz
    if [ $? -ne 0 ] ; then
       echo "Download of tomcat failed"
       exit 1
@@ -36,7 +36,7 @@ fi
 SOLR_DOWNLOADED="solr.${SOLR_VERSION}.downloaded"
 if [ ! -e ${SOLR_DOWNLOADED} ] ; then
    echo "Downloading Solr $SOLR_VERSION"
-   wget https://archive.apache.org/dist/lucene/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz
+   curl -O https://archive.apache.org/dist/lucene/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}.tgz
    if [ $? -ne 0 ] ; then
       echo "Download of solr failed"
       exit 1
@@ -68,14 +68,14 @@ tar -zxf ../../solr-${SOLR_VERSION}.tgz
 /bin/cp ../../../src/solr/solr.in.sh solr/bin/.
 
 /bin/rm -rf tomcat/webapps/*
-/bin/cp ../../ndexbio-rest.war tomcat/webapps/.
+/bin/cp ../../../build/ndexbio-rest.war tomcat/webapps/.
 
-/bin/cp ../../NDExQuery-*.jar query_engine/.
+/bin/cp ../../../build/NDExQuery-*.jar query_engine/.
 
-/bin/cp ../../interactomeSearch-*.jar services/interactome/.
+/bin/cp ../../../build/interactomeSearch-*.jar services/interactome/.
 
-/bin/cp ../../ndex-enrichment-rest-*-jar-with-dependencies.jar services/enrichment/.
-/bin/cp ../../ndexsearch-rest-*-*jar-with-dependencies.jar services/search/.
+/bin/cp ../../../build/ndex-enrichment-rest-*-jar-with-dependencies.jar services/enrichment/.
+/bin/cp ../../../build/ndexsearch-rest-*-*jar-with-dependencies.jar services/search/.
 
 echo "Configuring query_engine"
 QUERY_JAR_WITH_PATH=`find query_engine/ -name "NDExQuery-*.jar" -type f`

@@ -184,7 +184,7 @@ a. Configuring the Apache web server
          RequestReadTimeout header=60,minrate=200 body=60,minrate=200
       </IFModule>
 
-      <VirtualHost \*:80>
+      <VirtualHost *:80>
           ServerAdmin support@ndexbio.org
           DocumentRoot /opt/ndex/ndex-webapp
           <Directory />
@@ -222,7 +222,7 @@ a. Configuring the Apache web server
           RequestReadTimeout header=60,minrate=200 body=60,minrate=200
       </IFModule>
 
-      <VirtualHost \*:80>
+      <VirtualHost *:80>
          ServerAdmin support@ndexbio.org
          DocumentRoot /opt/ndex/ndex-webapp
          <Directory />

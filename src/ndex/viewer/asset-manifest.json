@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/viewer/static/css/main.a46b0f87.chunk.css",
+    "main.js": "/viewer/static/js/main.9e578d71.chunk.js",
+    "main.js.map": "/viewer/static/js/main.9e578d71.chunk.js.map",
+    "runtime-main.js": "/viewer/static/js/runtime-main.6b0b130f.js",
+    "runtime-main.js.map": "/viewer/static/js/runtime-main.6b0b130f.js.map",
+    "static/js/2.a976250b.chunk.js": "/viewer/static/js/2.a976250b.chunk.js",
+    "static/js/2.a976250b.chunk.js.map": "/viewer/static/js/2.a976250b.chunk.js.map",
+    "index.html": "/viewer/index.html",
+    "static/css/main.a46b0f87.chunk.css.map": "/viewer/static/css/main.a46b0f87.chunk.css.map",
+    "static/js/2.a976250b.chunk.js.LICENSE.txt": "/viewer/static/js/2.a976250b.chunk.js.LICENSE.txt",
+    "static/js/main.9e578d71.chunk.js.LICENSE.txt": "/viewer/static/js/main.9e578d71.chunk.js.LICENSE.txt",
+    "static/media/adjacent_network.f4e37580.png": "/viewer/static/media/adjacent_network.f4e37580.png",
+    "static/media/base_network.d8a7fc02.png": "/viewer/static/media/base_network.d8a7fc02.png",
+    "static/media/direct_network.5bad2ad8.png": "/viewer/static/media/direct_network.5bad2ad8.png",
+    "static/media/interconnect_network.21703162.png": "/viewer/static/media/interconnect_network.21703162.png",
+    "static/media/ndex-logo.f952f474.svg": "/viewer/static/media/ndex-logo.f952f474.svg",
+    "static/media/neighborhood_network.1fbd73ae.png": "/viewer/static/media/neighborhood_network.1fbd73ae.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6b0b130f.js",
+    "static/js/2.a976250b.chunk.js",
+    "static/css/main.a46b0f87.chunk.css",
+    "static/js/main.9e578d71.chunk.js"
+  ]
+}

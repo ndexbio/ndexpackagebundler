@@ -63,3 +63,14 @@ The file ``versions.config`` dictates what tagged versions of the NDEx_ codebase
 well as what versions of Solr_ and Tomcat_ to bundle in.
 
 **NOTE:** For information on building the NDEx distribution without Vagrant_ see ``Advanced.rst`` file in this repo.
+
+To create NDEx 2.5.2 bundle
+=============================
+
+1. install miniconda
+2. install rst2pdf using command 
+   ..code:: bash
+      pip install rst2pdf
+
+3. runscript createtar.sh
+

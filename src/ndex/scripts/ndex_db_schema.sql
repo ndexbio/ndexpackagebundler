@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.8
--- Dumped by pg_dump version 9.5.12
+-- Dumped from database version 9.5.25
+-- Dumped by pg_dump version 9.5.25
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -11,6 +11,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -49,6 +50,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: dblink; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS dblink WITH SCHEMA core;
+
+
+--
+-- Name: EXTENSION dblink; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION dblink IS 'connect to other PostgreSQL databases from within a database';
 
 
 --
@@ -138,6 +153,19 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: full_download_count; Type: TABLE; Schema: core; Owner: ndexserver
+--
+
+CREATE TABLE core.full_download_count (
+    network_id uuid NOT NULL,
+    d_month date NOT NULL,
+    downloads bigint NOT NULL
+);
+
+
+ALTER TABLE core.full_download_count OWNER TO ndexserver;
+
+--
 -- Name: group_network_membership; Type: TABLE; Schema: core; Owner: ndexserver
 --
 
@@ -177,8 +205,7 @@ CREATE TABLE core.ndex_group (
     is_deleted boolean,
     other_attributes jsonb,
     modification_time timestamp without time zone,
-    website_url character varying(200),
-    is_from_13 boolean
+    website_url character varying(200)
 );
 
 
@@ -239,7 +266,6 @@ CREATE TABLE core.ndex_user (
     is_deleted boolean,
     other_attributes jsonb,
     is_verified boolean,
-    is_from_13 boolean,
     disk_limit bigint,
     storage_usage bigint
 );
@@ -282,9 +308,8 @@ CREATE TABLE core.network (
     ndexdoi character varying(200),
     is_validated boolean DEFAULT false,
     readonly boolean,
-    error text,
+    error character varying(2000),
     warnings text[],
-    is_from_13 boolean,
     show_in_homepage boolean DEFAULT false,
     subnetworkids bigint[],
     access_key character varying(500),
@@ -293,8 +318,11 @@ CREATE TABLE core.network (
     solr_indexed boolean DEFAULT false,
     certified boolean DEFAULT false,
     solr_idx_lvl character varying(15) DEFAULT 'NONE'::character varying,
+    has_layout boolean DEFAULT false,
     has_sample boolean DEFAULT false,
-    has_layout boolean DEFAULT false
+    cx2metadata jsonb,
+    cx2_file_size bigint,
+    cxformat character varying(20)
 );
 
 
@@ -308,45 +336,10 @@ COMMENT ON TABLE core.network IS 'network info.';
 
 
 --
--- Name: COLUMN network.iscomplete; Type: COMMENT; Schema: core; Owner: ndexserver
---
-
-COMMENT ON COLUMN core.network.iscomplete IS 'For server use only. When all the validation processes and indexes are created for this network, we will set iscomplete to true.';
-
-
---
--- Name: COLUMN network.is_validated; Type: COMMENT; Schema: core; Owner: ndexserver
---
-
-COMMENT ON COLUMN core.network.is_validated IS 'When we pass the CX validation process, this flag will be set to true.';
-
-
---
--- Name: COLUMN network.error; Type: COMMENT; Schema: core; Owner: ndexserver
---
-
-COMMENT ON COLUMN core.network.error IS 'store the last error message if server failed to do any validation or indexing on this network.';
-
-
---
 -- Name: COLUMN network.warnings; Type: COMMENT; Schema: core; Owner: ndexserver
 --
 
-COMMENT ON COLUMN core.network.warnings IS 'Stores warnings.';
-
-
---
--- Name: COLUMN network.is_from_13; Type: COMMENT; Schema: core; Owner: ndexserver
---
-
-COMMENT ON COLUMN core.network.is_from_13 IS 'true means this network is migrated from Ndex 1.3';
-
-
---
--- Name: COLUMN network.show_in_homepage; Type: COMMENT; Schema: core; Owner: ndexserver
---
-
-COMMENT ON COLUMN core.network.show_in_homepage IS 'Indicate whether the owner of this network want to show this network in ''user page'' page.';
+COMMENT ON COLUMN core.network.warnings IS 'stores warnings.';
 
 
 --
@@ -358,11 +351,53 @@ COMMENT ON COLUMN core.network.cx_file_size IS 'size of the CX network in bytes.
 
 
 --
+-- Name: COLUMN network.solr_indexed; Type: COMMENT; Schema: core; Owner: ndexserver
+--
+
+COMMENT ON COLUMN core.network.solr_indexed IS 'true if this network is indexed in Solr.';
+
+
+--
 -- Name: COLUMN network.solr_idx_lvl; Type: COMMENT; Schema: core; Owner: ndexserver
 --
 
 COMMENT ON COLUMN core.network.solr_idx_lvl IS 'Solr Index level -- null: no index; ''meta'' Index on metadata. ''all'' full index(metadata and nodes)';
 
+
+--
+-- Name: network_arc; Type: TABLE; Schema: core; Owner: ndexserver
+--
+
+CREATE TABLE core.network_arc (
+    "UUID" uuid NOT NULL,
+    creation_time timestamp without time zone,
+    modification_time timestamp without time zone,
+    name character varying(500),
+    description text,
+    edgecount integer,
+    nodecount integer,
+    visibility character varying(100),
+    owner character varying(100),
+    sourceformat character varying(100),
+    properties jsonb,
+    cxmetadata jsonb,
+    version character varying(100),
+    is_validated boolean DEFAULT false,
+    error character varying(2000),
+    warnings text[],
+    show_in_homepage boolean DEFAULT false,
+    subnetworkids bigint[],
+    cx_file_size bigint,
+    solr_idx_lvl character varying(15) DEFAULT 'NONE'::character varying,
+    has_layout boolean DEFAULT false,
+    has_sample boolean DEFAULT false,
+    cx2metadata jsonb,
+    cx2_file_size bigint,
+    cxformat character varying(20)
+);
+
+
+ALTER TABLE core.network_arc OWNER TO ndexserver;
 
 --
 -- Name: network_set; Type: TABLE; Schema: core; Owner: ndexserver
@@ -431,27 +466,10 @@ COMMENT ON TABLE core.request IS 'request info.';
 
 
 --
--- Name: COLUMN request.response; Type: COMMENT; Schema: core; Owner: ndexserver
---
-
-COMMENT ON COLUMN core.request.response IS 'Valid response type are: DECLINED, ACCEPTED, PENDING;';
-
-
---
 -- Name: COLUMN request.owner_id; Type: COMMENT; Schema: core; Owner: ndexserver
 --
 
-COMMENT ON COLUMN core.request.owner_id IS 'The owner of this request.';
-
-
---
--- Name: COLUMN request.request_type; Type: COMMENT; Schema: core; Owner: ndexserver
---
-
-COMMENT ON COLUMN core.request.request_type IS 'The valid request types are: 
-1. ''user'' which means user permission request on network; 
-2. ''group'' which means group permission request on network;
-3. ''membership'' which means user memebership request on group.';
+COMMENT ON COLUMN core.request.owner_id IS 'owner of this request.';
 
 
 --
@@ -492,7 +510,7 @@ COMMENT ON TABLE core.task IS 'Task info.';
 -- Name: COLUMN task.user_properties; Type: COMMENT; Schema: core; Owner: ndexserver
 --
 
-COMMENT ON COLUMN core.task.user_properties IS 'Properties that can be set by user.';
+COMMENT ON COLUMN core.task.user_properties IS 'An object that can be updated  by owner.';
 
 
 --
@@ -524,169 +542,12 @@ CREATE TABLE core.user_network_membership_arc (
 ALTER TABLE core.user_network_membership_arc OWNER TO ndexserver;
 
 --
--- Name: v1_group; Type: TABLE; Schema: core; Owner: ndexserver
+-- Name: full_download_count_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
 --
 
-CREATE TABLE core.v1_group (
-    rid character varying(20),
-    account_name character varying(300),
-    group_name character varying(100),
-    website_url character varying(300),
-    image_url character varying(200),
-    modification_time timestamp without time zone,
-    creation_time timestamp without time zone,
-    description text,
-    id uuid NOT NULL
-);
+ALTER TABLE ONLY core.full_download_count
+    ADD CONSTRAINT full_download_count_pkey PRIMARY KEY (network_id, d_month);
 
-
-ALTER TABLE core.v1_group OWNER TO ndexserver;
-
---
--- Name: v1_group_network; Type: TABLE; Schema: core; Owner: ndexserver
---
-
-CREATE TABLE core.v1_group_network (
-    group_id uuid NOT NULL,
-    network_rid character varying(10) NOT NULL,
-    type character varying NOT NULL
-);
-
-
-ALTER TABLE core.v1_group_network OWNER TO ndexserver;
-
---
--- Name: v1_network; Type: TABLE; Schema: core; Owner: ndexserver
---
-
-CREATE TABLE core.v1_network (
-    rid character varying(20),
-    id uuid NOT NULL,
-    creation_time timestamp without time zone,
-    modification_time timestamp without time zone,
-    visibility character varying(10),
-    node_count bigint,
-    edge_count bigint,
-    description text,
-    version text,
-    props json,
-    provenance json,
-    readonly boolean,
-    name text,
-    source_format character varying(100),
-    owner character varying(50),
-    show_in_homepage boolean
-);
-
-
-ALTER TABLE core.v1_network OWNER TO ndexserver;
-
---
--- Name: v1_request; Type: TABLE; Schema: core; Owner: ndexserver
---
-
-CREATE TABLE core.v1_request (
-    rid character varying(20),
-    id uuid NOT NULL,
-    source_uuid uuid,
-    destination_uuid uuid,
-    message text,
-    creation_time timestamp without time zone,
-    modification_time timestamp without time zone,
-    responder character varying(20),
-    response_message text,
-    response character varying(20),
-    in_request character varying(100),
-    out_request character varying(100),
-    request_permission character varying(50),
-    response_time timestamp without time zone
-);
-
-
-ALTER TABLE core.v1_request OWNER TO ndexserver;
-
---
--- Name: v1_task; Type: TABLE; Schema: core; Owner: ndexserver
---
-
-CREATE TABLE core.v1_task (
-    id uuid NOT NULL,
-    creation_time timestamp without time zone,
-    modification_time timestamp with time zone,
-    description text,
-    status character varying(20),
-    task_type character varying(30),
-    resource uuid,
-    start_time timestamp without time zone,
-    end_time timestamp without time zone,
-    rid character varying(20),
-    owneruuid uuid,
-    format character varying(30),
-    attributes json
-);
-
-
-ALTER TABLE core.v1_task OWNER TO ndexserver;
-
---
--- Name: v1_user; Type: TABLE; Schema: core; Owner: ndexserver
---
-
-CREATE TABLE core.v1_user (
-    rid character varying(50),
-    id uuid NOT NULL,
-    creation_time timestamp without time zone,
-    modification_time timestamp without time zone,
-    account_name character varying(200),
-    password character varying(500),
-    description text,
-    email character varying(100),
-    first_name character varying(100),
-    last_name character varying(100),
-    image_url character varying(200),
-    website_url character varying(200)
-);
-
-
-ALTER TABLE core.v1_user OWNER TO ndexserver;
-
---
--- Name: v1_user_group; Type: TABLE; Schema: core; Owner: ndexserver
---
-
-CREATE TABLE core.v1_user_group (
-    user_id uuid NOT NULL,
-    group_rid character varying(10) NOT NULL,
-    type character varying(10) NOT NULL
-);
-
-
-ALTER TABLE core.v1_user_group OWNER TO ndexserver;
-
---
--- Name: v1_user_network; Type: TABLE; Schema: core; Owner: ndexserver
---
-
-CREATE TABLE core.v1_user_network (
-    user_id uuid NOT NULL,
-    network_rid character varying(20) NOT NULL,
-    type character varying(10) NOT NULL
-);
-
-
-ALTER TABLE core.v1_user_network OWNER TO ndexserver;
-
---
--- Name: working_migrated_uuids; Type: TABLE; Schema: core; Owner: ndexserver
---
-
-CREATE TABLE core.working_migrated_uuids (
-    table_name character varying(50),
-    id uuid NOT NULL
-);
-
-
-ALTER TABLE core.working_migrated_uuids OWNER TO ndexserver;
 
 --
 -- Name: groupNetworkMembership_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
@@ -705,19 +566,19 @@ ALTER TABLE ONLY core.ndex_group
 
 
 --
--- Name: migrated_uuids_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.working_migrated_uuids
-    ADD CONSTRAINT migrated_uuids_pkey PRIMARY KEY (id);
-
-
---
 -- Name: ndexGroupUser_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
 --
 
 ALTER TABLE ONLY core.ndex_group_user
     ADD CONSTRAINT "ndexGroupUser_pkey" PRIMARY KEY (group_id, user_id);
+
+
+--
+-- Name: network_arc_pk; Type: CONSTRAINT; Schema: core; Owner: ndexserver
+--
+
+ALTER TABLE ONLY core.network_arc
+    ADD CONSTRAINT network_arc_pk PRIMARY KEY ("UUID");
 
 
 --
@@ -777,67 +638,10 @@ ALTER TABLE ONLY core.ndex_user
 
 
 --
--- Name: v1_group_network_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
+-- Name: full_download_month_idx; Type: INDEX; Schema: core; Owner: ndexserver
 --
 
-ALTER TABLE ONLY core.v1_group_network
-    ADD CONSTRAINT v1_group_network_pkey PRIMARY KEY (group_id, network_rid, type);
-
-
---
--- Name: v1_group_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.v1_group
-    ADD CONSTRAINT v1_group_pkey PRIMARY KEY (id);
-
-
---
--- Name: v1_network_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.v1_network
-    ADD CONSTRAINT v1_network_pkey PRIMARY KEY (id);
-
-
---
--- Name: v1_request_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.v1_request
-    ADD CONSTRAINT v1_request_pkey PRIMARY KEY (id);
-
-
---
--- Name: v1_task_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.v1_task
-    ADD CONSTRAINT v1_task_pkey PRIMARY KEY (id);
-
-
---
--- Name: v1_user_group_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.v1_user_group
-    ADD CONSTRAINT v1_user_group_pkey PRIMARY KEY (user_id, group_rid, type);
-
-
---
--- Name: v1_user_network_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.v1_user_network
-    ADD CONSTRAINT v1_user_network_pkey PRIMARY KEY (user_id, network_rid, type);
-
-
---
--- Name: v1_user_pkey; Type: CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.v1_user
-    ADD CONSTRAINT v1_user_pkey PRIMARY KEY (id);
+CREATE INDEX full_download_month_idx ON core.full_download_count USING btree (d_month);
 
 
 --
@@ -890,17 +694,17 @@ CREATE INDEX network_owneruuid_idx ON core.network USING btree (owneruuid);
 
 
 --
+-- Name: network_set_member_networkId_idx; Type: INDEX; Schema: core; Owner: ndexserver
+--
+
+CREATE INDEX "network_set_member_networkId_idx" ON core.network_set_member USING btree (network_id);
+
+
+--
 -- Name: network_set_owner_id_idx; Type: INDEX; Schema: core; Owner: ndexserver
 --
 
 CREATE INDEX network_set_owner_id_idx ON core.network_set USING btree (owner_id) WHERE (is_deleted = false);
-
-
---
--- Name: request_destinationuuid_idx; Type: INDEX; Schema: core; Owner: ndexserver
---
-
-CREATE INDEX request_destinationuuid_idx ON core.request USING btree (destinationuuid) WHERE (is_deleted = false);
 
 
 --
@@ -946,27 +750,6 @@ CREATE UNIQUE INDEX user_username_constraint ON core.ndex_user USING btree (user
 
 
 --
--- Name: v1_group_rid_idx; Type: INDEX; Schema: core; Owner: ndexserver
---
-
-CREATE UNIQUE INDEX v1_group_rid_idx ON core.v1_group USING btree (rid);
-
-
---
--- Name: v1_network_rid_idx; Type: INDEX; Schema: core; Owner: ndexserver
---
-
-CREATE UNIQUE INDEX v1_network_rid_idx ON core.v1_network USING btree (rid);
-
-
---
--- Name: v1_user_network_network_rid_idx; Type: INDEX; Schema: core; Owner: ndexserver
---
-
-CREATE INDEX v1_user_network_network_rid_idx ON core.v1_user_network USING btree (network_rid);
-
-
---
 -- Name: insert_trigger; Type: TRIGGER; Schema: core; Owner: ndexserver
 --
 
@@ -1004,14 +787,6 @@ ALTER TABLE ONLY core.ndex_group_user
 
 
 --
--- Name: group_network_membership_group_id_fkey; Type: FK CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.group_network_membership
-    ADD CONSTRAINT group_network_membership_group_id_fkey FOREIGN KEY (group_id) REFERENCES core.ndex_group("UUID");
-
-
---
 -- Name: network_set_member_network_id_fkey; Type: FK CONSTRAINT; Schema: core; Owner: ndexserver
 --
 
@@ -1036,35 +811,11 @@ ALTER TABLE ONLY core.network_set
 
 
 --
--- Name: request_owner_id_fkey; Type: FK CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.request
-    ADD CONSTRAINT request_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES core.ndex_user("UUID");
-
-
---
 -- Name: task_ownerUUID_fkey; Type: FK CONSTRAINT; Schema: core; Owner: ndexserver
 --
 
 ALTER TABLE ONLY core.task
     ADD CONSTRAINT "task_ownerUUID_fkey" FOREIGN KEY (owneruuid) REFERENCES core.ndex_user("UUID");
-
-
---
--- Name: user_network_membership_network_id_fkey; Type: FK CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.user_network_membership
-    ADD CONSTRAINT user_network_membership_network_id_fkey FOREIGN KEY (network_id) REFERENCES core.network("UUID") ON UPDATE CASCADE;
-
-
---
--- Name: user_network_membership_user_id_fkey; Type: FK CONSTRAINT; Schema: core; Owner: ndexserver
---
-
-ALTER TABLE ONLY core.user_network_membership
-    ADD CONSTRAINT user_network_membership_user_id_fkey FOREIGN KEY (user_id) REFERENCES core.ndex_user("UUID");
 
 
 --

@@ -493,8 +493,8 @@ a. Configuring the Apache web server
 
 #. Changing NDEx web app properties
 
-   Starting with release 2.4.0, configuration of NDEx Web Application
-   (Web App) has been split into two parts:
+   Starting with release 2.5.0, configuration of NDEx Web Application
+   (Web App) has been split into 3 parts:
 
    1. ``ndex-webapp-config.js`` under directory ``/opt/ndex/ndex-webapp``
       contains definition of some constants required for network
@@ -582,7 +582,29 @@ a. Configuring the Apache web server
         won’t display the networks in this set. The default value of this
         parameter is ``50000``.
 
-   2. Landing page configuration server 
+      * ``iQuery`` This section contains these parameters for iQuery web application:
+        * ``baseUri`` URL prefix for the backend REST services of this iQuery instance
+        * ``deployEnvironment`` String that is appended to version displayed on main landing page of iQuery.
+        * ``myGeneUri`` URL for myGene.info REST services. iQuery uses this service to verify if a search term is a human gene symbol.
+        * ``geneCardsUri`` URL for Gene Card service. iQuery uses this service to get the basic information of a gene.
+        * ``helpUri`` points to the help page of iQuery.
+        * ``feedBackUri`` points to the page that allows users to give feedbacks.
+        * ``cytoscapeUri`` points to Cytoscape web site. 
+        * ``ucsdUri`` points to UCSD Ideker Lab web site.
+        * ``copyRight`` copyRight string.
+        * ``maxNetworkSize`` Maximum number of graph objects (total number of nodes and edges) allowed in a network. If larger than this, view will not be created for that network in iquery
+        * ``geneSetExamples`` example gene sets for this iQuery instance.
+
+   2. ``resource.json`` under directory ``/opt/ndex/viewer``
+      contains parameters for NDEx Network View app. These are the parameters you can modify:
+      * ``ndexUrl`` host name of the NDEx REST server this app points to.
+      * ``viewerThreshold`` Threshold switching to a simplified network renderer.
+      * ``maxNumObjects`` Maximum number of graph objects can be displayed.  If larger than this, view will not be created.
+      * ``maxEdgeQuery`` Maximum number of edges for query.  If the returned result is bigger than this, it will not be displayed.
+      * ``maxDataSize`` If data size (in bytes) is larger than this, view will not be created.  Used with maxNumObjects to check returned network size
+      * ``warningThreshold`` If network is smaller than this, it can be displayed, but warning will be displayed before applying automatic layout 
+  
+   3. Landing page configuration server 
    
       The location of Landing Page Configuration Server is defined by
       ``landingPageConfigServer`` parameter in ``ndex-webapp-config.js``. The

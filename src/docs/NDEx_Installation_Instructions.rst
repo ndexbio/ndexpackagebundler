@@ -6,11 +6,11 @@ NDEx Installation Instructions Version @@VERSION@@
 Step 1 – SYSTEM SETUP
 -----------------------------
 
-a. Make sure **Java 8** or Java 11 is installed in your system.
+a. Make sure **Java 11** is installed in your system.
 
-#. Install Apache HTTP server (Version 2.4).
+#. Install Apache HTTP server (Version 2.4) with SSL enabled.
 
-#. Install PostgreSQL server (version 9.5). The postgreSQL server can
+#. Install PostgreSQL server (version 9.5 or above). The postgreSQL server can
    be installed on the same machine when you run NDEx server, or can be
    installed on a separate machine.
 
@@ -27,6 +27,9 @@ a. Make sure **Java 8** or Java 11 is installed in your system.
 
 **IMPORTANT NOTE:**
 
+The provided bundle does NOT work out of the box. You need to modify the 
+configuration files in the provided bundle before trying to start the server. 
+Please read the instructions and configure all the components in the package.  
 In the following instructions, the ndex account is used to run tomcat
 server (and thereby the NDEx REST server) and all files are configured
 with the ndex user as owner. The tomcat start and stop scripts
@@ -65,22 +68,19 @@ a. Obtain the latest NDEx bundle from ftp://ftp.ndexbio.org.
 
       /opt/ndex/
                 apache-tomcat-@@TOMCATVERSION@@/
-                bin/
                 conf/
-                data/
                 importer_exporter/
-                query_engine/
-                services/
-                dbbackups/
-                exported-networks/
+                iquery/
                 ndex-webapp/
-                ndex-webapp-ssh/
+                query_engine/
                 resources/
+                scripts/
+                services/
                 solr -> solr-@@SOLRVERSION@@
                 solr-@@SOLRVERSION@@/
                 tomcat -> apache-tomcat-@@TOMCATVERSION@@
-                uploaded-networks/
-                workspace/
+                viewer/
+                webapp_landpage_configuration_template/
 
 Step 3 – DOWNLOAD AND INSTALL MINICONDA
 --------------------------------------------
@@ -143,20 +143,24 @@ a. Configuring the Apache web server
 
    -  The Tomcat main page is served at *host:8080*
 
-   -  Tomcat makes the REST server webapp available at
+   -  Tomcat makes the NDEx REST server available at
       *host:8080/ndexbio-rest*.
+      
+      **NOTE:** This is root of the service. It is not a valid end point.
+      It is not recommended to expose this port directly to the public. 
+      We suggest defining proxy rules to expose the NDEx rest server on the 
+      standard HTTPS port. 
 
-   -  In the typical configuration, the NDEx web ui is served by Apache on
+   -  In the typical configuration, the NDEx web application (the web site) is served by Apache on
       the same server
 
-   -  The document root is changed to ``/opt/ndex/ndex-webapp`` (the files in
+   -  The document root should be ``/opt/ndex/ndex-webapp`` (the files in
       ``/opt/ndex/ndex-webapp`` are from the project ndex-webapp)
 
-   -  To conveniently use the REST server from the NDEx web ui we setup a
-      proxy so that it will be available as a “folder” of the website.
-
-   -  For example, if the website is deployed at http://www.ndexbio.org, the
-      REST server will be at http://www.ndexbio.org/v2
+   -  To be able to use the REST server from the standard http or https port, we setup a
+      proxy so that it will be available as a “folder” under the standard ports. For example, 
+      if the website is deployed at https://www.ndexbio.org, the v2 root path
+      of the REST server will be at https://www.ndexbio.org/v2
 
    The configuration is accomplished by adding an additional configuration
    file that Apache will read after loading its main configuration. This
@@ -175,7 +179,9 @@ a. Configuring the Apache web server
 
    In CentOS (and RedHat), changes to the Apache server configuration are
    accomplished by adding a new config file called ``ndex.conf`` under the
-   ``/etc/httpd/conf.d`` directory. A typical setting in the ``ndex.conf`` file
+   ``/etc/httpd/conf.d`` directory. If you plan to serve the NDEx web application
+   from HTTPS, you need to modify the configuration of port 443 based on 
+   the example here. A typical setting in the ``ndex.conf`` file
    would be like this:
 
    .. code-block::
@@ -197,6 +203,23 @@ a. Configuring the Apache web server
              Order allow,deny
              allow from all
           </Directory>
+          <Directory /opt/ndex/ndex-webapp/viewer>
+            RewriteEngine on
+            RewriteCond %{REQUEST_FILENAME} -f [OR]
+            RewriteCond %{REQUEST_FILENAME} -d
+            RewriteRule ^ - [L]
+            # Rewrite everything else to index.html to allow html5 state links
+            RewriteRule ^ index.html [L]
+          </Directory>
+          <Directory /opt/ndex/ndex-webapp/iquery>
+            RewriteEngine on
+            RewriteCond %{REQUEST_FILENAME} -f [OR]
+            RewriteCond %{REQUEST_FILENAME} -d
+            RewriteRule ^ - [L]
+            # Rewrite everything else to index.html to allow html5 state links
+            RewriteRule ^ index.html [L]
+          </Directory>
+          
 
           <FilesMatch "\.(?i:xgmml|xbel)$">
              Header set Content-Disposition attachment
@@ -207,6 +230,10 @@ a. Configuring the Apache web server
           ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
           ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
           ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
+          ProxyPass /v3/ http://localhost:8080/ndexbio-rest/v3/ timeout=3000
+          ProxyPassReverse /v3/ http://localhost:8080/ndexbio-rest/v3/
+          ProxyPass /V3/ http://localhost:8080/ndexbio-rest/v3/ timeout=3000
+          ProxyPassReverse /V3/ http://localhost:8080/ndexbio-rest/v3/
       </VirtualHost>
 
    **Ubuntu**
@@ -234,6 +261,23 @@ a. Configuring the Apache web server
              AllowOverride None
              Require all granted
          </Directory>
+         <Directory /opt/ndex/ndex-webapp/viewer>
+            RewriteEngine on
+            RewriteCond %{REQUEST_FILENAME} -f [OR]
+            RewriteCond %{REQUEST_FILENAME} -d
+            RewriteRule ^ - [L]
+            # Rewrite everything else to index.html to allow html5 state links
+            RewriteRule ^ index.html [L]
+         </Directory>
+         <Directory /opt/ndex/ndex-webapp/iquery>
+            RewriteEngine on
+            RewriteCond %{REQUEST_FILENAME} -f [OR]
+            RewriteCond %{REQUEST_FILENAME} -d
+            RewriteRule ^ - [L]
+            # Rewrite everything else to index.html to allow html5 state links
+            RewriteRule ^ index.html [L]
+         </Directory>
+
          <FilesMatch "\.(?i:xgmml|xbel)$">
              Header set Content-Disposition attachment
          </FilesMatch>
@@ -243,6 +287,10 @@ a. Configuring the Apache web server
          ProxyPassReverse /v2/ http://localhost:8080/ndexbio-rest/v2/
          ProxyPass /V2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
          ProxyPassReverse /V2/ http://localhost:8080/ndexbio-rest/v2/
+         ProxyPass /v3/ http://localhost:8080/ndexbio-rest/v3/ timeout=3000
+         ProxyPassReverse /v3/ http://localhost:8080/ndexbio-rest/v3/
+         ProxyPass /V3/ http://localhost:8080/ndexbio-rest/v3/ timeout=3000
+         ProxyPassReverse /V3/ http://localhost:8080/ndexbio-rest/v3/
       </VirtualHost>
 
 #. Initialize the PostgreSQL database
@@ -259,7 +307,8 @@ a. Configuring the Apache web server
 
       psql
 
-   Enter this command:
+   Enter this command (we use a fake password here as an example, 
+   please set a proper password when you config your server):
 
    .. code-block::
 
@@ -307,15 +356,15 @@ a. Configuring the Apache web server
       NdexSystemUserEmail=support2@ndexbio.org
 
 #. Change the ``HostURI property``. You need to set its value to the
-   host name of your machine with the http prefix.
+   host name of your machine with the https prefix.
 
    For example, if you are installing NDEx to a machine named
-   ``myserver.somedomain.com``, the HostURI value should be set to:
+   ``myserver.mycompany.com``, the HostURI value should be set to:
 
-   ``HostURI=http://myserver.somedomain.com``
+   ``HostURI=https://myserver.mycompany.com``
 
 #. The ``SMPT-XXXX`` properties need to be updated only if you want
-   to allow users to update their passwords.
+   to allow users to update their passwords, or VERIFY_NEWUSER_BY_EMAIL is enabled.
 
 #. To enable ``LDAP Server Authentication``, you will need to edit
    the following properties in ``ndex.properties`` file.
@@ -410,6 +459,7 @@ a. Configuring the Apache web server
    also includes the error (exception) information. Setting Log-Level to
    ``error`` will only log exceptions. To disable logging, set Log-Level to
    ``off``.
+
    **IMPORTANT:** after changing the Log-Level value, you need to
    restart your server for the new setting to take effect.
 
@@ -471,7 +521,7 @@ a. Configuring the Apache web server
 
       NdexDBURL=jdbc:postgresql://localhost:5432/ndex
       NdexDBUsername=ndexserver
-      NdexDBDBPassword=ndex
+      NdexDBDBPassword=my_password
 
 #. Set these parameters if you want to enable the Google OAuth feature
    on the server:
@@ -482,7 +532,7 @@ a. Configuring the Apache web server
       GOOGLE_OAUTH_CLIENT_ID=xxxxx.apps.googleusercontent.com
 
    You can get a Google OAUTH Client Id by registering your server with a
-   Google developer account at http://console.developers.google.com/ .
+   Google developer account at https://console.developers.google.com/ .
 
 #. `USER_STORAGE_LIMIT` Its value is a float which sets the default disk
    quota for each user on this server. The unit is GB. 10.5 means each user
@@ -516,9 +566,8 @@ a. Configuring the Apache web server
         seconds for automatic reloading of My Account page for logged in users.
         Default value is ``0`` (no automatic reloading).
 
-      * ``ndexServerUri`` Specifies the ndex server in use. Currently, NDEx only
-        supports http protocol. Support of https will be added in future
-        releases.
+      * ``ndexServerUri`` Specifies the ndex server in use. From version 2.5.2, NDEx only
+        supports https protocol. 
 
       * ``idleTime`` Specifies the amount of time (in seconds) after which the user
         is automatically logged out for inactivity. Default value is: ``3600``
@@ -537,11 +586,6 @@ a. Configuring the Apache web server
 
       * ``googleAnalyticsTrackingCode`` Google Analytics tracking ID of your app.
 
-      * [STRIKEOUT:networkDisplayLimit]: - not used in WebApp
-
-      * [STRIKEOUT:networkQueryLimit]: - not used in WebApp
-        (networkQueryEdgeLimit used instead, see below)
-
       * ``networkQueryEdgeLimit`` Maximum number of edges that the network query
         will return. This parameter is optional. If it is not specified in
         ``ndex-webapp-config.js``, then it defaults to 50000. In case network query
@@ -553,8 +597,6 @@ a. Configuring the Apache web server
 
         2) logged in they have the option of saving the query result to her/his
            account.
-
-      * [STRIKEOUT:networkTableLimit]: - not used in WebApp
 
       * ``openInCytoscapeEdgeThresholdWarning`` Networks with this number of edges
         will open in Cytoscape without warning. This parameter is optional. If
@@ -568,7 +610,7 @@ a. Configuring the Apache web server
       * ``landingPageConfigServer`` Required parameter that specifies configuration
         server for NDEx Web Application front page. For NDEx Release 2.4.0,
         ``landingPageConfigServer`` is set to
-        http://staging.ndexbio.org/landing_page_content/v2_4_0/.
+        https://staging.ndexbio.org/landing_page_content/v2_4_0/.
 
       * ``featuredContentScrollIntervalInMs`` This parameter specifies how fast (in
         milliseconds) the items in Featured Content channel change. It is
@@ -823,12 +865,20 @@ a. Starting Solr
    Go to the directory ``query_engine`` and run the script ``run.sh`` to start the
    neighborhood query engine.
 
+#. Test your NDEx REST server
+
+   You can use this url to test if your service is running:
+
+   https://myserver.mycompany.com/v2/admin/status
+
+   If this endpoint has on error message in it, it means the server is up running.
+
 #. Proxy Issues
 
-   If after completing these steps the front-end of your NDEx server does
-   not seem to be talking to the back-end, it may be because your security
+   If after completing these steps, the front-end web application of your NDEx server 
+   does not seem to be talking to the back-end, it may be because your security
    settings are preventing your proxy settings from going into effect. If
-   you believe this may be the case, please see your local system
+   you believe this may be the case, please see your system
    administrator.
 
 Step 6 - INSTALLATION OF IQUERY

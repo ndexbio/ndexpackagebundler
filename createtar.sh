@@ -57,6 +57,8 @@ chmod go-rwx tomcat/conf/server.xml
 
 mkdir -p tomcat/conf/Catalina/localhost
 /bin/cp -f $SCRIPT_DIR/src/tomcat/ndexbio-rest.xml tomcat/conf/Catalina/localhost/.
+/bin/cp -f $SCRIPT_DIR/src/tomcat/setenv.sh tomcat/bin/
+/bin/chmod a+x tomcat/bin/setenv.sh
 
 echo "Decompressing solr"
 tar -zxf ../../solr-${SOLR_VERSION}.tgz

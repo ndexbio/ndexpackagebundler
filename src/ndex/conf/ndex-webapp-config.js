@@ -2,7 +2,7 @@ var ndexSettings =
 {
     messages:
     {
-	serverDown: "<img src='http://home.ndexbio.org/img/maintenance2.png'>"
+	serverDown: "<img src='https://home.ndexbio.org/img/maintenance2.png'>"
     },
     requireAuthentication: false,
     signIn:
@@ -13,7 +13,7 @@ var ndexSettings =
         showSignup: true
     },
     refreshIntervalInSeconds: 10,
-    ndexServerUri: "http://myndex.mycompany.com/v2",
+    ndexServerUri: "https://myndex.mycompany.com/v2",
     googleClientId: '802839698598-shh458t46bo9v2v5iolcvk1h443hid6n.apps.googleusercontent.com',
     networkQueryLimit: 50000,
     networkDisplayLimit: 500,
@@ -30,7 +30,7 @@ var ndexSettings =
     iQuery:
     {
         // not sure why serviceServerUri is subset of baseUri, but leaving it for now
-        baseUri: "https://www.ndexbio.org/integratedsearch/v1/",
+        baseUri: "https://myndex.mycompany.com/integratedsearch/v1/",
         deployEnvironment: "",
         myGeneUri: "https://mygene.info/v3/query",
         geneCardsUri: "https://www.genecards.org/cgi-bin/carddisp.pl?gene=",

@@ -1,3 +1,7 @@
+.. footer:: 
+   ###Page###
+
+
 NDEx Installation Instructions Version @@VERSION@@
 ====================================================================
 

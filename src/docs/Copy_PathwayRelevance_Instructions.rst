@@ -21,7 +21,8 @@ Prerequisites
 Instructions
 ----------------------------------------------------------
 
-.. note::  All instructions below should be run as user ``ndex``
+.. note::  All instructions below should be run as user ``ndex`` except for
+           ``systemctl`` calls which must be run as ``root``
 
 a.  Install ndex2 python client if version < 4.0.0
 
@@ -66,7 +67,7 @@ a.  Install ndex2 python client if version < 4.0.0
 
    .. code-block::
 
-      cd /opt/ndex/services/enrichment
+      cd /opt/ndex/services/ndex-enrichment-rest
       mkdir tmpdb
       cd tmpdb
       wget https://raw.githubusercontent.com/cytoscape/ndex-enrichment-rest/master/utils/copynetworks.py
@@ -134,10 +135,11 @@ a.  Install ndex2 python client if version < 4.0.0
 
 #. Stop Pathway Relevance Service (formerly known as Enrichment)
 
+   As user ``root`` invoke ``systemctl`` to stop service
+
    .. code-block::
 
-      ps -elf | grep enrichment
-      kill <PID of java process for enrichment output from previous step>
+      systemctl stop ndex-enrichment-rest
 
 #. Update database
 
@@ -146,6 +148,8 @@ a.  Install ndex2 python client if version < 4.0.0
       ./updatedb.sh
 
 #. Start Service
+
+   As user ``root`` invoke ``systemctl`` to start service
 
    .. code-block::
 

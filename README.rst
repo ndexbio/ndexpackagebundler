@@ -67,10 +67,17 @@ well as what versions of Solr_ and Tomcat_ to bundle in.
 To create NDEx 2.5.2 bundle
 =============================
 
-1. install miniconda
-2. install rst2pdf using command 
-   ..code:: bash
+1. Install miniconda
+
+2. Install rst2pdf using command
+
+   .. code-block:: bash
+
       pip install rst2pdf
 
-3. runscript createtar.sh
+3. Run script ``createtar.sh``
+
+   .. code-block:: bash
+
+      ./createtar.sh
 

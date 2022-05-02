@@ -58,7 +58,7 @@ directory into the local install of NDEx and to create a networkset.
 
    .. code-block::
 
-      cd /opt/ndex/services/interactome
+      cd /opt/ndex/services/ndex-interactome-rest
       sudo -u ndex /bin/bash # become ndex user
       ./rebuildIndex.sh networks.json
 

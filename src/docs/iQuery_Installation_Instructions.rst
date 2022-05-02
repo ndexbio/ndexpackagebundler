@@ -12,6 +12,7 @@ initially has the following files:
 * **run.sh** - Starts iQuery REST service as a background task
 * **logs/** - Directory where iQuery REST service logs are written
 * **ndexsearch-rest-<VERSION>-jar-with-dependencies.jar** - iQuery Application
+* **ndexsearch-rest.jar** - Symlink to actual jar used by start/stop scripts
 * **search.conf** - Main configuration file
 * **source.configurations.json** - Configuration file defining endpoints for services like enrichment and interactome
 

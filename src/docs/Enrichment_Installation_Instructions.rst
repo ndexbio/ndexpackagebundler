@@ -13,6 +13,7 @@ initially has the following files:
 * **tasks/** - Directory where enrichment tasks are stored
 * **logs/** - Directory where Enrichment REST service logs are written.
 * **ndex-enrichment-rest-<VERSION>-jar-with-dependencies.jar** - Enrichment Application
+* **ndex-enrichment-rest.jar** - Symlink to actual jar file used by update and start/stop scripts
 * **enrichment.conf** - Main configuration file
 * **db/** - Enrichment database directory
 * **dbresults.json** - Enrichment database creation/update configuration file
@@ -57,11 +58,11 @@ directory into the local install of NDEx and to create a networkset.
 
 #. Create Enrichment database
 
-   As user NDEx run ``updatedb.sh`` to create the Enrichment database.
+   As user ``ndex`` run ``updatedb.sh`` to create the Enrichment database.
 
    .. code-block::
 
-      cd /opt/ndex/services/enrichment
+      cd /opt/ndex/services/ndex-enrichment-rest
       sudo -u ndex /bin/bash # become ndex user
       ./updatedb.sh
 
@@ -163,7 +164,7 @@ directory into the local install of NDEx and to create a networkset.
 
 #. Stop Enrichment Service
 
-   As ``root`` user use ``systemctl`` to stop the service
+   As ``root`` user run ``systemctl`` to stop the service
 
    .. code-block::
 

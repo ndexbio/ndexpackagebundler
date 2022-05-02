@@ -10,5 +10,5 @@ if [ $# != 1 ]; then
    echo "rebuldIndex.sh network_list_file"
    exit 0
 else   
-  java -classpath @@INTERACTOME_JAR@@ org.ndexbio.interactomesearch.GeneSymbolIndexer ./genedb /opt/ndex/data/ "$1" 
+  java -classpath ndex-interactome-rest.jar org.ndexbio.interactomesearch.GeneSymbolIndexer ./genedb /opt/ndex/data/ "$1"
 fi

@@ -6,10 +6,9 @@ Enrichment Configuration and Invocation @@VERSION@@
 This document provides instructions on configuring and running the Enrichment REST service
 packaged with NDEx bundle.
 
-In the NDEx bundle, the enrichment service is located under ``services/enrichment`` and
+In the NDEx bundle, the enrichment service is located under ``services/ndex-enrichment-rest`` and
 initially has the following files:
 
-* **run.sh** - Starts Enrichment REST service as a background task
 * **updatedb.sh** - Creates/Updates Enrichment database
 * **tasks/** - Directory where enrichment tasks are stored
 * **logs/** - Directory where Enrichment REST service logs are written.
@@ -17,7 +16,7 @@ initially has the following files:
 * **enrichment.conf** - Main configuration file
 * **db/** - Enrichment database directory
 * **dbresults.json** - Enrichment database creation/update configuration file
-* **db/databaseresults.json** - Enrichment database file
+* **db/databaseresults.json** - Enrichment database file created when running ``updatedb.sh``
 * **examplencipidnetworks/** - Contains a several NCI PID networks to load into Enrichment as an example
 
 
@@ -68,11 +67,11 @@ directory into the local install of NDEx and to create a networkset.
 
 #. Start Enrichment Service
 
+   As ``root`` user use ``systemctl`` to start the service
+
    .. code-block::
 
-      cd /opt/ndex/services/enrichment
-      sudo -u ndex /bin/bash # become ndex user
-      ./run.sh
+      systemctl start ndex-enrichment-rest
 
 #. Test service is up
 
@@ -164,10 +163,10 @@ directory into the local install of NDEx and to create a networkset.
 
 #. Stop Enrichment Service
 
+   As ``root`` user use ``systemctl`` to stop the service
+
    .. code-block::
 
-       sudo -u ndex /bin/bash # become ndex user
-       ps -elf | grep enrichment
-       kill <PID of java process for enrichment output from previous step>
+       systemctl stop ndex-enrichment-rest
 
 

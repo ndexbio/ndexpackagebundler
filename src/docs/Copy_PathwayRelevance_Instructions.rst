@@ -147,7 +147,9 @@ a.  Install ndex2 python client if version < 4.0.0
 
 #. Start Service
 
-      ./run.sh
+   .. code-block::
+
+      systemctl start ndex-enrichment-rest
 
 #. Verify
 

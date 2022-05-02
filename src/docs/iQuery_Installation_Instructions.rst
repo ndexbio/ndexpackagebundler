@@ -24,27 +24,26 @@ Prerequisites
 
 * Interactome REST Service properly configured and running as described in ``Interactome_Installation_Instructions.pdf``
 
-Configuring Service
-----------------------------
+.. note::
 
-Normally you need to setup a ProxyPass in your Apache configuration, so that the rest endpoints are acessable on port 80. 
-You can add something like this in your configuration file (ndex.conf if you use our default setup.):
+    As part of NDEx installation the following ProxyPass lines should already
+    be in your Apache configuration
 
-.. code-block::
- 
-	ProxyPass /integratedsearch/ http://localhost:8290/
-	ProxyPassReverse /integratedsearch/ http://localhost:8290/
+    .. code-block::
+
+    	ProxyPass /integratedsearch/ http://localhost:8290/
+        ProxyPassReverse /integratedsearch/ http://localhost:8290/
    
 Starting Service
 ---------------------------------
 
 Start iQuery REST Service
 
+As user ``root`` use ``systemctl`` to start service
+
 .. code-block::
 
-      cd /opt/ndex/services/search
-      sudo -u ndex /bin/bash # become ndex user
-      ./run.sh
+    systemctl start ndexsearch-rest
 
 Testing Service
 ------------------------
@@ -121,10 +120,10 @@ Stopping Service
 
 Stop iQuery REST Service
 
+As user ``root`` use ``systemctl`` to start service
+
 .. code-block::
 
-       sudo -u ndex /bin/bash # become ndex user
-       ps -elf | grep ndexsearch
-       kill <PID of java process for ndexsearch output from previous step>
+    systemctl stop ndexsearch-rest
 
 

@@ -10,7 +10,7 @@ if [ `whoami` != "ndex" ] ; then
    exit 1
 fi
 
-JARFILE="$SCRIPT_DIR/@@ENRICHMENT_JAR@@"
+JARFILE="$SCRIPT_DIR/ndex-enrichment-rest.jar"
 
 echo "This script updates the enrichment database located: $SCRIPT_DIR/db"
 echo "using the configuration file $SCRIPT_DIR/enrichment.conf"

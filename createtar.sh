@@ -76,7 +76,7 @@ tar -zxf ../../solr-${SOLR_VERSION}.tgz
 
 /bin/cp ../../../build/interactomeSearch-*.jar services/interactome/.
 
-/bin/cp ../../../build/ndex-enrichment-rest-*-jar-with-dependencies.jar services/enrichment/.
+/bin/cp ../../../build/ndex-enrichment-rest-*-jar-with-dependencies.jar services/ndex-enrichment-rest/.
 /bin/cp ../../../build/ndexsearch-rest-*-*jar-with-dependencies.jar services/search/.
 
 echo "Configuring query_engine"
@@ -102,16 +102,13 @@ mkdir -p services/interactome/task
 
 echo "Copying over and configuring Enrichment"
 # configure enrichment
-ENRICHMENT_JAR_WITH_PATH=`find services/enrichment/ -name "ndex-enrichment-rest-*-jar-with-dependencies.jar" -type f`
+ENRICHMENT_JAR_WITH_PATH=`find services/ndex-enrichment-rest/ -name "ndex-enrichment-rest-*-jar-with-dependencies.jar" -type f`
 ENRICHMENT_JAR=`basename $ENRICHMENT_JAR_WITH_PATH`
-cat services/enrichment/updatedb.sh | sed "s/@@ENRICHMENT_JAR@@/${ENRICHMENT_JAR}/g" > services/enrichment/updatedb.tmp
-mv services/enrichment/updatedb.tmp services/enrichment/updatedb.sh
-cat services/enrichment/run.sh | sed "s/@@ENRICHMENT_JAR@@/${ENRICHMENT_JAR}/g" > services/enrichment/run.tmp
-mv services/enrichment/run.tmp services/enrichment/run.sh
-chmod a+x services/enrichment/run.sh
-chmod a+x services/enrichment/updatedb.sh
-mkdir -p services/enrichment/tasks
-mkdir -p services/enrichment/logs
+cat services/ndex-enrichment-rest/updatedb.sh | sed "s/@@ENRICHMENT_JAR@@/${ENRICHMENT_JAR}/g" > services/ndex-enrichment-rest/updatedb.tmp
+mv services/ndex-enrichment-rest/updatedb.tmp services/ndex-enrichment-rest/updatedb.sh
+chmod a+x services/ndex-enrichment-rest/updatedb.sh
+mkdir -p services/ndex-enrichment-rest/tasks
+mkdir -p services/ndex-enrichment-rest/logs
 
 echo "Copying over and configuring Integrated Search aka iQuery REST service"
 # configure integrated search

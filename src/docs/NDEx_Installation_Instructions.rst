@@ -228,6 +228,11 @@ a. Configuring the Apache web server
           <FilesMatch "\.(?i:xgmml|xbel)$">
              Header set Content-Disposition attachment
           </FilesMatch>
+
+          # Redirects needed for IQuery
+          ProxyPass /integratedsearch/ http://localhost:8290/
+          ProxyPassReverse /integratedsearch/ http://localhost:8290/
+
           ProxyPass /rest/ http://localhost:8080/ndexbio-rest/
           ProxyPassReverse /rest/ http://localhost:8080/ndexbio-rest/
           ProxyPass /v2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000
@@ -285,6 +290,11 @@ a. Configuring the Apache web server
          <FilesMatch "\.(?i:xgmml|xbel)$">
              Header set Content-Disposition attachment
          </FilesMatch>
+
+         # Redirects needed for IQuery
+         ProxyPass /integratedsearch/ http://localhost:8290/
+         ProxyPassReverse /integratedsearch/ http://localhost:8290/
+
          ProxyPass /rest/ http://localhost:8080/ndexbio-rest/ timeout=3000
          ProxyPassReverse /rest/ http://localhost:8080/ndexbio-rest/
          ProxyPass /v2/ http://localhost:8080/ndexbio-rest/v2/ timeout=3000

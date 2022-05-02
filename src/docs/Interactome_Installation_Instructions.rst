@@ -6,10 +6,9 @@ Interactome Configuration and Invocation @@VERSION@@
 This document provides instructions on configuring and running the Interactome REST service
 packaged with NDEx bundle.
 
-In the NDEx bundle, the Interactome service is located under ``services/interactome`` and
+In the NDEx bundle, the Interactome service is located under ``services/ndex-interactome-rest`` and
 initially has the following files:
 
-* **run.sh** - Starts Interactome REST service as a background task
 * **rebuildIndex.sh** - Creates/Updates Interactome database
 * **logs/** - Directory where Interactome REST service logs are written.
 * **interactomeSearch-<VERSION>.jar** - Interactome Application
@@ -65,11 +64,11 @@ directory into the local install of NDEx and to create a networkset.
 
 #. Start Interactome Service
 
+   As user ``root`` use ``systemctl`` to start service
+
    .. code-block::
 
-      cd /opt/ndex/services/interactome
-      sudo -u ndex /bin/bash # become ndex user
-      ./run.sh
+      systemctl start ndex-interactome-rest
 
 #. Test service
 
@@ -87,10 +86,10 @@ directory into the local install of NDEx and to create a networkset.
 
 #. Stop Interactome Service
 
+   As user ``root`` use ``systemctl`` to stop service
+
    .. code-block::
 
-       sudo -u ndex /bin/bash # become ndex user
-       ps -elf | grep interactome
-       kill <PID of java process for interactome output from previous step>
+       systemctl stop ndex-interactome-rest
 
 

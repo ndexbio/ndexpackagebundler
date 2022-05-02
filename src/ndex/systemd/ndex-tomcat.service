@@ -1,0 +1,22 @@
+[Unit]
+Description=Tomcat - instance NDEx Web application 
+After=syslog.target network.target ndex-solr.service postgresql.service
+
+[Service]
+Type=forking
+
+User=ndex
+Group=ndex
+
+Environment= ndexConfigurationPath=/opt/ndex/conf/ndex.properties
+Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"
+WorkingDirectory=/opt/ndex/tomcat/bin
+
+ExecStart=/opt/ndex/tomcat/bin/startup.sh
+ExecStop=/opt/ndex/tomcat/bin/shutdown.sh
+
+#RestartSec=10
+#Restart=always
+
+[Install]
+WantedBy=multi-user.target

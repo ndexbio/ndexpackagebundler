@@ -1,0 +1,20 @@
+[Unit]
+Description=SOLR - instance NDEx Web application 
+After=syslog.target network.target ndex-tomcat.service
+
+[Service]
+Type=forking
+
+User=ndex
+Group=ndex
+
+WorkingDirectory=/opt/ndex/solr/bin
+
+ExecStart=/opt/ndex/solr/bin/solr start -m 32g
+ExecStop=/opt/ndex/solr/bin/solr stop
+
+#RestartSec=10
+#Restart=always
+
+[Install]
+WantedBy=multi-user.target

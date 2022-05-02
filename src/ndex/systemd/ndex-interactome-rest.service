@@ -1,0 +1,20 @@
+[Unit]
+Description=NDEx Interactome Service
+After=auditd.service systemd-user-sessions.service time-sync.target ndex-tomcat.service
+
+[Service]
+User=ndex
+TimeoutStartSec=0
+Type=simple
+KillMode=process
+WorkingDirectory=/opt/ndex/services/ndex-interactome-rest
+StandardOutput=null
+StandardError=null
+ExecStart=/usr/bin/java -Xmx5g -Dndex.host="http://localhost/v2" -Dndex.interactomehost=localhost -Dndex.interactomedb=/opt/ndex/services/interactome -Dndex.queryport=8287 -jar interactomeSearch-0.3.0.jar >> /opt/ndex/services/interactome/nohup.out 2>&1 
+Restart=always
+RestartSec=5
+LimitNOFILE=5555
+
+[Install]
+WantedBy=multi-user.target
+

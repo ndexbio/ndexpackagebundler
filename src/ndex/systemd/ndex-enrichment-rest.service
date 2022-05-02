@@ -1,0 +1,20 @@
+[Unit]
+Description=NDEx Enrichment Service
+After=auditd.service systemd-user-sessions.service time-sync.target
+
+[Service]
+User=ndex
+TimeoutStartSec=0
+Type=simple
+KillMode=process
+WorkingDirectory=/opt/ndex/services/ndex-enrichment-rest
+StandardOutput=null
+StandardError=null
+ExecStart=/usr/bin/java -Xmx5g -jar /opt/ndex/services/ndex-enrichment-rest/ndex-enrichment-rest.jar --conf /opt/ndex/services/ndex-enrichment-rest/enrichment.conf --mode runserver
+Restart=always
+RestartSec=5
+LimitNOFILE=5555
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,1 +1,9 @@
-/opt/ndex/conf/viewer-resource.json
+{
+  "version": "0.3.1",
+  "ndexUrl": "dev.ndexbio.org",
+  "viewerThreshold": 10000,
+  "maxNumObjects": 2000000,
+  "maxEdgeQuery": 10000,
+  "maxDataSize": 900000000,
+  "warningThreshold": 1000000
+}
